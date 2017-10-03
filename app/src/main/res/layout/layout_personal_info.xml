@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/old_edit"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="年紀"
+        android:maxLines="1"
+        android:inputType="number"
+        android:theme="@style/MyEditText"/>
+
+    <EditText
+        android:id="@+id/high_edit"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="身高(cm)"
+        android:maxLines="1"
+        android:inputType="number"
+        android:theme="@style/MyEditText"/>
+
+    <EditText
+        android:id="@+id/sex_edit"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="性別(M/F)"
+        android:maxLines="1"
+        android:inputType="textCapCharacters"
+        android:theme="@style/MyEditText"/>
+
+    <EditText
+        android:id="@+id/weight_edit"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="體重(kg)"
+        android:maxLines="1"
+        android:inputType="number"
+        android:theme="@style/MyEditText"/>
+
+    <Button
+        android:id="@+id/ensure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:text="儲存/同步"/>
+
+</LinearLayout>

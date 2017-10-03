@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <PreferenceCategory android:title="智慧設定">
+        <SwitchPreference
+            android:summaryOn="久坐提醒"
+            android:key="sedentary_remind"
+            android:title="久坐提醒" />
+        <SwitchPreference
+            android:key="hand_up"
+            android:defaultValue="true"
+            android:title="抬手亮屏" />
+        <SwitchPreference
+            android:key="on-wear"
+            android:defaultValue="true"
+            android:title="配戴偵測" />
+        <SwitchPreference
+            android:key="double-tap"
+            android:title="雙擊切換" />
+        <SwitchPreference
+            android:key="wrist-scroll"
+            android:title="扭轉切換" />
+        <EditTextPreference
+            android:defaultValue="8000"
+            android:inputType="number"
+            android:summary=""
+            android:key="step_number_aim"
+            android:title="走路目標步數" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="操作設定">
+       <Preference
+         android:key="intelligent_sync"
+         android:title="儲存/同步"/>
+    </PreferenceCategory>
+</PreferenceScreen>
+

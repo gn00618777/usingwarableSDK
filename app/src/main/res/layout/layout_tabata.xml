@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+    android:id="@+id/prepare_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="Prepare Time"/>
+
+    <Spinner android:id="@+id/spinner_prepare"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+    <TextView
+        android:id="@+id/action_type_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text = "Action Type"/>
+
+    <Spinner android:id="@+id/spinner_action_type"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+    <TextView
+        android:id="@+id/action_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text = "Action Time"/>
+
+    <Spinner android:id="@+id/spinner_action_time"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+    <TextView
+        android:id="@+id/interval_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text = "Interval Time"/>
+
+    <Spinner android:id="@+id/spinner_interval"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+    <TextView
+        android:id="@+id/cycle_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text = "Cycles"/>
+    <Spinner android:id="@+id/spinner_cycle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+    <Button
+        android:id="@+id/execise_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:text="Exercise Items"/>
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="START"/>
+
+</LinearLayout>
