@@ -45,7 +45,8 @@ public class TabataFragment extends Fragment {
     private final String[] cycleTimes = {"1","2","5","10","50"};
     private final CharSequence[] items = {"PUSH_UP", "CRUNCH", "SQUART", "JUMPING_JACK",
             "DIPS","HIGH_KNESSRUNNING", "LUNGES", "BURPEES", "STEP_ON_CHAIR", "PUSHUP_ROTATION"};
-    private final boolean[] itemSelected = {false,false,false,false,false,false,false,false,false,false,false};
+    private final boolean[] itemSelected = {false,false,false,false,false,false,false,false,false,false};
+    private final boolean[] itemSelected1 = {false,false,false,false,false,false,false,false,false,false,false};
 
     private TabataSettings tatataSettings = new TabataSettings();
 
@@ -269,8 +270,10 @@ public class TabataFragment extends Fragment {
                 builder.setMultiChoiceItems(items, itemSelected, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        which++;
+
                         itemSelected[which] = isChecked;
+                        itemSelected1[which+1] = isChecked;
+
                     }
                 });
                // Log.d("bernie","itemSelected[0] is "+Boolean.toString(itemSelected[0]));
@@ -278,7 +281,7 @@ public class TabataFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 for(int i = 1; i < 11. ; i++){
-                                    if(itemSelected[i] == true) {
+                                    if(itemSelected1[i] == true) {
                                         tatataSettings.enableItem(i);
                                     }
                                     else
