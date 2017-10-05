@@ -91,7 +91,7 @@ SwVersionFragment.ListenForSwVersionFragment{
     private IntelligentSettings testSettings;
     private BodySettings testS1ettings;
 
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 3;
+    private static final int PERMISSION_REQUEST_FINE_LOCATION = 3;
 
     public CwmManager.InformationListener informationListener = new CwmManager.InformationListener() {
         @Override
@@ -508,7 +508,7 @@ SwVersionFragment.ListenForSwVersionFragment{
         }
 
         //Android 6.0 and later need permission of loacation in order to scan BLE device.
-        if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("This app needs location access");
             builder.setMessage("Please grant location access so this app can detect peripherals.");
@@ -516,7 +516,7 @@ SwVersionFragment.ListenForSwVersionFragment{
             builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_FINE_LOCATION);
                 }
             });
             builder.show();
