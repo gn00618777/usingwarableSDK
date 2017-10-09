@@ -42,6 +42,7 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
 SwVersionFragment.ListenForSwVersionFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
+    private final int WRITE_EXTERNAL_STORAGE = 4;
 
     //sdk
     private CwmManager cwmManager;
@@ -518,6 +519,19 @@ SwVersionFragment.ListenForSwVersionFragment{
             });
             builder.show();
         }
+        if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("External Storage");
+            builder.setMessage("Please grant external storage to access file.");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
+                }
+            });
+            builder.show();
+        }
     }
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -570,5 +584,29 @@ SwVersionFragment.ListenForSwVersionFragment{
         }
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        switch(requestCode) {
+            case WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //do nothing
+                } else {
+                    builder.setMessage("This app will close when you refuse the access external storage file permission")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, final int id) {
+                                    finish();
+                                }
+                            });
+                    final AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                break;
+        }
     }
 }
