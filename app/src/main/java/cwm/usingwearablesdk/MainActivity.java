@@ -236,6 +236,9 @@ SwVersionFragment.ListenForSwVersionFragment{
         @Override
         public void onDisconnected() {
             mDeviceStatus = false;
+            mSelectTypeFM.setDevice("", "", mDeviceStatus);
+            if(mSelectTypeFM.isVisible())
+                resetFragments(SELECT_DEVICE_POSITION);
         }
 
         @Override
