@@ -607,6 +607,22 @@ SwVersionFragment.ListenForSwVersionFragment{
                     alert.show();
                 }
                 break;
+            case PERMISSION_REQUEST_FINE_LOCATION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //do nothing
+                } else {
+                    builder.setMessage("This app will close when you refuse the access location permission")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, final int id) {
+                                    finish();
+                                }
+                            });
+                    final AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                break;
         }
     }
 }
