@@ -11,5 +11,28 @@
         <item name="colorControlNormal">#99CCFF</item>
         <item name="colorControlActivated">#CC0066</item>
     </style>
+    <style name="HeaderShadow">
+        <item name="android:foreground">@drawable/action_bar_shadow</item>
+        <item name="foreground">@drawable/action_bar_shadow</item>
+    </style>
+    <style name="Widget.Connect" parent="@android:style/Widget.Holo.Light.Button">
+        <item name="android:background">@drawable/button</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:paddingLeft">40dp</item>
+        <item name="android:paddingRight">40dp</item>
+    </style>
+    <style name="Widget.List" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/backgroundColor</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+    <style name="Widget.ListTitle"  parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/headerBackgroundColor</item>
+        <item name="android:textColor">@color/headerTextColor</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="Widget.ScannerSubtitle" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>

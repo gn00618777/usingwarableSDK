@@ -235,13 +235,6 @@ SwVersionFragment.ListenForSwVersionFragment{
         @Override
         public void onDisconnected() {
             mDeviceStatus = false;
-            mShowDataFM.setValue(0,0,
-                    0,"");
-            mSelectTypeFM.setDevice(null, null, mDeviceStatus);
-            if(mSelectTypeFM.isVisible())
-               resetFragments(SELECT_DEVICE_POSITION);
-            else
-                setFragments(SELECT_DEVICE_POSITION);
         }
 
         @Override
@@ -366,7 +359,7 @@ SwVersionFragment.ListenForSwVersionFragment{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.d("bernie","onCreate");
         // set toolbar to be action bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         sdkView = (TextView)findViewById(R.id.sdk_version);
@@ -410,6 +403,7 @@ SwVersionFragment.ListenForSwVersionFragment{
     @Override
     protected void onPause(){
         super.onPause();
+        Log.d("bernie","onPause");
     }
 
     @Override
@@ -478,6 +472,9 @@ SwVersionFragment.ListenForSwVersionFragment{
                 mToolbar.setTitle("裝置版本");
                 setFragments(SW_VERSION_POSITION);
                 break;
+            case R.id.navigation_item_9:
+                 buildAlertMessageSwichOTA();
+                break;
             default: break;
         }
         mDrawerLayout.closeDrawers();
@@ -537,6 +534,40 @@ SwVersionFragment.ListenForSwVersionFragment{
                         dialog.cancel();
                     }
                 });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+    private void buildAlertMessageSwichOTA() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(mDeviceStatus == true) {
+            builder.setMessage("The Device will switch to OTA mode when you press the Yes. Do you \n" +
+                    "want to keep going?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+
+                            cwmManager.CwmSwitchOTA();
+                            final Intent newIntent = new Intent(getApplication(), DfuActivity.class);
+                            newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(newIntent);
+                            Toast.makeText(getApplicationContext(), "Please check your device is connecting", Toast.LENGTH_LONG);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            //do nothing
+                        }
+                    });
+        }
+        else{
+            builder.setMessage("Please check your device is connecting")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            //do nothing
+                        }
+                    });
+        }
         final AlertDialog alert = builder.create();
         alert.show();
     }
