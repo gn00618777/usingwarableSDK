@@ -485,7 +485,7 @@ SwVersionFragment.ListenForSwVersionFragment{
         mFM.beginTransaction().replace(R.id.frames, mFragments.get(position), "t"+position).commit();
     } // setFragments()
     private void resetFragments(int position) {
-        mFM.beginTransaction().detach(mFragments.get(position)).attach(mFragments.get(position)).commit();
+        mFM.beginTransaction().detach(mFragments.get(position)).attach(mFragments.get(position)).commitAllowingStateLoss();
     }
     private void setPreferencedFragments(){
         mFM.beginTransaction().replace(R.id.frames, mIntelligentFM).commit();
