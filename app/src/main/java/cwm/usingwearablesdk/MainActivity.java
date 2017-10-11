@@ -48,7 +48,6 @@ SwVersionFragment.ListenForSwVersionFragment{
     private CwmManager cwmManager;
     //UI
     private Toolbar mToolbar;
-    private TextView sdkView;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavView;
     private NavigationView.OnNavigationItemSelectedListener mNavViewOnNavItemSelListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -366,7 +365,6 @@ SwVersionFragment.ListenForSwVersionFragment{
         Log.d("bernie","onCreate");
         // set toolbar to be action bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        sdkView = (TextView)findViewById(R.id.sdk_version);
 
         // set navigation item selected behavior
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -401,7 +399,6 @@ SwVersionFragment.ListenForSwVersionFragment{
         //testS1ettings.
         //testSettings.
         cwmManager = new CwmManager(this,wearableServiceListener, informationListener,ackListener);
-        sdkView.setText("SDK: "+cwmManager.CwmSdkVersion());
         statusCheck();
     }
     @Override
