@@ -22,6 +22,14 @@
         <SwitchPreference
             android:key="wrist-scroll"
             android:title="扭轉切換" />
+        <SwitchPreference
+            android:key="shake"
+            android:defaultValue="true"
+            android:title="搖動偵測" />
+        <SwitchPreference
+            android:key="significant"
+            android:title="Significant" />
+
         <EditTextPreference
             android:defaultValue="8000"
             android:inputType="number"

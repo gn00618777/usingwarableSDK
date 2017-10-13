@@ -19,6 +19,8 @@ public class IntelligentFragment extends PreferenceFragment{
     private Boolean isOnWear = false;
     private Boolean isDoubleTap = false;
     private Boolean isWristScroll = false;
+    private Boolean isShake = false;
+    private Boolean isSignificant = false;
     private int stepAim = 0;
 
     ListenerForIntellignetFragment mCallback;
@@ -57,6 +59,8 @@ public class IntelligentFragment extends PreferenceFragment{
         final SwitchPreference onWearSwitch = (SwitchPreference) findPreference("on-wear");
         final SwitchPreference doubleTapSwitch = (SwitchPreference) findPreference("double-tap");
         final SwitchPreference wristScrollSwitch = (SwitchPreference) findPreference("wrist-scroll");
+        final SwitchPreference ShakeSwitch = (SwitchPreference) findPreference("shake");
+        final SwitchPreference SignificantSwitch = (SwitchPreference) findPreference("significant");
         final EditTextPreference editTextPreference = (EditTextPreference) findPreference("step_number_aim");
         final Preference sync = findPreference("intelligent_sync");
 
@@ -141,6 +145,36 @@ public class IntelligentFragment extends PreferenceFragment{
                 }
             });
         }
+        if (ShakeSwitch != null){
+            ShakeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
+                @Override
+                public boolean onPreferenceChange(Preference arg0, Object isVibrateOnObject){
+                    boolean isEnabled = false;
+                    isEnabled = ShakeSwitch.isChecked();
+                    if(isEnabled == false)
+                        isShake = true;
+                    else
+                        isShake = false;
+
+                    return true;
+                }
+            });
+        }
+        if (SignificantSwitch != null){
+            SignificantSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
+                @Override
+                public boolean onPreferenceChange(Preference arg0, Object isVibrateOnObject){
+                    boolean isEnabled = false;
+                    isEnabled = SignificantSwitch.isChecked();
+                    if(isEnabled == false)
+                        isSignificant = true;
+                    else
+                        isSignificant = false;
+
+                    return true;
+                }
+            });
+        }
 
         if(editTextPreference != null){
             editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
@@ -182,6 +216,8 @@ public class IntelligentFragment extends PreferenceFragment{
         final SwitchPreference onWearSwitch = (SwitchPreference) findPreference("on-wear");
         final SwitchPreference doubleTapSwitch = (SwitchPreference) findPreference("double-tap");
         final SwitchPreference wristScrollSwitch = (SwitchPreference) findPreference("wrist-scroll");
+        final SwitchPreference ShakeSwitch = (SwitchPreference) findPreference("shake");
+        final SwitchPreference SignificantSwitch = (SwitchPreference) findPreference("significant");
 
         EditTextPreference aim = (EditTextPreference) findPreference("step_number_aim");
 
@@ -190,6 +226,8 @@ public class IntelligentFragment extends PreferenceFragment{
         isOnWear = onWearSwitch.isChecked();
         isDoubleTap = doubleTapSwitch.isChecked();
         isWristScroll = wristScrollSwitch.isChecked();
+        isShake = ShakeSwitch.isChecked();
+        isSignificant = SignificantSwitch.isChecked();
 
         stepAim = Integer.valueOf(aim.getText());
 
@@ -201,6 +239,8 @@ public class IntelligentFragment extends PreferenceFragment{
     public boolean getOnWearStatus() {return isOnWear;}
     public boolean getDoubleTapStatus() {return isDoubleTap;}
     public boolean getWritstScrollStatus() {return isWristScroll;}
+    public boolean getShakeStatus(){return isShake;}
+    public boolean getSignificantStatus(){return isSignificant;}
     public int getAim(){return stepAim;}
 
 }

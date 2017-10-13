@@ -150,6 +150,10 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                 Type = "TAP";
             else if(cwmInformation.getId() == 0x02)
                 Type = "WRIST";
+            else if(cwmInformation.getId() == 0x06)
+                Type = "Shake";
+            else if(cwmInformation.getId() == 0x08)
+                Type = "Significant";
 
             Toast.makeText(getApplicationContext(),Type,Toast.LENGTH_SHORT).show();
 
@@ -234,6 +238,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         public void onGetSleepLog(CwmInformation cwmInformation){
             int startSleepPos = 0;
             int getup = 0;
+
             mParser = cwmInformation.getSleepParser();
             StringBuilder builder1 = new StringBuilder();
             builder1.append("\nParser array:\n");
@@ -260,6 +265,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                 bw.write("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100));
                 bw.newLine();
                 bw.write("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100));
+
                 bw.close();
             } catch (IOException e){
                 e.printStackTrace();
@@ -366,6 +372,10 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         Log.d("bernie","double:"+Boolean.toString(mIntelligentFM.getDoubleTapStatus()));
         settings.setWristSwitch(mIntelligentFM.getWritstScrollStatus());
         Log.d("bernie","Wrist:"+Boolean.toString(mIntelligentFM.getWritstScrollStatus()));
+        settings.setShakeSwitch(mIntelligentFM.getShakeStatus());
+        Log.d("bernie","Shake:"+Boolean.toString(mIntelligentFM.getShakeStatus()));
+        settings.setSignificantSwitch(mIntelligentFM.getSignificantStatus());
+        Log.d("bernie","Significant:"+Boolean.toString(mIntelligentFM.getSignificantStatus()));
         settings.setGoal(mIntelligentFM.getAim());
         Log.d("bernie","AIM:"+Integer.toString(mIntelligentFM.getAim()));
 
