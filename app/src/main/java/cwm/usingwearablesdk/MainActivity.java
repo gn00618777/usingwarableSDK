@@ -31,15 +31,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Environment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 public class MainActivity extends AppCompatActivity implements SelectTypeFragment.ListenForSelectTypeFragment,
 RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncTimeFragment,
         IntelligentFragment.ListenerForIntellignetFragment,PersonalInfoFragment.ListenForPersonalInfoFragment,
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
-SwVersionFragment.ListenForSwVersionFragment{
+SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -63,7 +67,7 @@ SwVersionFragment.ListenForSwVersionFragment{
     private ShowDataFragment mShowDataFM = new ShowDataFragment();
     private PersonalInfoFragment mPersonalInfoFM = new PersonalInfoFragment();
     private SelectTypeFragment mSelectTypeFM = new SelectTypeFragment();
-    private RingScreenFragment mRingScreenFM = new RingScreenFragment();
+    private SleepFragment mSleepFM = new SleepFragment();
     private IntelligentFragment mIntelligentFM = new IntelligentFragment();
     private RingBatteryFragment mRingBatteryFM = new RingBatteryFragment();
     private TimeSyncFragment mTimeSyncFM = new TimeSyncFragment();
@@ -74,12 +78,15 @@ SwVersionFragment.ListenForSwVersionFragment{
     private String mDeviceName = null;
     private String mDeviceAddress = null;
     private boolean mDeviceStatus = false;
+    private byte[] mValue;
+    private int[] mParser;
 
     private BluetoothAdapter mBtAdapter = null;
 
     final int SHOWDATA_POSITION = 0;
     final int PERSONAL_POSITION = 1;
     final int SELECT_DEVICE_POSITION = 2;
+    final int SLEEP_POSITION = 3;
     final int RING_BATTERY_POSITION = 5;
     final int TIME_SYNC_POSITION = 6;
     final int TABATA_WORK_POSITION = 7;
@@ -222,6 +229,47 @@ SwVersionFragment.ListenForSwVersionFragment{
                 resetFragments(SW_VERSION_POSITION);
             }
         }
+
+        @Override
+        public void onGetSleepLog(CwmInformation cwmInformation){
+            int startSleepPos = 0;
+            int getup = 0;
+            mParser = cwmInformation.getSleepParser();
+            StringBuilder builder1 = new StringBuilder();
+            builder1.append("\nParser array:\n");
+            for(int i = 0; i < cwmInformation.getParserLength() ; i++) {
+                builder1.append(Integer.toString(mParser[i])+"\n");
+            }
+            for(int i = 0; i < cwmInformation.getParserLength() ; i+=2) {
+                if(mParser[i] % 100 == 4) {
+                    getup = i;
+                    break;
+                }
+            }
+            for(int i = 0; i < cwmInformation.getParserLength() ; i+=2) {
+                if(mParser[i] == 100)
+                    startSleepPos = i;
+            }
+            try {
+                FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/Download/CwmSleepLog.txt", false);
+                BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
+                for(int i = 0 ; i < cwmInformation.getParserLength() ; i++) {
+                    bw.write(Integer.toString(mParser[i]));
+                    bw.newLine();
+                }
+                bw.write("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100));
+                bw.newLine();
+                bw.write("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100));
+                bw.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
+           // mSleepFM.setRawValue(builder.toString());
+            mSleepFM.setParserValue(builder1.toString());
+            if(mSleepFM.isVisible())
+                resetFragments(SLEEP_POSITION);
+        }
     };
 
     public CwmManager.WearableServiceListener wearableServiceListener = new CwmManager.WearableServiceListener() {
@@ -348,13 +396,20 @@ SwVersionFragment.ListenForSwVersionFragment{
 
     @Override
     public void onRequestSleepLog(){
-       // cwmManager.CwmRequestSleepLog();
+        cwmManager.CwmRequestSleepLog();
+
     }
 
     @Override
     public void onRequestSwVersion(){
         cwmManager.CwmRequestSwVersion();
         Log.d("bernie","sw version");
+    }
+
+    @Override
+    public void onRequestSleep(){
+        cwmManager.CwmRequestSleepLog();
+        Log.d("bernie","press request sleep button");
     }
 
 
@@ -389,7 +444,7 @@ SwVersionFragment.ListenForSwVersionFragment{
         mFragments.add(mShowDataFM);
         mFragments.add(mPersonalInfoFM);
         mFragments.add(mSelectTypeFM);
-        mFragments.add(mRingScreenFM);
+        mFragments.add(mSleepFM);
         mFragments.add(mIntelligentFM);
         mFragments.add(mRingBatteryFM);
         mFragments.add(mTimeSyncFM);
@@ -449,8 +504,8 @@ SwVersionFragment.ListenForSwVersionFragment{
                 setFragments(SELECT_DEVICE_POSITION);
                 break;
             case R.id.navigation_item_3:
-                mToolbar.setTitle("手環顯示畫面");
-                //setFragments(RING_SCREEN_POSITION);
+                mToolbar.setTitle("睡眠資料");
+                setFragments(SLEEP_POSITION);
                 break;
 
             case R.id.navigation_item_4:

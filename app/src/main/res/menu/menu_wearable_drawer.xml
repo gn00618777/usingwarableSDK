@@ -15,7 +15,7 @@
         <item
             android:id="@+id/navigation_item_3"
             android:checked="true"
-            android:title="手環顯示畫面"/>
+            android:title="睡眠資料"/>
         <item
             android:id="@+id/navigation_item_4"
             android:checked="true"
