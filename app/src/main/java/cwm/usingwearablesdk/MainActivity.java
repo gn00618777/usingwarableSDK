@@ -238,6 +238,11 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         public void onGetSleepLog(CwmInformation cwmInformation){
             int startSleepPos = 0;
             int getup = 0;
+            StringBuilder light = new StringBuilder();
+            StringBuilder deep = new StringBuilder();
+
+            light.append("Light Sleep:\n");
+            deep.append("Deep Sleep:\n");
 
             mParser = cwmInformation.getSleepParser();
             StringBuilder builder1 = new StringBuilder();
@@ -251,6 +256,20 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     break;
                 }
             }
+            /***************************************************************/
+            for(int i = 0; i <= getup ; i+=2) {
+                if(mParser[i] % 100 == 1) {
+                    light.append("Day-"+Integer.toString(mParser[i+1]/100)+"/"+Integer.toString(mParser[i+1]%100)+" Time-"+
+                            Integer.toString(mParser[i+2]/100)+":"+Integer.toString(mParser[i+2]%100)+"\n");
+                }
+            }
+            for(int i = 0; i <= getup ; i+=2) {
+                if(mParser[i] % 100 == 2) {
+                    deep.append("Day-"+Integer.toString(mParser[i+1]/100)+"/"+Integer.toString(mParser[i+1]%100)+" Time-"+
+                            Integer.toString(mParser[i+2]/100)+":"+Integer.toString(mParser[i+2]%100)+"\n");
+                }
+            }
+            /***************************************************************/
             for(int i = 0; i < cwmInformation.getParserLength() ; i+=2) {
                 if(mParser[i] == 100)
                     startSleepPos = i;
@@ -265,7 +284,10 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                 bw.write("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100));
                 bw.newLine();
                 bw.write("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100));
-
+                bw.newLine();
+                bw.write("Light Sleep:"+light.toString());
+                bw.newLine();
+                bw.write("Deep Sleep:"+deep.toString());
                 bw.close();
             } catch (IOException e){
                 e.printStackTrace();
