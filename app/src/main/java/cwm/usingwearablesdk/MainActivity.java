@@ -254,44 +254,52 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
             for(int i = 0; i < cwmInformation.getParserLength() ; i++) {
                 builder1.append(Integer.toString(mParser[i])+"\n");
             }
-            for(int i = 0; i < cwmInformation.getParserLength() ; i+=2) {
+            for(int i = 0; i < cwmInformation.getParserLength() ; i+=3) {
                 if(mParser[i] % 100 == 4) {
                     getup = i;
                     break;
                 }
             }
             /***************************************************************/
-            for(int i = 0; i <= getup ; i+=2) {
+            for(int i = 0; i <= getup ; i+=3) {
                 if(mParser[i] % 100 == 1) {
                     light.append("Day-"+Integer.toString(mParser[i+1]/100)+"/"+Integer.toString(mParser[i+1]%100)+" Time-"+
                             Integer.toString(mParser[i+2]/100)+":"+Integer.toString(mParser[i+2]%100)+"\n");
                 }
             }
-            for(int i = 0; i <= getup ; i+=2) {
+            for(int i = 0; i <= getup ; i+=3) {
                 if(mParser[i] % 100 == 2) {
                     deep.append("Day-"+Integer.toString(mParser[i+1]/100)+"/"+Integer.toString(mParser[i+1]%100)+" Time-"+
                             Integer.toString(mParser[i+2]/100)+":"+Integer.toString(mParser[i+2]%100)+"\n");
                 }
             }
             /***************************************************************/
-            for(int i = 0; i < cwmInformation.getParserLength() ; i+=2) {
+            for(int i = 0; i < cwmInformation.getParserLength() ; i+=3) {
                 if(mParser[i] == 100)
                     startSleepPos = i;
             }
+
             try {
                 FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/Download/CwmSleepLog.txt", false);
                 BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
+                int count = 0;
                 for(int i = 0 ; i < cwmInformation.getParserLength() ; i++) {
+                    count++;
                     bw.write(Integer.toString(mParser[i]));
                     bw.newLine();
+                    if(count == 3) {
+                        count = 0;
+                        bw.newLine();
+                    }
+
                 }
                 bw.write("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100));
                 bw.newLine();
                 bw.write("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100));
                 bw.newLine();
-                bw.write("Light Sleep:"+light.toString());
+                bw.write(light.toString());
                 bw.newLine();
-                bw.write("Deep Sleep:"+deep.toString());
+                bw.write(deep.toString());
                 bw.close();
             } catch (IOException e){
                 e.printStackTrace();
