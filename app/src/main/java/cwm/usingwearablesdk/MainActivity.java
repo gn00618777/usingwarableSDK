@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Environment;
+import android.app.ProgressDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,6 +93,8 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     final int TABATA_WORK_POSITION = 7;
     final int TABATA_SHOW_POSITION = 8;
     final int SW_VERSION_POSITION = 9;
+
+    private ProgressDialog mProgressDialog = null;
 
 
     // information
@@ -236,6 +239,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
 
         @Override
         public void onGetSleepLog(CwmInformation cwmInformation){
+            mProgressDialog.dismiss();
             int startSleepPos = 0;
             int getup = 0;
             StringBuilder light = new StringBuilder();
@@ -347,6 +351,14 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         }
     };
 
+    public CwmManager.ErrorListener errorListener = new CwmManager.ErrorListener(){
+        @Override
+        public void onPacketLost(){
+            mProgressDialog.dismiss();
+             Toast.makeText(getApplicationContext(),"Packet Lost!", Toast.LENGTH_LONG).show();
+        }
+    };
+
     //Fragment Interfaces
     @Override
     public void onNewADevice(){
@@ -440,8 +452,9 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
 
     @Override
     public void onRequestSleep(){
+        if(mDeviceStatus == true)
+           mProgressDialog = ProgressDialog.show(this,"要求睡眠資料","處理中...");
         cwmManager.CwmRequestSleepLog();
-        Log.d("bernie","press request sleep button");
     }
 
 
@@ -485,7 +498,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         mFragments.add(mSwVersionFM);
         //testS1ettings.
         //testSettings.
-        cwmManager = new CwmManager(this,wearableServiceListener, informationListener,ackListener);
+        cwmManager = new CwmManager(this,wearableServiceListener, informationListener, ackListener, errorListener);
         statusCheck();
     }
     @Override
