@@ -96,6 +96,10 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
 
     private ProgressDialog mProgressDialog = null;
 
+    String previous_item = "";
+    String previous_count = "";
+    StringBuilder builder = new StringBuilder();
+
 
     // information
     private IntelligentSettings testSettings;
@@ -219,7 +223,16 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
             count = Integer.toString(cwmInformation.getDoItemCount());
             calories = Integer.toString(cwmInformation.getCalories());
             heartRate = Integer.toString(cwmInformation.getHeartBeat());
-            //strength = Integer.toString(cwmInformation.getStrength());
+
+            if(status.equals("start")) {
+                previous_item = item;
+                previous_count = count;
+            }
+            else {
+                Log.d("bernie","stop");
+                builder.append("item: "+previous_item+"  count: "+previous_count+"\n");
+                mTabataShowFM.setHistory(builder.toString());
+            }
 
             mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
 

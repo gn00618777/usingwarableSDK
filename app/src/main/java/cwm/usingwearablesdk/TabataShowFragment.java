@@ -28,6 +28,7 @@ public class TabataShowFragment extends Fragment {
     private TextView countView;
     private TextView caloriesView;
     private TextView heartBeatView;
+    private TextView historyView;
    // private TextView strengthView;
 
     String status = "";
@@ -35,6 +36,7 @@ public class TabataShowFragment extends Fragment {
     String count = "";
     String calories = "";
     String heartBeat = "";
+    String history = "";
     //String strength = null;
 
     @Override
@@ -52,7 +54,10 @@ public class TabataShowFragment extends Fragment {
         countView = (TextView) mView.findViewById(R.id.action_count);
         caloriesView = (TextView) mView.findViewById(R.id.action_calories);
         heartBeatView = (TextView) mView.findViewById(R.id.action_heart);
+        historyView = (TextView) mView.findViewById(R.id.histroy);
 
+
+        historyView.setText(history);
         statusView.setText("Status:  "+status);
         itemView.setText("Action Item:  "+item);
         countView.setText("Action Count:  "+count);
@@ -69,6 +74,10 @@ public class TabataShowFragment extends Fragment {
         this.calories = calories;
         this.heartBeat = heartBeat;
         //this.strength = strength;
+    }
+    public void setHistory(String builder)
+    {
+        history = builder;
     }
 
 
