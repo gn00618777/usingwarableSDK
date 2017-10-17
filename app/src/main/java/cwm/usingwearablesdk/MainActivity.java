@@ -263,16 +263,18 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
 
             mParser = cwmInformation.getSleepParser();
             StringBuilder builder1 = new StringBuilder();
-            builder1.append("\nParser array:\n");
-            for(int i = 0; i < cwmInformation.getParserLength() ; i++) {
-                builder1.append(Integer.toString(mParser[i])+"\n");
-            }
+
             for(int i = 0; i < cwmInformation.getParserLength() ; i+=3) {
                 if(mParser[i] % 100 == 4) {
                     getup = i;
                     break;
                 }
             }
+
+            builder1.append("Parser:\n");
+            builder1.append("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100)+"\n");
+            builder1.append("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100)+"\n");
+
             /***************************************************************/
             for(int i = 0; i <= getup ; i+=3) {
                 if(mParser[i] % 100 == 1) {
@@ -292,6 +294,9 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     startSleepPos = i;
             }
 
+            builder1.append(light.toString()+"\n");
+            builder1.append(deep.toString()+"\n");
+
             try {
                 FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/Download/CwmSleepLog.txt", false);
                 BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
@@ -304,8 +309,8 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                         count = 0;
                         bw.newLine();
                     }
-
                 }
+
                 bw.write("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100));
                 bw.newLine();
                 bw.write("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100));
