@@ -438,6 +438,8 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         Log.d("bernie","Significant:"+Boolean.toString(mIntelligentFM.getSignificantStatus()));
         settings.setGoal(mIntelligentFM.getAim());
         Log.d("bernie","AIM:"+Integer.toString(mIntelligentFM.getAim()));
+        settings.setSedentaryTime(mIntelligentFM.getSedentartTime());
+        Log.d("bernie","Sed:"+Integer.toString(mIntelligentFM.getSedentartTime()));
 
         cwmManager.CwmSaveIntelligentSettings(settings);
         cwmManager.CwmSyncIntelligentSettings();

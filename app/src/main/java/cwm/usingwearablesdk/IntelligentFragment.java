@@ -22,6 +22,7 @@ public class IntelligentFragment extends PreferenceFragment{
     private Boolean isShake = false;
     private Boolean isSignificant = false;
     private int stepAim = 0;
+    private int sedentaryT = 0;
 
     ListenerForIntellignetFragment mCallback;
 
@@ -62,6 +63,7 @@ public class IntelligentFragment extends PreferenceFragment{
         final SwitchPreference ShakeSwitch = (SwitchPreference) findPreference("shake");
         final SwitchPreference SignificantSwitch = (SwitchPreference) findPreference("significant");
         final EditTextPreference editTextPreference = (EditTextPreference) findPreference("step_number_aim");
+        final EditTextPreference editTextPreference1 = (EditTextPreference) findPreference("sedentary_remind_time");
         final Preference sync = findPreference("intelligent_sync");
 
 
@@ -185,6 +187,15 @@ public class IntelligentFragment extends PreferenceFragment{
             });
         }
 
+        if(editTextPreference1 != null){
+            editTextPreference1.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
+                public boolean onPreferenceChange(Preference arg0, Object isVibrateOnObject) {
+                    sedentaryT = Integer.valueOf(editTextPreference1.getEditText().getText().toString());
+                    return true;
+                }
+            });
+        }
+
         if(sync != null) {
             sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
 
@@ -220,6 +231,7 @@ public class IntelligentFragment extends PreferenceFragment{
         final SwitchPreference SignificantSwitch = (SwitchPreference) findPreference("significant");
 
         EditTextPreference aim = (EditTextPreference) findPreference("step_number_aim");
+        EditTextPreference time = (EditTextPreference) findPreference("sedentary_remind_time");
 
         isSendtaryRemind = sedentarySwitch.isChecked();
         isHandUp = handUpSwitch.isChecked();
@@ -230,6 +242,7 @@ public class IntelligentFragment extends PreferenceFragment{
         isSignificant = SignificantSwitch.isChecked();
 
         stepAim = Integer.valueOf(aim.getText());
+        sedentaryT = Integer.valueOf(time.getText());
 
     }
 
@@ -242,5 +255,6 @@ public class IntelligentFragment extends PreferenceFragment{
     public boolean getShakeStatus(){return isShake;}
     public boolean getSignificantStatus(){return isSignificant;}
     public int getAim(){return stepAim;}
+    public int getSedentartTime(){return sedentaryT;}
 
 }

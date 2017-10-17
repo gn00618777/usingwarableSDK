@@ -36,6 +36,12 @@
             android:summary=""
             android:key="step_number_aim"
             android:title="走路目標步數" />
+        <EditTextPreference
+            android:defaultValue="60"
+            android:inputType="number"
+            android:summary=""
+            android:key="sedentary_remind_time"
+            android:title="久坐提醒時間" />
     </PreferenceCategory>
     <PreferenceCategory android:title="操作設定">
        <Preference
