@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 
 import cwm.wearablesdk.CwmManager;
 import cwm.wearablesdk.CwmEvents;
+import cwm.wearablesdk.AckEvents;
 import cwm.wearablesdk.BodySettings;
 import cwm.wearablesdk.IntelligentSettings;
 import cwm.wearablesdk.TabataSettings;
@@ -369,6 +370,21 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
 
     private CwmManager.AckListener ackListener = new CwmManager.AckListener() {
         @Override
+        public void onAckArrival(AckEvents ackEvents) {
+            int id = ackEvents.getId();
+
+            switch (id) {
+                case 0x02:
+                    Toast.makeText(getApplicationContext(),"Time has sync !",Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x14:
+                    Toast.makeText(getApplicationContext(),"Personal Info has sync !",Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x12:
+                    Toast.makeText(getApplicationContext(),"Intelligent has sync !",Toast.LENGTH_SHORT).show();
+            }
+        }
+       /* @Override
         public void onSyncTimeAckArrival() {
             Toast.makeText(getApplicationContext(),"Time has sync !",Toast.LENGTH_SHORT).show();
         }
@@ -379,7 +395,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         @Override
         public void onSyncPersonInfoAckArrival(){
             Toast.makeText(getApplicationContext(),"Personal Info has sync !",Toast.LENGTH_SHORT).show();
-        }
+        }*/
     };
 
     public CwmManager.ErrorListener errorListener = new CwmManager.ErrorListener(){
