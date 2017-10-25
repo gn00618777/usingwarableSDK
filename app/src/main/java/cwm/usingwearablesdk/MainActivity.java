@@ -366,6 +366,20 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         public void onNotSupport() {
 
         }
+
+        @Override
+        public void onUnknownProblem(){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
+            builder.setTitle("Unknown Problem");
+            builder.setMessage("Please try reboot your phone or wait wearable a minute");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                }
+            });
+            builder.show();
+        }
     };
 
     private CwmManager.AckListener ackListener = new CwmManager.AckListener() {
