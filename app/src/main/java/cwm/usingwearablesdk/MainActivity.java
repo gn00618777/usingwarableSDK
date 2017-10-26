@@ -268,11 +268,20 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     String heartRate = "";
                     String strength = null;
 
+                    Log.d("bernie","tatabata status = "+Integer.toString(cwmEvents.getTabataStatus()));
+
                     if(cwmEvents.getTabataStatus() == 0){
                         status = "stop";
                     }
-                    else
+                    else if(cwmEvents.getTabataStatus() == 1){
                         status = "start";
+                    }
+                    else if(cwmEvents.getTabataStatus() == 2){
+                        status = "continue";
+                    }
+                    else if(cwmEvents.getTabataStatus() == 3) {
+                        status = "pause";
+                    }
 
                     if(cwmEvents.getExerciseItem() == 1){
                         item = "Push Up";
@@ -313,8 +322,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                         previous_item = item;
                         previous_count = count;
                     }
-                    else {
-                        Log.d("bernie","stop");
+                    else if(status.equals("continue")){
                         builder.append("item: "+previous_item+"  count: "+previous_count+"\n");
                         mTabataShowFM.setHistory(builder.toString());
                     }
