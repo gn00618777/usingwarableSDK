@@ -26,6 +26,7 @@ import cwm.wearablesdk.AckEvents;
 import cwm.wearablesdk.BodySettings;
 import cwm.wearablesdk.IntelligentSettings;
 import cwm.wearablesdk.TabataSettings;
+import cwm.wearablesdk.ErrorEvents;
 
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -404,6 +405,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     break;
                 case 0x12:
                     Toast.makeText(getApplicationContext(),"Intelligent has sync !",Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
        /* @Override
@@ -422,9 +424,22 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
 
     public CwmManager.ErrorListener errorListener = new CwmManager.ErrorListener(){
         @Override
-        public void onPacketLost(){
+        public void onErrorArrival(ErrorEvents errorEvents){
             mProgressDialog.dismiss();
-             Toast.makeText(getApplicationContext(),"Packet Lost!", Toast.LENGTH_LONG).show();
+            int id = errorEvents.getId();
+            int command = errorEvents.getCommand();
+
+            if(id == 0x01){
+               if(command == 0xBE)
+                   Toast.makeText(getApplicationContext(), "Sleep Header Lost!", Toast.LENGTH_SHORT);
+               else if(command == 0x1F)
+                   Toast.makeText(getApplicationContext(), "OTA Header Lost!", Toast.LENGTH_SHORT);
+            }
+            else if(id == 0x02){
+                if(command == 0xBE)
+                    Toast.makeText(getApplicationContext(), "Sleep Packets Lost!", Toast.LENGTH_SHORT);
+            }
+
         }
     };
 
