@@ -25,6 +25,7 @@ import cwm.wearablesdk.CwmEvents;
 import cwm.wearablesdk.AckEvents;
 import cwm.wearablesdk.BodySettings;
 import cwm.wearablesdk.IntelligentSettings;
+import cwm.wearablesdk.TabataObject;
 import cwm.wearablesdk.TabataSettings;
 import cwm.wearablesdk.ErrorEvents;
 
@@ -42,12 +43,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity implements SelectTypeFragment.ListenForSelectTypeFragment,
 RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncTimeFragment,
         IntelligentFragment.ListenerForIntellignetFragment,PersonalInfoFragment.ListenForPersonalInfoFragment,
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
-SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment{
+SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
+        TabataOperateFragment.ListenForTabataOperateFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -77,6 +80,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     private TimeSyncFragment mTimeSyncFM = new TimeSyncFragment();
     private TabataFragment mTabataFM = new TabataFragment();
     private TabataShowFragment mTabataShowFM = new TabataShowFragment();
+    private TabataOperateFragment mTabataOperateFM = new TabataOperateFragment();
     private SwVersionFragment mSwVersionFM = new SwVersionFragment();
 
     private String mDeviceName = null;
@@ -87,6 +91,16 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
 
     private BluetoothAdapter mBtAdapter = null;
 
+    private TabataSettings mTabataSettings;
+    private int totalCycle = 0;
+    private int totalPrepare = 0;
+    private int totalInterval = 0;
+    private int currnetCycle = 0;
+    private int currentPrepare = 0;
+    private int currentInterval = 0;
+    private String currentItem = "";
+    private Queue<TabataObject> mTabataQueue;
+
     final int SHOWDATA_POSITION = 0;
     final int PERSONAL_POSITION = 1;
     final int SELECT_DEVICE_POSITION = 2;
@@ -94,8 +108,23 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     final int RING_BATTERY_POSITION = 5;
     final int TIME_SYNC_POSITION = 6;
     final int TABATA_WORK_POSITION = 7;
-    final int TABATA_SHOW_POSITION = 8;
+    final int TABATA_OPERATE_POSITION = 8;
     final int SW_VERSION_POSITION = 9;
+
+    public enum ITEMS{
+        TABATA_INIT,
+        TABATA_PAUSE,
+        TABATA_PREPARE_START,
+        TABATA_PREPARE_COUNT,
+        TABATA_PREARE_END,
+        TABATA_REST_START,
+        TABATA_REST_COUNT,
+        TABATA_REST_END,
+        TABATA_ACTION_ITEM,
+        TABATA_ACTION_START,
+        TABATA_ACTION_END,
+        TABATA_DONE
+    };
 
     private ProgressDialog mProgressDialog = null;
 
@@ -319,21 +348,21 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     calories = Integer.toString(cwmEvents.getCalories());
                     heartRate = Integer.toString(cwmEvents.getHeartBeat());
 
-                    if(status.equals("start")) {
+                  /*  if(status.equals("start")) {
                         previous_item = item;
                         previous_count = count;
                     }
                     else if(status.equals("continue")){
                         builder.append("item: "+previous_item+"  count: "+previous_count+"\n");
-                        mTabataShowFM.setHistory(builder.toString());
-                    }
+                        mTabataOperateFMFM.setHistory(builder.toString());
+                    }*/
 
-                    mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
+                    mTabataOperateFM.setTabataResultValue(status, item, count, calories, heartRate);
 
-                    if(mTabataShowFM.isVisible())
-                        resetFragments(TABATA_SHOW_POSITION);
+                    if(mTabataOperateFM.isVisible())
+                        resetFragments(TABATA_OPERATE_POSITION);
                     else
-                        setFragments(TABATA_SHOW_POSITION);
+                        setFragments(TABATA_OPERATE_POSITION);
                     break;
                  default:
                     break;
@@ -405,6 +434,10 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     break;
                 case 0x12:
                     Toast.makeText(getApplicationContext(),"Intelligent has sync !",Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x05:
+                    mTabataOperateFM.setCycles(0, totalCycle);
+                    setFragments(TABATA_OPERATE_POSITION);
                     break;
             }
         }
@@ -519,8 +552,13 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     }
 
     @Override
-    public void onSendTabataParameters(TabataSettings tabataSettings){
-        cwmManager.CwmSendTabataParameters(tabataSettings);
+    public void onInitTabata(TabataSettings tabataSettings){
+        mTabataSettings = tabataSettings;
+        totalCycle = mTabataSettings.getCycle();
+        totalPrepare = mTabataSettings.getPrepareTime();
+        totalInterval = mTabataSettings.getIntervalTime();
+        mTabataQueue = mTabataSettings.getExerciseItems();
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0 , 0, 0);
 
     }
 
@@ -542,6 +580,131 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
            mProgressDialog = ProgressDialog.show(this,"要求睡眠資料","處理中...");
         cwmManager.CwmRequestSleepLog();
     }
+
+
+    @Override
+    public void onPressPrepareStartButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_START.ordinal(), 0 , 0, 0);
+        mTabataOperateFM.setPrepareStartView("start!");
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+    }
+    @Override
+    public void onPressPrepareCountButton(){
+        if(totalPrepare >= 0) {
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), totalPrepare, 0, 0);
+            mTabataOperateFM.setPrepareCountView(Integer.toString(totalPrepare));
+        }
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+        if(totalPrepare >= 0)
+          totalPrepare--;
+    }
+    @Override
+    public void onPressPrepareEndButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_PREARE_END.ordinal(), 0 , 0, 0);
+        mTabataOperateFM.setPrepareEndView("end!");
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+
+    }
+    @Override
+    public void onPressActionItemButton(){
+        int itemPos;
+        String itemName;
+        TabataObject obj;
+
+        obj = mTabataQueue.poll();
+        itemPos = obj.getItemPos();
+        itemName = obj.getItemName();
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0 , 0, itemPos);
+        mTabataOperateFM.setActionItemView(itemName);
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+
+    }
+    @Override
+    public void onPressActionItemStartButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0 , 0, 0);
+        mTabataOperateFM.setActionItemStartView("start!");
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+    }
+    @Override
+    public void onPressActionItemEndButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
+        mTabataOperateFM.setActionItemEndView("end!");
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+
+        if(mTabataQueue.size() != 0){
+            totalInterval = mTabataSettings.getIntervalTime();
+            mTabataOperateFM.setIntervalCountView("");
+            mTabataOperateFM.setGone(true);
+        }
+        else{
+            if(currnetCycle <= totalCycle){
+                currnetCycle++;
+                if(currnetCycle > totalCycle){
+                    mTabataOperateFM.setGone(false);
+                }
+            }
+        }
+    }
+    @Override
+    public void onPressItervalStartButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0 , 0, 0);
+        mTabataOperateFM.setIntervalStartView("start!");
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+    }
+    @Override
+    public void onPressIntervalCountButton(){
+        if(totalInterval >= 0) {
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, totalInterval, 0);
+            mTabataOperateFM.setIntervalCountView(Integer.toString(totalInterval));
+        }
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+        if(totalInterval >= 0)
+            totalInterval--;
+    }
+    @Override
+    public void onPressIntervalEndButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_END.ordinal(), 0 , 0, 0);
+        mTabataOperateFM.setIntervalEndView("end!");
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+
+    }
+    @Override
+    public void onPressTabataDoneButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
+        mTabataOperateFM.setIntervalEndView("done!");
+        if(mTabataOperateFM.isVisible())
+            resetFragments(TABATA_OPERATE_POSITION);
+        else
+            setFragments(TABATA_OPERATE_POSITION);
+    }
+
 
 
     @Override
@@ -580,7 +743,8 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         mFragments.add(mRingBatteryFM);
         mFragments.add(mTimeSyncFM);
         mFragments.add(mTabataFM);
-        mFragments.add(mTabataShowFM);
+        mFragments.add(mTabataOperateFM);
+        //mFragments.add(mTabataShowFM);
         mFragments.add(mSwVersionFM);
         //testS1ettings.
         //testSettings.

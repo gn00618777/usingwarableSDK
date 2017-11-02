@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+    <TextView
+        android:id="@+id/cycle_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10dp"
+        android:text=""/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/prepare_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prepare Start"/>
+
+        <TextView
+            android:id="@+id/prepare_start_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+
+    </LinearLayout>
+    <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+       <Button
+           android:id="@+id/prepare_count"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+          android:text="Prepare Count"/>
+
+       <TextView
+          android:id="@+id/prepare_count_view"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text=" "/>
+
+     </LinearLayout>
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+          <Button
+              android:id="@+id/prepare_end"
+              android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Prepare End"/>
+          <TextView
+              android:id="@+id/prepare_end_view"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text=""/>
+     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/action_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Action Item"/>
+        <TextView
+            android:id="@+id/action_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/action_item_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Action Item Start"/>
+        <TextView
+            android:id="@+id/action_item_start_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Status:"/>
+
+    <TextView
+        android:id="@+id/exercise_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Action Item:"/>
+    <TextView
+        android:id="@+id/action_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Action Count:"/>
+
+    <TextView
+        android:id="@+id/action_calories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text = "Calories Burned:"/>
+
+    <TextView
+        android:id="@+id/action_heart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text = "Heart Beat:"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/action_item_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Action Item End"
+        />
+    <TextView
+        android:id="@+id/action_item_end_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/interval_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Interval Start"
+            />
+        <TextView
+            android:id="@+id/interval_start_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/interval_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Interval Count"
+            />
+        <TextView
+            android:id="@+id/interval_count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/interval_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Interval End"
+            />
+        <TextView
+            android:id="@+id/interval_end_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/tabata_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tabata Done"
+            />
+        <TextView
+            android:id="@+id/tabata_done_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "/>
+    </LinearLayout>
+
+</LinearLayout>

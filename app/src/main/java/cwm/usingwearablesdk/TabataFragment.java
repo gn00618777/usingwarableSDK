@@ -52,7 +52,7 @@ public class TabataFragment extends Fragment {
 
     // Container Activity must implement this interface
     public interface ListenForTabataFragment {
-        public void onSendTabataParameters(TabataSettings tabataSettings);
+        public void onInitTabata(TabataSettings tabataSettings);
     }
 
     private ListenForTabataFragment mCallback;
@@ -298,7 +298,7 @@ public class TabataFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onSendTabataParameters(tatataSettings);
+                mCallback.onInitTabata(tatataSettings);
             }
         });
 
