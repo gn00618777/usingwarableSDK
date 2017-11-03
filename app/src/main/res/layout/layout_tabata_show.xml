@@ -5,6 +5,20 @@
     android:orientation="vertical">
 
     <TextView
+    android:id="@+id/cycle_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="10dp"
+    android:text=""/>
+
+    <TextView
+        android:id="@+id/items_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10dp"
+        android:text=""/>
+
+    <TextView
         android:id="@+id/histroy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -48,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text = "Heart Beat:"/>
+        android:text="Heart Beat:"/>
     <TextView
         android:id="@+id/action_strength"
         android:layout_width="wrap_content"
@@ -56,5 +70,24 @@
         android:layout_gravity="center"
         android:text="Action Strength:"/>
 
+        <Button
+            android:id="@+id/action_item_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Action Item End"/>
+    <Button
+        android:id="@+id/tabata_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Tabata Done"
+        />
+    <Button
+        android:id="@+id/tabata_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Tabata Pause"/>
 
 </LinearLayout>

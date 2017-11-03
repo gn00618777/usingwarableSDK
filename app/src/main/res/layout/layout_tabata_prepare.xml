@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/prepare_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prepare Start"/>
+
+        <TextView
+            android:id="@+id/prepare_start_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+
+    </LinearLayout>
+    <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+       <Button
+           android:id="@+id/prepare_count"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+          android:text="Prepare Count"/>
+
+       <TextView
+          android:id="@+id/prepare_count_view"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text=" "/>
+
+     </LinearLayout>
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+          <Button
+              android:id="@+id/prepare_end"
+              android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Prepare End"/>
+          <TextView
+              android:id="@+id/prepare_end_view"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text=""/>
+     </LinearLayout>
+
+</LinearLayout>

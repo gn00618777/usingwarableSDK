@@ -50,7 +50,8 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
         IntelligentFragment.ListenerForIntellignetFragment,PersonalInfoFragment.ListenForPersonalInfoFragment,
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
 SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
-        TabataOperateFragment.ListenForTabataOperateFragment{
+        TabataPrepareFragment.ListenForTabataPrepareFragment, TabataActionItemFragment.ListenForTabataActionItemFragment,
+TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.ListenForTabataShowFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -79,9 +80,11 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     private RingBatteryFragment mRingBatteryFM = new RingBatteryFragment();
     private TimeSyncFragment mTimeSyncFM = new TimeSyncFragment();
     private TabataFragment mTabataFM = new TabataFragment();
-    private TabataShowFragment mTabataShowFM = new TabataShowFragment();
-    private TabataOperateFragment mTabataOperateFM = new TabataOperateFragment();
+    private TabataPrepareFragment mTabataPrepareFM = new TabataPrepareFragment();
     private SwVersionFragment mSwVersionFM = new SwVersionFragment();
+    private TabataShowFragment mTabataShowFM = new TabataShowFragment();
+    private TabataActionItemFragment mTabataActionItemFM = new TabataActionItemFragment();
+    private TabataIntervalFragment mTabataIntervalFM = new TabataIntervalFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -96,10 +99,15 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     private int totalPrepare = 0;
     private int totalInterval = 0;
     private int currnetCycle = 0;
-    private int currentPrepare = 0;
-    private int currentInterval = 0;
-    private String currentItem = "";
+    private int goalTimes = 0;
+    private int totalItems = 0;
+    private int curentDoneItems = 0;
+
     private Queue<TabataObject> mTabataQueue;
+
+    private boolean isPressPrepareEnd = false;
+    private boolean isPressActionItemEnd = false;
+    private boolean isPressTabataDone = false;
 
     final int SHOWDATA_POSITION = 0;
     final int PERSONAL_POSITION = 1;
@@ -108,8 +116,11 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     final int RING_BATTERY_POSITION = 5;
     final int TIME_SYNC_POSITION = 6;
     final int TABATA_WORK_POSITION = 7;
-    final int TABATA_OPERATE_POSITION = 8;
-    final int SW_VERSION_POSITION = 9;
+    final int TABATA_PREPARE_POSITION = 8;
+    final int TABATA_ACTION_ITEM_POSITION  = 9;
+    final int TABATA_SHOW_POSITION = 10;
+    final int TABATA_INTERVAL_POSITION = 11;
+    final int SW_VERSION_POSITION = 12;
 
     public enum ITEMS{
         TABATA_INIT,
@@ -140,6 +151,7 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     String previous_item = "";
     String previous_count = "";
     StringBuilder builder = new StringBuilder();
+
 
 
     // information
@@ -291,78 +303,93 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     break;
 
                 case 0x05:
-                    String status = "";
-                    String item = "";
-                    String count = "";
-                    String calories = "";
-                    String heartRate = "";
-                    String strength = null;
+                    Log.d("bernie", "0x05");
+                    if(isPressPrepareEnd == false && isPressPrepareEnd == false && isPressTabataDone == false) {
+                        mTabataShowFM.setCycles(currnetCycle, totalCycle);
+                        String status = "";
+                        String item = "";
+                        String count = "";
+                        String calories = "";
+                        String heartRate = "";
+                        String strength = null;
 
-                    Log.d("bernie","tatabata status = "+Integer.toString(cwmEvents.getTabataStatus()));
+                        Log.d("bernie", "tatabata status = " + Integer.toString(cwmEvents.getTabataStatus()));
 
-                    if(cwmEvents.getTabataStatus() == 0){
-                        status = "stop";
-                    }
-                    else if(cwmEvents.getTabataStatus() == 1){
-                        status = "start";
-                    }
-                    else if(cwmEvents.getTabataStatus() == 2){
-                        status = "continue";
-                    }
-                    else if(cwmEvents.getTabataStatus() == 3) {
-                        status = "pause";
-                    }
+                        if (cwmEvents.getTabataStatus() == 0) {
+                            status = "stop";
+                        } else if (cwmEvents.getTabataStatus() == 1) {
+                            status = "start";
+                        } else if (cwmEvents.getTabataStatus() == 2) {
+                            status = "continue";
+                        } else if (cwmEvents.getTabataStatus() == 3) {
+                            status = "pause";
+                        }
 
-                    if(cwmEvents.getExerciseItem() == 1){
-                        item = "Push Up";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 2){
-                        item = "Crunch";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 3){
-                        item = "Squart";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 4){
-                        item = "Jumping Jack";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 5){
-                        item = "Dips";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 6){
-                        item = "High Knees Running";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 7){
-                        item = "Lunges";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 8){
-                        item = "Burpee";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 9){
-                        item = "Step On Chair";
-                    }
-                    else if(cwmEvents.getExerciseItem() == 10){
-                        item = "Push Up Rotation";
-                    }
+                        if (cwmEvents.getExerciseItem() == 1) {
+                            item = "Push Up";
+                        } else if (cwmEvents.getExerciseItem() == 2) {
+                            item = "Crunch";
+                        } else if (cwmEvents.getExerciseItem() == 3) {
+                            item = "Squart";
+                        } else if (cwmEvents.getExerciseItem() == 4) {
+                            item = "Jumping Jack";
+                        } else if (cwmEvents.getExerciseItem() == 5) {
+                            item = "Dips";
+                        } else if (cwmEvents.getExerciseItem() == 6) {
+                            item = "High Knees Running";
+                        } else if (cwmEvents.getExerciseItem() == 7) {
+                            item = "Lunges";
+                        } else if (cwmEvents.getExerciseItem() == 8) {
+                            item = "Burpee";
+                        } else if (cwmEvents.getExerciseItem() == 9) {
+                            item = "Step On Chair";
+                        } else if (cwmEvents.getExerciseItem() == 10) {
+                            item = "Push Up Rotation";
+                        }
 
-                    count = Integer.toString(cwmEvents.getDoItemCount());
-                    calories = Integer.toString(cwmEvents.getCalories());
-                    heartRate = Integer.toString(cwmEvents.getHeartBeat());
+                        count = Integer.toString(cwmEvents.getDoItemCount());
+                        calories = Integer.toString(cwmEvents.getCalories());
+                        heartRate = Integer.toString(cwmEvents.getHeartBeat());
 
-                  /*  if(status.equals("start")) {
-                        previous_item = item;
-                        previous_count = count;
+                        if (status.equals("start")) {
+                            previous_item = item;
+                            previous_count = count;
+                        } //else if (status.equals("continue")) {
+                           // builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
+                           // mTabataShowFM.setHistory(builder.toString());
+                        //}
+                        // goal is achievement
+                        if (cwmEvents.getDoItemCount() == goalTimes) {
+                            mTabataShowFM.hideButton(false);
+                            mTabataActionItemFM.setActionItemView("");
+                            mTabataActionItemFM.setActionItemStartView("");
+                            builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
+                            mTabataShowFM.setHistory(builder.toString());
+                            if (mTabataShowFM.isVisible())
+                                resetFragments(TABATA_SHOW_POSITION);
+                            else
+                                setFragments(TABATA_SHOW_POSITION);
+
+                        }
+
+                        mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
+
+                        if (mTabataShowFM.isVisible())
+                            resetFragments(TABATA_SHOW_POSITION);
+                        else
+                            setFragments(TABATA_SHOW_POSITION);
                     }
-                    else if(status.equals("continue")){
-                        builder.append("item: "+previous_item+"  count: "+previous_count+"\n");
-                        mTabataOperateFMFM.setHistory(builder.toString());
-                    }*/
-
-                    mTabataOperateFM.setTabataResultValue(status, item, count, calories, heartRate);
-
-                    if(mTabataOperateFM.isVisible())
-                        resetFragments(TABATA_OPERATE_POSITION);
-                    else
-                        setFragments(TABATA_OPERATE_POSITION);
+                    else if(isPressPrepareEnd == true || isPressActionItemEnd == true || isPressTabataDone == true) {
+                        if(isPressTabataDone == true){
+                            isPressTabataDone = false;
+                            setFragments(TABATA_WORK_POSITION);
+                        }
+                        else {
+                        isPressPrepareEnd = false;
+                        isPressActionItemEnd = false;
+                        setFragments(TABATA_ACTION_ITEM_POSITION);
+                    }
+                    }
                     break;
                  default:
                     break;
@@ -436,8 +463,6 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
                     Toast.makeText(getApplicationContext(),"Intelligent has sync !",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x05:
-                    mTabataOperateFM.setCycles(0, totalCycle);
-                    setFragments(TABATA_OPERATE_POSITION);
                     break;
             }
         }
@@ -558,7 +583,11 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         totalPrepare = mTabataSettings.getPrepareTime();
         totalInterval = mTabataSettings.getIntervalTime();
         mTabataQueue = mTabataSettings.getExerciseItems();
+        totalItems = mTabataSettings.getTotalItemsNumber();
+        mTabataShowFM.setItems(curentDoneItems, totalItems);
+        goalTimes = mTabataSettings.getActionTimes();
         cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0 , 0, 0);
+        setFragments(TABATA_PREPARE_POSITION);
 
     }
 
@@ -585,33 +614,30 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
     @Override
     public void onPressPrepareStartButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_START.ordinal(), 0 , 0, 0);
-        mTabataOperateFM.setPrepareStartView("start!");
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
+        mTabataPrepareFM.setPrepareStartView("start!");
+        if(mTabataPrepareFM.isVisible())
+            resetFragments(TABATA_PREPARE_POSITION);
         else
-            setFragments(TABATA_OPERATE_POSITION);
+            setFragments(TABATA_PREPARE_POSITION);
     }
     @Override
     public void onPressPrepareCountButton(){
         if(totalPrepare >= 0) {
             cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), totalPrepare, 0, 0);
-            mTabataOperateFM.setPrepareCountView(Integer.toString(totalPrepare));
+            mTabataPrepareFM.setPrepareCountView(Integer.toString(totalPrepare));
         }
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
+        if(mTabataPrepareFM.isVisible())
+            resetFragments(TABATA_PREPARE_POSITION);
         else
-            setFragments(TABATA_OPERATE_POSITION);
+            setFragments(TABATA_PREPARE_POSITION);
         if(totalPrepare >= 0)
           totalPrepare--;
     }
     @Override
     public void onPressPrepareEndButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_PREARE_END.ordinal(), 0 , 0, 0);
-        mTabataOperateFM.setPrepareEndView("end!");
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
-        else
-            setFragments(TABATA_OPERATE_POSITION);
+        isPressPrepareEnd = true;
+        setFragments(TABATA_ACTION_ITEM_POSITION);
 
     }
     @Override
@@ -620,89 +646,98 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         String itemName;
         TabataObject obj;
 
-        obj = mTabataQueue.poll();
-        itemPos = obj.getItemPos();
-        itemName = obj.getItemName();
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0 , 0, itemPos);
-        mTabataOperateFM.setActionItemView(itemName);
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
-        else
-            setFragments(TABATA_OPERATE_POSITION);
-
+        if(mTabataQueue.size() != 0 ) {
+            obj = mTabataQueue.poll();
+            itemPos = obj.getItemPos();
+            itemName = obj.getItemName();
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
+            mTabataActionItemFM.setActionItemView(itemName);
+            if (mTabataActionItemFM.isVisible()) {
+                resetFragments(TABATA_ACTION_ITEM_POSITION);
+            } else
+                setFragments(TABATA_ACTION_ITEM_POSITION);
+        }
+        else{
+            setFragments(TABATA_WORK_POSITION);
+        }
     }
     @Override
     public void onPressActionItemStartButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0 , 0, 0);
-        mTabataOperateFM.setActionItemStartView("start!");
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
+        mTabataActionItemFM.setActionItemStartView("start!");
+        if(mTabataActionItemFM.isVisible())
+            resetFragments(TABATA_ACTION_ITEM_POSITION);
         else
-            setFragments(TABATA_OPERATE_POSITION);
+            setFragments(TABATA_ACTION_ITEM_POSITION);
     }
     @Override
     public void onPressActionItemEndButton(){
+        isPressPrepareEnd = true;
+        mTabataShowFM.hideButton(true);
+        curentDoneItems++;
+        mTabataShowFM.setItems(curentDoneItems, totalItems);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
-        mTabataOperateFM.setActionItemEndView("end!");
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
-        else
-            setFragments(TABATA_OPERATE_POSITION);
-
         if(mTabataQueue.size() != 0){
             totalInterval = mTabataSettings.getIntervalTime();
-            mTabataOperateFM.setIntervalCountView("");
-            mTabataOperateFM.setGone(true);
+            setFragments(TABATA_INTERVAL_POSITION);
         }
         else{
-            if(currnetCycle <= totalCycle){
+            if(currnetCycle < totalCycle){
                 currnetCycle++;
-                if(currnetCycle > totalCycle){
-                    mTabataOperateFM.setGone(false);
-                }
+            }
+            else{
+                cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
+                setFragments(TABATA_WORK_POSITION);
             }
         }
     }
     @Override
     public void onPressItervalStartButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0 , 0, 0);
-        mTabataOperateFM.setIntervalStartView("start!");
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
+        mTabataIntervalFM.setIntervalStartView("start!");
+        if(mTabataIntervalFM.isVisible())
+            resetFragments(TABATA_INTERVAL_POSITION);
         else
-            setFragments(TABATA_OPERATE_POSITION);
+            setFragments(TABATA_INTERVAL_POSITION);
     }
     @Override
     public void onPressIntervalCountButton(){
         if(totalInterval >= 0) {
             cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, totalInterval, 0);
-            mTabataOperateFM.setIntervalCountView(Integer.toString(totalInterval));
+            mTabataIntervalFM.setIntervalCountView(Integer.toString(totalInterval));
         }
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
+        if(mTabataIntervalFM.isVisible())
+            resetFragments(TABATA_INTERVAL_POSITION);
         else
-            setFragments(TABATA_OPERATE_POSITION);
+            setFragments(TABATA_INTERVAL_POSITION);
         if(totalInterval >= 0)
             totalInterval--;
     }
     @Override
     public void onPressIntervalEndButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_END.ordinal(), 0 , 0, 0);
-        mTabataOperateFM.setIntervalEndView("end!");
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
-        else
-            setFragments(TABATA_OPERATE_POSITION);
+        setFragments(TABATA_SHOW_POSITION);
 
     }
     @Override
+    public void onPressTabataPauseButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_PAUSE.ordinal(), 0 , 0, 0);
+    }
+
+    @Override
     public void onPressTabataDoneButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
-        mTabataOperateFM.setIntervalEndView("done!");
-        if(mTabataOperateFM.isVisible())
-            resetFragments(TABATA_OPERATE_POSITION);
+        isPressTabataDone = true;
+        mTabataQueue = null;
+        mTabataQueue = mTabataSettings.getExerciseItems();
+        mTabataPrepareFM.setPrepareCountView("");
+        mTabataPrepareFM.setPrepareStartView("");
+        mTabataShowFM.setCycles(0,0);
+        mTabataShowFM.setItems(0,0);
+        if(mTabataFM.isVisible())
+            resetFragments(TABATA_WORK_POSITION);
         else
-            setFragments(TABATA_OPERATE_POSITION);
+            setFragments(TABATA_WORK_POSITION);
     }
 
 
@@ -743,8 +778,10 @@ SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragme
         mFragments.add(mRingBatteryFM);
         mFragments.add(mTimeSyncFM);
         mFragments.add(mTabataFM);
-        mFragments.add(mTabataOperateFM);
-        //mFragments.add(mTabataShowFM);
+        mFragments.add(mTabataPrepareFM);
+        mFragments.add(mTabataActionItemFM);
+        mFragments.add(mTabataShowFM);
+        mFragments.add(mTabataIntervalFM);
         mFragments.add(mSwVersionFM);
         //testS1ettings.
         //testSettings.
