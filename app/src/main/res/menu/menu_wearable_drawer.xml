@@ -41,6 +41,10 @@
             android:id="@+id/navigation_item_9"
             android:checked="true"
             android:title="韌體更新"/>
+        <item
+            android:id="@+id/navigation_item_10"
+            android:checked="true"
+            android:title="Flash測試"/>
 
     </group>
 </menu>

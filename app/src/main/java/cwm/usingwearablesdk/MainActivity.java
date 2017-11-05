@@ -51,7 +51,8 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
 SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
         TabataPrepareFragment.ListenForTabataPrepareFragment, TabataActionItemFragment.ListenForTabataActionItemFragment,
-TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.ListenForTabataShowFragment{
+TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.ListenForTabataShowFragment,
+FlashFragment.ListenForFlashFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -85,6 +86,7 @@ TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.Liste
     private TabataShowFragment mTabataShowFM = new TabataShowFragment();
     private TabataActionItemFragment mTabataActionItemFM = new TabataActionItemFragment();
     private TabataIntervalFragment mTabataIntervalFM = new TabataIntervalFragment();
+    private FlashFragment mFlashFM = new FlashFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -121,6 +123,7 @@ TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.Liste
     final int TABATA_SHOW_POSITION = 10;
     final int TABATA_INTERVAL_POSITION = 11;
     final int SW_VERSION_POSITION = 12;
+    final int FLASH_TEST_POSITION = 13;
 
     public enum ITEMS{
         TABATA_INIT,
@@ -391,6 +394,14 @@ TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.Liste
                     }
                     }
                     break;
+                case 0x21: // flash feedback command
+                    mProgressDialog.dismiss();
+                    mFlashFM.setReceivedStatus("true");
+                    if(mFlashFM.isVisible())
+                        resetFragments(FLASH_TEST_POSITION);
+                    else
+                        setFragments(FLASH_TEST_POSITION);
+                    break;
                  default:
                     break;
             }
@@ -486,16 +497,40 @@ TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.Liste
             mProgressDialog.dismiss();
             int id = errorEvents.getId();
             int command = errorEvents.getCommand();
+            int tag = errorEvents.getTag();
+            String tagString = "";
 
-            if(id == 0x01){
+            if(id == 0x01){ //header lost
                if(command == 0xBE)
                    Toast.makeText(getApplicationContext(), "Sleep Header Lost!", Toast.LENGTH_SHORT);
                else if(command == 0x1F)
                    Toast.makeText(getApplicationContext(), "OTA Header Lost!", Toast.LENGTH_SHORT);
+               else if(command == 0x20) {
+                   mFlashFM.setReceivedStatus("false");
+                   if(mFlashFM.isVisible())
+                       resetFragments(FLASH_TEST_POSITION);
+                   else
+                       setFragments(FLASH_TEST_POSITION);
+                   Toast.makeText(getApplication(), "Flash Header Lost!", Toast.LENGTH_SHORT);
+               }
             }
-            else if(id == 0x02){
+            else if(id == 0x02){ //packet lost
                 if(command == 0xBE)
                     Toast.makeText(getApplicationContext(), "Sleep Packets Lost!", Toast.LENGTH_SHORT);
+                else if(command == 0x21) {
+                    if(tag == 0x0)
+                        tagString = "Sync Start";
+                    else if(tag == 0x01)
+                        tagString = "Sync Success";
+                    else if(tag == 0x02)
+                        tagString = "Sync Fail";
+                    mFlashFM.setReceivedStatus("false");
+                    if(mFlashFM.isVisible())
+                        resetFragments(FLASH_TEST_POSITION);
+                    else
+                        setFragments(FLASH_TEST_POSITION);
+                    Toast.makeText(getApplicationContext(), "Flash Packets Lost! "+tagString+"button failed", Toast.LENGTH_SHORT);
+                }
             }
 
         }
@@ -740,6 +775,26 @@ TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.Liste
             setFragments(TABATA_WORK_POSITION);
     }
 
+    @Override
+    public void onPressSyncStartButton(){
+        mFlashFM.setReceivedStatus("");
+        if(mFlashFM.isVisible())
+            resetFragments(FLASH_TEST_POSITION);
+        else
+            resetFragments(FLASH_TEST_POSITION);
+        mProgressDialog = ProgressDialog.show(this,"正在 Start Sync","處理中...");
+        cwmManager.CwmFlashSyncStart();
+    }
+    @Override
+    public void onPressSyncSuccessButton(){
+        mProgressDialog = ProgressDialog.show(this,"按下 Start Success","處理中...");
+        cwmManager.CwmFlashSyncSuccess();
+    }
+    @Override
+    public void onPressSyncFailButton(){
+        mProgressDialog = ProgressDialog.show(this,"按下 Start Fail","處理中...");
+        cwmManager.CwmFlashSyncFail();
+    }
 
 
     @Override
@@ -783,6 +838,7 @@ TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.Liste
         mFragments.add(mTabataShowFM);
         mFragments.add(mTabataIntervalFM);
         mFragments.add(mSwVersionFM);
+        mFragments.add(mFlashFM);
         //testS1ettings.
         //testSettings.
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
@@ -866,6 +922,9 @@ TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.Liste
                 break;
             case R.id.navigation_item_9:
                  buildAlertMessageSwichOTA();
+                break;
+            case R.id.navigation_item_10:
+                setFragments(FLASH_TEST_POSITION);
                 break;
             default: break;
         }
