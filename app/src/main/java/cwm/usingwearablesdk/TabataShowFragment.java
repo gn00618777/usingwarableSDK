@@ -36,6 +36,7 @@ public class TabataShowFragment extends Fragment {
     private Button actionItemEndButton;
     private Button tabataDoneButton;
     private Button tabataPauseButton;
+    private Button tabataResumeButton;
 
     private int cycle = 0;
     private int currentCycle = 0;
@@ -60,6 +61,7 @@ public class TabataShowFragment extends Fragment {
         public void onPressActionItemEndButton();
         public void onPressTabataDoneButton();
         public void onPressTabataPauseButton();
+        public void onPressTabataResumeButton();
     }
 
     @Override
@@ -118,6 +120,14 @@ public class TabataShowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallback.onPressTabataDoneButton();
+            }
+        });
+
+        tabataResumeButton = (Button)mView.findViewById(R.id.tabata_resume);
+        tabataResumeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressTabataResumeButton();
             }
         });
 

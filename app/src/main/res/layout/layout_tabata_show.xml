@@ -89,5 +89,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Tabata Pause"/>
+    <Button
+        android:id="@+id/tabata_resume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Tabata Resume"/>
 
 </LinearLayout>

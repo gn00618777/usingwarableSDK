@@ -137,7 +137,8 @@ FlashFragment.ListenForFlashFragment{
         TABATA_ACTION_ITEM,
         TABATA_ACTION_START,
         TABATA_ACTION_END,
-        TABATA_DONE
+        TABATA_DONE,
+        TABATA_RESUME
     };
 
     private ProgressDialog mProgressDialog = null;
@@ -773,6 +774,11 @@ FlashFragment.ListenForFlashFragment{
             resetFragments(TABATA_WORK_POSITION);
         else
             setFragments(TABATA_WORK_POSITION);
+    }
+
+    @Override
+    public void onPressTabataResumeButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_RESUME.ordinal(), 0 , 0, 0);
     }
 
     @Override
