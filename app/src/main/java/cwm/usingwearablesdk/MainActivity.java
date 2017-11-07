@@ -396,12 +396,12 @@ FlashFragment.ListenForFlashFragment{
                     }
                     break;
                 case 0x21: // flash feedback command
-                    mProgressDialog.dismiss();
                     mFlashFM.setReceivedStatus("true");
                     if(mFlashFM.isVisible())
                         resetFragments(FLASH_TEST_POSITION);
                     else
                         setFragments(FLASH_TEST_POSITION);
+                    mProgressDialog.dismiss();
                     break;
                  default:
                     break;
@@ -495,13 +495,13 @@ FlashFragment.ListenForFlashFragment{
     public CwmManager.ErrorListener errorListener = new CwmManager.ErrorListener(){
         @Override
         public void onErrorArrival(ErrorEvents errorEvents){
-            mProgressDialog.dismiss();
             int id = errorEvents.getId();
             int command = errorEvents.getCommand();
             int tag = errorEvents.getTag();
             String tagString = "";
 
             if(id == 0x01){ //header lost
+                mProgressDialog.dismiss();
                if(command == 0xBE)
                    Toast.makeText(getApplicationContext(), "Sleep Header Lost!", Toast.LENGTH_SHORT);
                else if(command == 0x1F)
@@ -512,13 +512,17 @@ FlashFragment.ListenForFlashFragment{
                        resetFragments(FLASH_TEST_POSITION);
                    else
                        setFragments(FLASH_TEST_POSITION);
-                   Toast.makeText(getApplication(), "Flash Header Lost!", Toast.LENGTH_SHORT);
+                   Toast.makeText(getApplication(), "Flash Header Lost!", Toast.LENGTH_SHORT).show();
+
                }
             }
             else if(id == 0x02){ //packet lost
-                if(command == 0xBE)
-                    Toast.makeText(getApplicationContext(), "Sleep Packets Lost!", Toast.LENGTH_SHORT);
+                if(command == 0xBE) {
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Sleep Packets Lost!", Toast.LENGTH_SHORT).show();
+                }
                 else if(command == 0x21) {
+                    mProgressDialog.dismiss();
                     if(tag == 0x0)
                         tagString = "Sync Start";
                     else if(tag == 0x01)
@@ -530,8 +534,13 @@ FlashFragment.ListenForFlashFragment{
                         resetFragments(FLASH_TEST_POSITION);
                     else
                         setFragments(FLASH_TEST_POSITION);
-                    Toast.makeText(getApplicationContext(), "Flash Packets Lost! "+tagString+"button failed", Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(), "Flash Packets Lost! "+tagString+"button failed", Toast.LENGTH_SHORT).show();
                 }
+            }
+            else if(id == 0x03) { //flash sync aborted
+                mProgressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Sync Aborted!", Toast.LENGTH_SHORT).show();
+
             }
 
         }
