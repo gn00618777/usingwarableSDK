@@ -52,7 +52,7 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
 SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
         TabataPrepareFragment.ListenForTabataPrepareFragment, TabataActionItemFragment.ListenForTabataActionItemFragment,
 TabataIntervalFragment.ListenForTabataIntervalFragment, TabataShowFragment.ListenForTabataShowFragment,
-FlashFragment.ListenForFlashFragment{
+FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -87,6 +87,7 @@ FlashFragment.ListenForFlashFragment{
     private TabataActionItemFragment mTabataActionItemFM = new TabataActionItemFragment();
     private TabataIntervalFragment mTabataIntervalFM = new TabataIntervalFragment();
     private FlashFragment mFlashFM = new FlashFragment();
+    private CommandTestFragment mCommandTestFM = new CommandTestFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -124,6 +125,7 @@ FlashFragment.ListenForFlashFragment{
     final int TABATA_INTERVAL_POSITION = 11;
     final int SW_VERSION_POSITION = 12;
     final int FLASH_TEST_POSITION = 13;
+    final int REQUEST_TEST_POSITION = 14;
 
     public enum ITEMS{
         TABATA_INIT,
@@ -811,6 +813,11 @@ FlashFragment.ListenForFlashFragment{
         cwmManager.CwmFlashSyncFail();
     }
 
+    @Override
+    public void onPressTestButton(){
+        cwmManager.CwmTestRequest();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -854,6 +861,7 @@ FlashFragment.ListenForFlashFragment{
         mFragments.add(mTabataIntervalFM);
         mFragments.add(mSwVersionFM);
         mFragments.add(mFlashFM);
+        mFragments.add(mCommandTestFM);
         //testS1ettings.
         //testSettings.
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
@@ -940,6 +948,9 @@ FlashFragment.ListenForFlashFragment{
                 break;
             case R.id.navigation_item_10:
                 setFragments(FLASH_TEST_POSITION);
+                break;
+            case R.id.navigation_item_11:
+                setFragments(REQUEST_TEST_POSITION);
                 break;
             default: break;
         }

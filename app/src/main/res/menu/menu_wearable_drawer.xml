@@ -45,6 +45,10 @@
             android:id="@+id/navigation_item_10"
             android:checked="true"
             android:title="Flash測試"/>
+        <item
+            android:id="@+id/navigation_item_11"
+            android:checked="true"
+            android:title="Request測試"/>
 
     </group>
 </menu>
