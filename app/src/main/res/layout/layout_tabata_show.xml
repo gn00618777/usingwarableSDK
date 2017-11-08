@@ -70,12 +70,6 @@
         android:layout_gravity="center"
         android:text="Action Strength:"/>
 
-        <Button
-            android:id="@+id/action_item_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Action Item End"/>
     <Button
         android:id="@+id/tabata_done"
         android:layout_width="wrap_content"
@@ -89,11 +83,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Tabata Pause"/>
-    <Button
-        android:id="@+id/tabata_resume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Tabata Resume"/>
 
 </LinearLayout>

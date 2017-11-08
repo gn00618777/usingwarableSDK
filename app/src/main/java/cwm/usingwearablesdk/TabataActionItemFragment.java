@@ -24,8 +24,6 @@ public class TabataActionItemFragment extends Fragment {
 
     private View mView;
 
-    private Button actionItemtButton;
-    private Button actionItemStartButton;
 
     private TextView actionItemView;
     private TextView actionItemStartView;
@@ -33,24 +31,10 @@ public class TabataActionItemFragment extends Fragment {
     private String actionItem="";
     private String actionItemStart="";
 
-    // Container Activity must implement this interface
-    public interface ListenForTabataActionItemFragment {
-        public void onPressActionItemButton();
-        public void onPressActionItemStartButton();
-    }
-
-    private ListenForTabataActionItemFragment mCallback;
-
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-        try {
-            mCallback = (ListenForTabataActionItemFragment) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement ListenForTabataActionItemFragment");
-        }
     }
 
     @Override
@@ -60,28 +44,9 @@ public class TabataActionItemFragment extends Fragment {
         }
 
         actionItemView = (TextView)mView.findViewById(R.id.action_item_view);
-        actionItemView.setText(actionItem);
+        actionItemView.setText("Action Item: "+actionItem);
         actionItemStartView = (TextView)mView.findViewById(R.id.action_item_start_view);
         actionItemStartView.setText(actionItemStart);
-
-        actionItemtButton = (Button)mView.findViewById(R.id.action_item);
-        actionItemStartButton = (Button)mView.findViewById(R.id.action_item_start);
-
-        actionItemtButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressActionItemButton();
-            }
-        });
-
-        actionItemStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressActionItemStartButton();
-            }
-        });
-
-
 
 
         return mView;

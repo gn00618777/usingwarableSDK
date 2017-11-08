@@ -27,33 +27,13 @@ public class TabataIntervalFragment extends Fragment {
     private TextView intervalStartView;
     private TextView intervalCountView;
 
-    private Button intervalStartButton;
-    private Button intervalCountButton;
-    private Button intervalEndButton;
-
-    private String intervalStart = "";
     private String intervalCount = "";
-
-    // Container Activity must implement this interface
-    public interface ListenForTabataIntervalFragment {
-        public void onPressItervalStartButton();
-        public void onPressIntervalCountButton();
-        public void onPressIntervalEndButton();
-
-    }
-
-    private ListenForTabataIntervalFragment mCallback;
 
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-        try {
-            mCallback = (ListenForTabataIntervalFragment) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement ListenForTabataPrepareFragment");
-        }
+
     }
 
     @Override
@@ -62,39 +42,12 @@ public class TabataIntervalFragment extends Fragment {
             mView = inflater.inflate(R.layout.layout_tabata_interval, null);
         }
         intervalStartView = (TextView)mView.findViewById(R.id.interval_start_view);
-        intervalStartView.setText(intervalStart);
         intervalCountView = (TextView)mView.findViewById(R.id.interval_count_view);
         intervalCountView.setText(intervalCount);
-
-        intervalStartButton = (Button)mView.findViewById(R.id.interval_start);
-        intervalCountButton = (Button)mView.findViewById(R.id.interval_count);
-        intervalEndButton = (Button)mView.findViewById(R.id.interval_end);
-
-        intervalStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressItervalStartButton();
-            }
-        });
-        intervalCountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressIntervalCountButton();
-            }
-        });
-        intervalEndButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressIntervalEndButton();
-            }
-        });
 
         return mView;
     }
 
-    public void setIntervalStartView(String s){
-        intervalStart = s;
-    }
     public void setIntervalCountView(String s){
         intervalCount = s;
     }

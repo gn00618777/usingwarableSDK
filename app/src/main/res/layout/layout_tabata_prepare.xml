@@ -6,51 +6,19 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/prepare_start_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/prepare_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Prepare Start"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
-        <TextView
-            android:id="@+id/prepare_start_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""/>
-
-    </LinearLayout>
-    <LinearLayout
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content">
-       <Button
-           android:id="@+id/prepare_count"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-          android:text="Prepare Count"/>
-
-       <TextView
+    <TextView
           android:id="@+id/prepare_count_view"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text=" "/>
-
-     </LinearLayout>
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content">
-          <Button
-              android:id="@+id/prepare_end"
-              android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Prepare End"/>
-          <TextView
-              android:id="@+id/prepare_end_view"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text=""/>
-     </LinearLayout>
+          android:layout_gravity="center"
+          android:layout_marginTop="10dp"
+          android:textSize="50dp"
+          android:text=" count"/>
 
 </LinearLayout>

@@ -31,12 +31,9 @@ public class TabataShowFragment extends Fragment {
     private TextView historyView;
     private TextView cycleView;
     private TextView itemsView;
-   // private TextView strengthView;
 
-    private Button actionItemEndButton;
     private Button tabataDoneButton;
     private Button tabataPauseButton;
-    private Button tabataResumeButton;
 
     private int cycle = 0;
     private int currentCycle = 0;
@@ -58,10 +55,8 @@ public class TabataShowFragment extends Fragment {
     ListenForTabataShowFragment mCallback;
 
     public interface ListenForTabataShowFragment {
-        public void onPressActionItemEndButton();
         public void onPressTabataDoneButton();
         public void onPressTabataPauseButton();
-        public void onPressTabataResumeButton();
     }
 
     @Override
@@ -99,20 +94,6 @@ public class TabataShowFragment extends Fragment {
                 mCallback.onPressTabataPauseButton();
             }
         });
-        actionItemEndButton = (Button)mView.findViewById(R.id.action_item_end);
-        actionItemEndButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressActionItemEndButton();
-            }
-        });
-
-        if(hideActionItemEndButton == false){
-            actionItemEndButton.setVisibility(View.VISIBLE);
-        }
-        else{
-            actionItemEndButton.setVisibility(View.GONE);
-        }
 
 
         tabataDoneButton = (Button)mView.findViewById(R.id.tabata_done);
@@ -122,15 +103,6 @@ public class TabataShowFragment extends Fragment {
                 mCallback.onPressTabataDoneButton();
             }
         });
-
-        tabataResumeButton = (Button)mView.findViewById(R.id.tabata_resume);
-        tabataResumeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressTabataResumeButton();
-            }
-        });
-
 
         historyView.setText(history);
         statusView.setText("Status:  "+status);
@@ -162,9 +134,6 @@ public class TabataShowFragment extends Fragment {
     public void setCycles(int currentCycle, int totalCycle){
         this.currentCycle = currentCycle;
         this.cycle = totalCycle;
-    }
-    public void hideButton(boolean b){
-        hideActionItemEndButton = b;
     }
 
     public void setItems(int currentDone, int totalItems){
