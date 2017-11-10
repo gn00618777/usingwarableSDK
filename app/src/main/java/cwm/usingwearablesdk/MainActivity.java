@@ -73,8 +73,15 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private NavigationView.OnNavigationItemSelectedListener mNavViewOnNavItemSelListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            //do reinitial
             outSide = true;
             cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
+            currnetCycle = 0;
+            curentDoneItems = 0;
+            mTabataQueue = null;
+            mTabataShowFM.setCycles(0,0);
+            mTabataShowFM.setItems(0,0);
+
             navigateTo(item);
             return true;
         }
@@ -382,7 +389,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                         }
 
                         // goal is achievement
-                        if (cwmEvents.getDoItemCount() == goalTimes) {
+                        if (cwmEvents.getDoItemCount() == goalTimes && goalTimes!= 0) {
+                            Log.d("bernie","goalTimes: "+Integer.toString(goalTimes));
                             builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
                             mTabataShowFM.setHistory(builder.toString());
                             sendActionItemEnd();
@@ -812,6 +820,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         }
         else{
             if(currnetCycle < totalCycle){
+                Log.d("bernie","current cycle:"+Integer.toString(currnetCycle)+" totalCycle:"+Integer.toString(totalCycle));
                 currnetCycle++;
                 mTabataShowFM.setCycles(currnetCycle, totalCycle);
                 if(mTabataShowFM.isVisible())
