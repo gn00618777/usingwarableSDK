@@ -42,6 +42,7 @@ public class TabataFragment extends Fragment {
     private Button scheduleButton;
     private Button removeItem;
     private Button startButton;
+    private int index = 0;
     private ArrayAdapter<String> adapter1;
     private ArrayAdapter<String> adapter2;
     private ArrayAdapter<String> adapter3;
@@ -294,26 +295,21 @@ public class TabataFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Exercise Menu");
-                builder.setMultiChoiceItems(items, itemSelected, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
-                        itemSelected[which] = isChecked;
-                        itemSelected1[which+1] = isChecked;
-
+                    public void onClick(DialogInterface dialog, int which) {
+                        index = which+1;
                     }
                 });
-               // Log.d("bernie","itemSelected[0] is "+Boolean.toString(itemSelected[0]));
                 builder.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                for(int i = 1; i < 11. ; i++){
-                                    if(itemSelected1[i] == true) {
-                                        tatataSettings.enableItem(i);
-                                    }
-                                    else
-                                        tatataSettings.disableItem(i);
+                                dialog.dismiss();
+                                for(int i = 1; i < 11; i++){
+                                    itemSelected1[i] = false;
                                 }
+                                itemSelected1[index] = true;
+                                tatataSettings.enableItem(index);
                             }
                         });
                 AlertDialog alert = builder.create();
@@ -328,15 +324,14 @@ public class TabataFragment extends Fragment {
                     TabataTask tabataTask = new TabataTask();
                     //*********************create a new setttings**********************/
                     TabataSettings tempTabataSettings = new TabataSettings();
-
                     for(int i = 1; i < 11. ; i++){
                         if(itemSelected1[i] == true) {
+                            Log.d("bernie","yes selected");
                             tempTabataSettings.enableItem(i);
                         }
                         else
                             tempTabataSettings.disableItem(i);
                     }
-
                     tempTabataSettings.setActionType(tatataSettings.getActionType());
                     tempTabataSettings.setCycle(tatataSettings.getCycle());
                     tempTabataSettings.setActionTimes(tatataSettings.getActionTimes());
@@ -346,8 +341,6 @@ public class TabataFragment extends Fragment {
                     //***************************************************************/
 
                     tabataTask.setTabataSettings(tempTabataSettings);
-
-                    Log.d("bernie","task name:"+tabataTask.getTabataSettings().getItemName());
 
                     String name = tabataTask.getTabataSettings().getItemName();;
                     String prepare = Integer.toString(tabataTask.getTabataSettings().getPrepareTime());;
