@@ -73,11 +73,14 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private NavigationView.OnNavigationItemSelectedListener mNavViewOnNavItemSelListener = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            outSide = true;
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
             navigateTo(item);
             return true;
         }
     };
     private int mNavIdx;
+    private boolean outSide = false;
     private FragmentManager mFM;
     private List<Fragment> mFragments = new ArrayList<Fragment>();
     private ShowDataFragment mShowDataFM = new ShowDataFragment();
@@ -369,6 +372,15 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             previous_count = count;
                         }
 
+                        if(status.equals("stop")){
+                            mTabataFM.setReset();
+                            if(outSide == false)
+                               setFragments(TABATA_WORK_POSITION);
+                            else {
+                                outSide = false;
+                            }
+                        }
+
                         // goal is achievement
                         if (cwmEvents.getDoItemCount() == goalTimes) {
                             builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
@@ -376,8 +388,9 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             sendActionItemEnd();
                         }
                         mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
-                    makeTextAndShow("item: "+item+"\ncount: "+
-                            count+"\nheartRate: "+heartRate+"\ncalories: "+calories,Toast.LENGTH_SHORT);
+                    if(!status.equals("stop"))
+                       makeTextAndShow("item: "+item+"\ncount: "+
+                               count+"\nheartRate: "+heartRate+"\ncalories: "+calories,Toast.LENGTH_SHORT);
 
                     break;
                 case 0x21: // flash feedback command
@@ -652,7 +665,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         int size = mTabataQueue.size();
         isTabataInitStart = true;
         firstTask = mTabataQ.poll();
-        Log.d("bernie","onInit firstTask name is"+firstTask.getTabataSettings().getItemName());
         mTabataSettings = firstTask.getTabataSettings();
         totalCycle = mTabataSettings.getCycle();
         totalPrepare = mTabataSettings.getPrepareTime();

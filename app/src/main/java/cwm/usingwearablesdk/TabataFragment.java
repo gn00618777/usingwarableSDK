@@ -6,12 +6,16 @@ package cwm.usingwearablesdk;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
@@ -30,33 +34,28 @@ import cwm.wearablesdk.TabataSettings;
 public class TabataFragment extends Fragment {
 
     private View mView;
-    private Spinner spinner1;
-    private Spinner spinner2;
-    private Spinner spinner3;
-    private Spinner spinner4;
-    private Spinner spinner5;
-    private TextView textViewActionTime;
-    private TextView textViewCycke;
-    private Button selectItems;
-    private Button addItem;
-    private Button scheduleButton;
+
+    private TextView scheduleList;
+
+    private Button newAddItem;
     private Button removeItem;
     private Button startButton;
+
+    private RadioGroup radioGroupPrepare;
+    private RadioGroup radioGroupInterval;
+    private RadioGroup radioGroupTimes;
+    private RadioButton radioButtonPrepare;
+    private RadioButton radioButtonInterval;
+    private RadioButton radioButtonTimes;
+
+    private int prepare = 5;
+    private int interval = 10;
+    private int times = 5;
+
     private int index = 0;
-    private ArrayAdapter<String> adapter1;
-    private ArrayAdapter<String> adapter2;
-    private ArrayAdapter<String> adapter3;
-    private ArrayAdapter<String> adapter4;
-    private ArrayAdapter<String> adapter5;
-    private final String[] prepareTime = {"5 sec","10 sec","15 sec","20 sec","25 sec", "30 sec"};
-    private final String[] actionType = {"count down", "count up times"};
-    private final String[] intervalTime = {"10 sec", "15 sec", "20 sec", "1 min", "3 min", "5 min"};
-    private final String[] actionTime = {"10 sec","15 sec","30 sec","1 min","10 min", "30 min"};
-    private final String[] actionTimes = {"5","10", "15","30","40","60"};
-    private final String[] cycleTimes = {"1","2","5","10","50"};
+
     private final CharSequence[] items = {"PUSH_UP", "CRUNCH", "SQUART", "JUMPING_JACK",
             "DIPS","HIGH_KNESSRUNNING", "LUNGES", "BURPEES", "STEP_ON_CHAIR", "PUSHUP_ROTATION"};
-    private final boolean[] itemSelected = {false,false,false,false,false,false,false,false,false,false};
     private final boolean[] itemSelected1 = {false,false,false,false,false,false,false,false,false,false,false};
 
     private TabataSettings tatataSettings = new TabataSettings();
@@ -89,208 +88,13 @@ public class TabataFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.layout_tabata, null);
         }
-        textViewActionTime = (TextView)mView.findViewById(R.id.action_time_text);
 
-        spinner1 = (Spinner) mView.findViewById(R.id.spinner_prepare);
-        adapter1 = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,prepareTime);
-        spinner1.setAdapter(adapter1);
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                if(parent.getSelectedItem().toString().equals("5sec")){
-                    tatataSettings.setPrepareTime(5);
-                }
-                else if(parent.getSelectedItem().toString().equals("10 sec")){
-                    tatataSettings.setPrepareTime(10);
-                }
-                else if(parent.getSelectedItem().toString().equals("15 sec")){
-                    tatataSettings.setPrepareTime(15);
-                }
-                else if(parent.getSelectedItem().toString().equals("20 sec")){
-                    tatataSettings.setPrepareTime(20);
-                }
-                else if(parent.getSelectedItem().toString().equals("25 sec")){
-                    tatataSettings.setPrepareTime(25);
-                }
-                else if(parent.getSelectedItem().toString().equals("30 sec")){
-                    tatataSettings.setPrepareTime(30);
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-                Log.d("bernie","onNothingSelected spinner1");
-            }
-        });
-        spinner1.setSelection(0);
+        scheduler = new StringBuilder();
+        scheduleList = (TextView)mView.findViewById(R.id.schedule_list);
+        scheduleList.setText("");
 
-
-        spinner2 = (Spinner) mView.findViewById(R.id.spinner_action_type);
-        adapter2 = new ArrayAdapter<String>(getContext(),R.layout.support_simple_spinner_dropdown_item,actionType);
-        spinner2.setAdapter(adapter2);
-
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-              public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                 String item = "count up times";
-
-                spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-                    {
-                        if(parent.getSelectedItem().toString().equals("count down")) {
-                            tatataSettings.setActionType(0);
-                            textViewActionTime.setText("Action Time");
-                            spinner4 = (Spinner) mView.findViewById(R.id.spinner_action_time);
-                            adapter4 = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,actionTime);
-                            spinner4.setAdapter(adapter4);
-                            //tatataSettings.setActionType(TabataSettings.COUNT_DOWN);
-                            spinner4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    if(parent.getSelectedItem().toString().equals("10 sec")) {
-                                        tatataSettings.setActionTime(10);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("15 sec")){
-                                        tatataSettings.setActionTime(15);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("30 sec")){
-                                        tatataSettings.setActionTime(30);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("1 min")){
-                                        tatataSettings.setActionTime(1*60);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("10 min")){
-                                        tatataSettings.setActionTime(10*60);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("30 min")){
-                                        tatataSettings.setActionTime(30*60);
-                                    }
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
-                        }
-                        else if(parent.getSelectedItem().toString().equals("count up times")){
-                            tatataSettings.setActionType(1);
-                            textViewActionTime.setText("Action Times");
-                            spinner4 = (Spinner) mView.findViewById(R.id.spinner_action_time);
-                            adapter4 = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,actionTimes);
-                            spinner4.setAdapter(adapter4);
-                            spinner4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-                                {
-                                    if(parent.getSelectedItem().toString().equals("5")) {
-                                        tatataSettings.setActionTimes(5);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("10")){
-                                        tatataSettings.setActionTimes(10);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("15")){
-                                        tatataSettings.setActionTimes(15);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("30")){
-                                        tatataSettings.setActionTimes(30);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("40")){
-                                        tatataSettings.setActionTimes(40);
-                                    }
-                                    else if(parent.getSelectedItem().toString().equals("60")){
-                                        tatataSettings.setActionTimes(60);
-                                    }
-                                }
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent)
-                                {
-                                    Log.d("bernie","onNothingSelected spinner4");
-                                }
-                            });
-
-                        }
-                    }
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent)
-                    {
-                        Log.d("bernie","onNothingSelected spinner2");
-                    }
-                });
-
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-                Log.d("bernie","onNothingSelected");
-            }
-        });
-
-        spinner3 = (Spinner) mView.findViewById(R.id.spinner_interval);
-        adapter3 = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,intervalTime);
-        spinner3.setAdapter(adapter3);
-        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(parent.getSelectedItem().toString().equals("10 sec")) {
-                    tatataSettings.setIntervalTime(10);
-                }
-                else if(parent.getSelectedItem().toString().equals("15 sec")){
-                    tatataSettings.setIntervalTime(15);
-                }
-                else if(parent.getSelectedItem().toString().equals("30 sec")){
-                    tatataSettings.setIntervalTime(30);
-                }
-                else if(parent.getSelectedItem().toString().equals("1 min")){
-                    tatataSettings.setIntervalTime(1*60);
-                }
-                else if(parent.getSelectedItem().toString().equals("3 min")){
-                    tatataSettings.setIntervalTime(3*60);
-                }
-                else if(parent.getSelectedItem().toString().equals("5 min")){
-                    tatataSettings.setActionTime(5*60);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinner5 = (Spinner)mView.findViewById(R.id.spinner_cycle);
-        adapter5 = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,cycleTimes);
-        spinner5.setAdapter(adapter5);
-        spinner5.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(parent.getSelectedItem().toString().equals("1")){
-                    tatataSettings.setCycle(1);
-                }
-                else if(parent.getSelectedItem().toString().equals("2")){
-                    tatataSettings.setCycle(2);
-                }
-                else if(parent.getSelectedItem().toString().equals("5")){
-                    tatataSettings.setCycle(5);
-                }
-                else if(parent.getSelectedItem().toString().equals("10")){
-                    tatataSettings.setCycle(10);
-                }
-                else if(parent.getSelectedItem().toString().equals("50")){
-                    tatataSettings.setCycle(50);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        selectItems = (Button)mView.findViewById(R.id.execise_items);
-        selectItems.setOnClickListener(new View.OnClickListener() {
+        newAddItem = (Button)mView.findViewById(R.id.add_item_new);
+        newAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -310,49 +114,128 @@ public class TabataFragment extends Fragment {
                                 }
                                 itemSelected1[index] = true;
                                 tatataSettings.enableItem(index);
+
+                                final View configs = LayoutInflater.from(getContext()).inflate(R.layout.layout_custom_config, null);
+                                radioGroupPrepare = (RadioGroup)configs.findViewById(R.id.radio_group1);
+                                radioGroupInterval = (RadioGroup)configs.findViewById(R.id.radio_group2);
+                                radioGroupTimes = (RadioGroup)configs.findViewById(R.id.radio_group3);
+
+                                radioButtonPrepare = (RadioButton)configs.findViewById(R.id.prepare_one);
+                                radioButtonPrepare.setChecked(true);
+
+                                radioGroupPrepare.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                                        if(checkedId == R.id.prepare_one){
+                                           prepare = 5;
+                                        }
+                                        else if(checkedId == R.id.preapre_two){
+                                            prepare = 10;
+                                        }
+                                        else if(checkedId == R.id.prepare_three){
+                                            prepare = 15;
+                                        }
+                                        else if(checkedId == R.id.prepare_four){
+                                            prepare = 20;
+                                        }
+                                    }
+                                });
+                                radioButtonInterval = (RadioButton)configs.findViewById(R.id.interval_one);
+                                radioButtonInterval.setChecked(true);
+                                radioGroupInterval.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                                        if(checkedId == R.id.interval_one){
+                                            interval = 10;
+                                        }
+                                        else if(checkedId == R.id.interval_two){
+                                            interval = 15;
+                                        }
+                                        else if(checkedId == R.id.interval_three){
+                                            interval = 20;
+                                        }
+                                        else if(checkedId == R.id.interval_four){
+                                            interval = 60;
+                                        }
+                                    }
+                                });
+                                radioButtonTimes = (RadioButton)configs.findViewById(R.id.times_one);
+                                radioButtonTimes.setChecked(true);
+                                radioGroupTimes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                                        if(checkedId == R.id.times_one){
+                                            times = 5;
+                                        }
+                                        else if(checkedId == R.id.times_two){
+                                            times = 10;
+                                        }
+                                        else if(checkedId == R.id.times_three){
+                                            times = 15;
+                                        }
+                                        else if(checkedId == R.id.times_four){
+                                            times = 30;
+                                        }
+                                    }
+                                });
+
+
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Parameters")
+                                        .setView(configs)
+                                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                tatataSettings.setPrepareTime(prepare);
+                                                tatataSettings.setIntervalTime(interval);
+                                                tatataSettings.setActionType(1);
+                                                tatataSettings.setActionTimes(times);
+                                                tatataSettings.setCycle(1);
+                                                Log.d("bernie",Integer.toString(tatataSettings.getActionTimes()));
+
+                                                if(statusCheck()){
+                                                    //*********************create a new setttings**********************/
+                                                    TabataTask tabataTask = new TabataTask();
+                                                    TabataSettings tempTabataSettings = new TabataSettings();
+                                                    for(int i = 1; i < 11. ; i++){
+                                                        if(itemSelected1[i] == true) {
+                                                            Log.d("bernie","yes selected");
+                                                            tempTabataSettings.enableItem(i);
+                                                        }
+                                                        else
+                                                            tempTabataSettings.disableItem(i);
+                                                    }
+                                                    tempTabataSettings.setActionType(tatataSettings.getActionType());
+                                                    tempTabataSettings.setCycle(tatataSettings.getCycle());
+                                                    tempTabataSettings.setActionTimes(tatataSettings.getActionTimes());
+                                                    tempTabataSettings.setPrepareTime(tatataSettings.getPrepareTime());
+                                                    tempTabataSettings.setIntervalTime(tatataSettings.getIntervalTime());
+
+                                                    //***************************************************************/
+
+                                                    tabataTask.setTabataSettings(tempTabataSettings);
+
+                                                    String name = tabataTask.getTabataSettings().getItemName();;
+                                                    String prepare = Integer.toString(tabataTask.getTabataSettings().getPrepareTime());;
+                                                    String interval = Integer.toString(tabataTask.getTabataSettings().getIntervalTime());;
+                                                    String actionTimes = Integer.toString(tabataTask.getTabataSettings().getActionTimes());
+                                                    scheduler.append(name+"→"+" Prepare: "+prepare+" Rest: "+interval+" Times:"+actionTimes+"\n");
+                                                    mTabataQ.add(tabataTask);
+
+                                                    Toast.makeText(getContext(), "Add One Task", Toast.LENGTH_SHORT).show();
+                                                    scheduleList.setText(scheduler.toString());
+                                                }
+                                            }
+                                        })
+                                        .show();
+
                             }
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
         });
-        addItem = (Button) mView.findViewById(R.id.add_item);
-        addItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(statusCheck()){
-                    TabataTask tabataTask = new TabataTask();
-                    //*********************create a new setttings**********************/
-                    TabataSettings tempTabataSettings = new TabataSettings();
-                    for(int i = 1; i < 11. ; i++){
-                        if(itemSelected1[i] == true) {
-                            Log.d("bernie","yes selected");
-                            tempTabataSettings.enableItem(i);
-                        }
-                        else
-                            tempTabataSettings.disableItem(i);
-                    }
-                    tempTabataSettings.setActionType(tatataSettings.getActionType());
-                    tempTabataSettings.setCycle(tatataSettings.getCycle());
-                    tempTabataSettings.setActionTimes(tatataSettings.getActionTimes());
-                    tempTabataSettings.setPrepareTime(tatataSettings.getPrepareTime());
-                    tempTabataSettings.setIntervalTime(tatataSettings.getIntervalTime());
 
-                    //***************************************************************/
-
-                    tabataTask.setTabataSettings(tempTabataSettings);
-
-                    String name = tabataTask.getTabataSettings().getItemName();;
-                    String prepare = Integer.toString(tabataTask.getTabataSettings().getPrepareTime());;
-                    String interval = Integer.toString(tabataTask.getTabataSettings().getIntervalTime());;
-                    String actionTimes = Integer.toString(tabataTask.getTabataSettings().getActionTimes());
-                    scheduler.append(name+" P: "+prepare+" R: "+interval+" T:"+actionTimes+"\n");
-                    mTabataQ.add(tabataTask);
-                    Toast.makeText(getContext(), "Add One Task", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
         removeItem = (Button)mView.findViewById(R.id.remove_item);
         removeItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -373,29 +256,15 @@ public class TabataFragment extends Fragment {
                             prepare = Integer.toString(tempTask.getTabataSettings().getPrepareTime());
                             interval = Integer.toString(tempTask.getTabataSettings().getIntervalTime());
                             actionTimes = Integer.toString(tempTask.getTabataSettings().getActionTimes());
-                            scheduler.append(name + " P: " + prepare + " R: " + interval + " T:" + actionTimes + "\n");
+                            scheduler.append(name +"→"+" Prepare: " + prepare + " Rest: " + interval + " Times:" + actionTimes + "\n");
                             tempTabataQ.add(tempTask);
                         }
                     }
                     mTabataQ = new LinkedList<>();
                     mTabataQ = tempTabataQ;
+                    scheduleList.setText(scheduler.toString());
                     Toast.makeText(getContext(), "Remove One Task", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-        scheduleButton = (Button)mView.findViewById(R.id.schedule);
-        scheduleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Schedule");
-                builder.setMessage(scheduler.toString());
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                builder.show();
             }
         });
         startButton = (Button) mView.findViewById(R.id.start);
@@ -489,6 +358,11 @@ public class TabataFragment extends Fragment {
             return false;
         }
         return true;
+    }
+    public void setReset(){
+        mTabataQ = new LinkedList<>();
+        scheduler = new StringBuilder();
+        scheduleList.setText("");
     }
 
 
