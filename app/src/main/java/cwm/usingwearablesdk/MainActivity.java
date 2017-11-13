@@ -421,6 +421,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
            mDeviceStatus = true;
            if(mSelectTypeFM.isVisible())
                resetFragments(SELECT_DEVICE_POSITION);
+            mDrawerLayout.openDrawer(Gravity.LEFT);
         }
 
         @Override
@@ -939,6 +940,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         //testSettings.
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
+        setFragments(SELECT_DEVICE_POSITION);
     }
     @Override
     protected void onPause(){
