@@ -490,7 +490,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                         cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_START.ordinal(), 0 , 0, 0);
                         Handler handler = new Handler();
 
-                        mTabataPrepareFM.setPrepareCountView("TABATA Start!");
                         if(mTabataPrepareFM.isVisible())
                             resetFragments(TABATA_PREPARE_POSITION);
                         else
@@ -519,6 +518,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
                                      @Override
                                      public void onTick(long millisUntilFinished) {
+                                         mTabataPrepareFM.setPrepareActionView(firstTask.getTabataSettings().getItemName());
                                          mTabataPrepareFM.setPrepareCountView(Long.toString((millisUntilFinished+50)/1000));
                                          cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), (int)((millisUntilFinished+50)/1000), 0, 0);
                                          if(mTabataPrepareFM.isVisible())
@@ -806,6 +806,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
                 @Override
                 public void onTick(long millisUntilFinished) {
+                    mTabataIntervalFM.setIntervalNextAction(mTabataSettings.getItemName());
                     mTabataIntervalFM.setIntervalCountView(Long.toString((millisUntilFinished+50)/1000));
                     if(mTabataIntervalFM.isVisible())
                         resetFragments(TABATA_INTERVAL_POSITION);

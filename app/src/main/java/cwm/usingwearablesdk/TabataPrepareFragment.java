@@ -26,9 +26,11 @@ public class TabataPrepareFragment extends Fragment {
 
     private TextView prepareStartView;
     private TextView prepareCountView;
+    private TextView prepareActionView;
 
     private String prepareStart = "Prepare";
     private String prepareCount;
+    private String prepareAction = "";
 
     @Override
     public void onAttach(Context context){
@@ -43,16 +45,16 @@ public class TabataPrepareFragment extends Fragment {
 
         prepareStartView = (TextView)mView.findViewById(R.id.prepare_start_view);
         prepareCountView = (TextView)mView.findViewById(R.id.prepare_count_view);
+        prepareActionView = (TextView)mView.findViewById(R.id.prepare_action);
 
         prepareStartView.setText(prepareStart);
         prepareCountView.setText(prepareCount);
+        prepareActionView.setText(prepareAction);
 
         return mView;
     }
 
-    public void setPrepareStartView(String s){
-        prepareStart = s;
-    }
+    public void setPrepareActionView(String s){prepareAction =s;}
     public void setPrepareCountView(String s){prepareCount = s;}
 
 
