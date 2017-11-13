@@ -3,50 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <Button
-        android:id="@+id/add_item_new"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#227700"
-        android:text="Add"/>
-    <Button
-        android:id="@+id/remove_item"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#DDAA00"
-        android:text="REMOVE"/>
-    <Button
-        android:id="@+id/start"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#550088"
-        android:text="START"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="EDIT"/>
-        <Button
-            android:id="@+id/load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="LOAD"/>
-
-    </LinearLayout>
-
     <TextView
         android:id="@+id/schedule_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+                android:id="@+id/load"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/add_item_new"
+                android:layout_alignParentRight="true"
+                android:text="LOAD"/>
+        <Button
+                android:id="@+id/edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/add_item_new"
+                android:text="EDIT"/>
+
+        <Button
+            android:id="@+id/add_item_new"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#227700"
+            android:layout_above="@+id/remove_item"
+            android:text="Add"/>
+        <Button
+            android:id="@+id/remove_item"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#DDAA00"
+            android:layout_above="@+id/start"
+            android:text="REMOVE"/>
+        <Button
+            android:id="@+id/start"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#550088"
+            android:layout_alignParentBottom="true"
+            android:text="START"/>
+    </RelativeLayout>
+
 
 </LinearLayout>
