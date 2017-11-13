@@ -114,6 +114,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
     private BluetoothAdapter mBtAdapter = null;
 
+    private CountDownTimer timer;
+
     private TabataSettings mTabataSettings;
     private int totalCycle = 0;
     private int totalPrepare = 0;
@@ -384,6 +386,9 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             if(outSide == false)
                                setFragments(TABATA_WORK_POSITION);
                             else {
+                                timer.cancel();
+                                mTabataPrepareFM.setPrepareCountView("");
+                                mTabataIntervalFM.setIntervalCountView("");
                                 outSide = false;
                             }
                         }
@@ -498,7 +503,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                              @Override
                              public void run() {
                                  //開始倒數
-                                 new CountDownTimer(totalPrepare*1000,1000){
+                                 timer = new CountDownTimer(totalPrepare*1000,1000){
 
                                      @Override
                                      public void onFinish() {
@@ -781,7 +786,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
             /*************************reset time***************************/
             //開始倒數
-            new CountDownTimer(totalInterval*1000,1000){
+            timer = new CountDownTimer(totalInterval*1000,1000){
 
                 @Override
                 public void onFinish() {
