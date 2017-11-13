@@ -246,6 +246,10 @@ public class TabataFragment extends Fragment {
 
                                                     Toast.makeText(getContext(), "Add One Task", Toast.LENGTH_SHORT).show();
                                                     scheduleList.setText(scheduler.toString());
+
+                                                    //reset
+                                                    index = 0;
+                                                    tatataSettings = new TabataSettings();
                                                 }
                                             }
                                         })
