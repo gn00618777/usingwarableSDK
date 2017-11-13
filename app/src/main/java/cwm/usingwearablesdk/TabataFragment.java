@@ -4,16 +4,22 @@ package cwm.usingwearablesdk;
  * Created by user on 2017/9/10.
  */
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -26,7 +32,9 @@ import android.content.DialogInterface;
 import android.widget.Toast;
 import cwm.wearablesdk.TabataTask;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import cwm.wearablesdk.TabataSettings;
@@ -40,6 +48,17 @@ public class TabataFragment extends Fragment {
     private Button newAddItem;
     private Button removeItem;
     private Button startButton;
+    private Button editButton;
+    private Button addAListButton;
+    private Button loadButton;
+
+    private EditText listNameInput;
+
+    //for menu list
+    private ListAdapter listAdapter;
+    private List<String> stringList = new ArrayList<>();
+    private ListView.OnItemClickListener listViewOnItemClickListener;
+    private MyDBHelper myDBHelper;
 
     private RadioGroup radioGroupPrepare;
     private RadioGroup radioGroupInterval;
@@ -63,6 +82,8 @@ public class TabataFragment extends Fragment {
     private Queue<TabataTask> mTabataQ = new LinkedList<>();
     Queue<TabataTask> tempTabataQ = new LinkedList<>();
     private StringBuilder scheduler = new StringBuilder();
+    private StringBuilder itemSchedule = new StringBuilder();
+    private StringBuilder parameterSchedule = new StringBuilder();
 
     // Container Activity must implement this interface
     public interface ListenForTabataFragment {
@@ -88,7 +109,7 @@ public class TabataFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.layout_tabata, null);
         }
-
+        myDBHelper = new MyDBHelper(getContext(), Environment.getExternalStorageDirectory().toString() + "/Download/"+"tabatamenu.db", null, 1);
         scheduler = new StringBuilder();
         scheduleList = (TextView)mView.findViewById(R.id.schedule_list);
         scheduleList.setText("");
@@ -112,6 +133,7 @@ public class TabataFragment extends Fragment {
                                 for(int i = 1; i < 11; i++){
                                     itemSelected1[i] = false;
                                 }
+                                Log.d("bernie","index = "+Integer.toString(index));
                                 itemSelected1[index] = true;
                                 tatataSettings.enableItem(index);
 
@@ -191,7 +213,6 @@ public class TabataFragment extends Fragment {
                                                 tatataSettings.setActionType(1);
                                                 tatataSettings.setActionTimes(times);
                                                 tatataSettings.setCycle(1);
-                                                Log.d("bernie",Integer.toString(tatataSettings.getActionTimes()));
 
                                                 if(statusCheck()){
                                                     //*********************create a new setttings**********************/
@@ -199,7 +220,6 @@ public class TabataFragment extends Fragment {
                                                     TabataSettings tempTabataSettings = new TabataSettings();
                                                     for(int i = 1; i < 11. ; i++){
                                                         if(itemSelected1[i] == true) {
-                                                            Log.d("bernie","yes selected");
                                                             tempTabataSettings.enableItem(i);
                                                         }
                                                         else
@@ -215,11 +235,13 @@ public class TabataFragment extends Fragment {
 
                                                     tabataTask.setTabataSettings(tempTabataSettings);
 
-                                                    String name = tabataTask.getTabataSettings().getItemName();;
+                                                    String name = tabataTask.getTabataSettings().getItemName();
                                                     String prepare = Integer.toString(tabataTask.getTabataSettings().getPrepareTime());;
                                                     String interval = Integer.toString(tabataTask.getTabataSettings().getIntervalTime());;
                                                     String actionTimes = Integer.toString(tabataTask.getTabataSettings().getActionTimes());
                                                     scheduler.append(name+"→"+" Prepare: "+prepare+" Rest: "+interval+" Times:"+actionTimes+"\n");
+                                                    itemSchedule.append(name+",");
+                                                    parameterSchedule.append(prepare+","+interval+","+actionTimes+":");
                                                     mTabataQ.add(tabataTask);
 
                                                     Toast.makeText(getContext(), "Add One Task", Toast.LENGTH_SHORT).show();
@@ -243,6 +265,8 @@ public class TabataFragment extends Fragment {
 
                if(mTabataQ.size() != 0) {
                     scheduler = new StringBuilder();
+                    itemSchedule = new StringBuilder();
+                    parameterSchedule = new StringBuilder();
                     TabataTask tempTask = new TabataTask();
                     String name = "";
                     String prepare = "";
@@ -257,6 +281,8 @@ public class TabataFragment extends Fragment {
                             interval = Integer.toString(tempTask.getTabataSettings().getIntervalTime());
                             actionTimes = Integer.toString(tempTask.getTabataSettings().getActionTimes());
                             scheduler.append(name +"→"+" Prepare: " + prepare + " Rest: " + interval + " Times:" + actionTimes + "\n");
+                            itemSchedule.append(name+",");
+                            parameterSchedule.append(prepare+","+interval+","+actionTimes+":");
                             tempTabataQ.add(tempTask);
                         }
                     }
@@ -274,6 +300,102 @@ public class TabataFragment extends Fragment {
                 if(mTabataQ.size() != 0)
                    mCallback.onInitTabata(mTabataQ);
                 scheduler = new StringBuilder();
+            }
+        });
+
+        listAdapter = new ListAdapter(getContext(), stringList);
+
+        listViewOnItemClickListener = new ListView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final String menuName = parent.getItemAtPosition(position).toString();
+                int res = 0;
+                res = myDBHelper.getWritableDatabase().delete("exp","menuName=?",new String[]{menuName});
+                if(res == 1) {
+                    stringList.remove(position);
+                    listAdapter.notifyDataSetChanged();
+                }
+            }
+        };
+
+        editButton = (Button) mView.findViewById(R.id.edit);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                final View database = LayoutInflater.from(getContext()).inflate(R.layout.layout_custom_database, null);
+                final ListView listView = (ListView)database.findViewById(R.id.list_view);
+                listView.setAdapter(listAdapter);
+                listView.setOnItemClickListener(listViewOnItemClickListener);
+                builder.setView(database);
+                final AlertDialog dialog = builder.create();
+
+                addAListButton = (Button)database.findViewById(R.id.add_a_list);
+                addAListButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        final View popupAdd = LayoutInflater.from(getContext()).inflate(R.layout.layout_custom_popup_add, null);
+                        listNameInput = (EditText)popupAdd.findViewById(R.id.input) ;
+                        builder.setView(popupAdd);
+                        builder.setPositiveButton("Ensure", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(listNameInput.getText().toString().matches("")){
+                                    Toast.makeText(getContext(),"You should fill up the blank",Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    dialog.dismiss();
+                                    if(mTabataQ.size()!=0) {
+                                        Boolean isOverLap = false;
+                                        String name = listNameInput.getText().toString();
+
+                                        Cursor c = myDBHelper.getReadableDatabase().query("exp",null,null,null,null,null,null,null);
+
+                                        while(c.moveToNext()){
+                                            if(name.equals(c.getString(c.getColumnIndex("menuName")))){
+                                                isOverLap = true;
+                                                Toast.makeText(getContext(),"Database has the same list",Toast.LENGTH_SHORT).show();
+                                                break;
+                                            }
+                                        }
+                                        if(isOverLap == false) {
+                                            long id = 0;
+                                            ContentValues values = new ContentValues();
+                                            values.put("menuName", name);
+                                            values.put("items", itemSchedule.toString());
+                                            values.put("parameters", parameterSchedule.toString());
+                                            id = myDBHelper.getWritableDatabase().insert("exp", null, values);
+                                            Log.d("bernie","id is"+Long.toString(id));
+                                            stringList.add(name);
+                                        }
+
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(), "You must schedule a tabata list", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            }
+                        });
+                        builder.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        loadButton = (Button)mView.findViewById(R.id.load);
+        loadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -363,6 +485,48 @@ public class TabataFragment extends Fragment {
         mTabataQ = new LinkedList<>();
         scheduler = new StringBuilder();
         scheduleList.setText("");
+    }
+    class ListAdapter extends BaseAdapter {
+        Context context;
+        LayoutInflater inflater;
+        List<String> list;
+
+        public ListAdapter(Context context, List<String> list) {
+            this.context = context;
+            inflater = LayoutInflater.from(context);
+            this.list = list;
+        }
+
+        @Override
+        public int getCount() {
+            return this.list.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return this.list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            ViewGroup vg;
+
+            if (convertView != null) {
+                vg = (ViewGroup) convertView;
+            } else {
+                vg = (ViewGroup) inflater.inflate(R.layout.layout_custom_list_menu, null);
+            }
+
+            final TextView menuName = ((TextView) vg.findViewById(R.id.name));
+            menuName.setText(list.get(position));
+
+            return vg;
+        }
     }
 
 
