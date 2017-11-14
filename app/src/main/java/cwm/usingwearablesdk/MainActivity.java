@@ -395,6 +395,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
                             mTabataShowFM.setHistory(builder.toString());
                             sendActionItemEnd();
+                            selectActionItemFromQueue();
                         }
                         mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
                     if(!status.equals("stop"))
@@ -752,76 +753,15 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     }
 
     public void selectActionItemFromQueue(){
-        int itemPos;
-        String itemName;
-        TabataTask task;
+
+        final TabataTask task;
 
         if(mTabataQueue.size() != 0) {
             task = mTabataQueue.poll();
-            itemPos = task.getTabataSettings().getItemPos();
-            itemName = task.getTabataSettings().getItemName();
-
-            if(itemName.equals("Push Up"))
-                comment = "伏地挺身";
-            else if(itemName.equals("Crunch"))
-                comment = "捲腹";
-            else if(itemName.equals("Squart"))
-                comment = "深蹲";
-            else if(itemName.equals("Jumping Jack"))
-                comment = "開合跳";
-            else if(itemName.equals("Dips"))
-                comment = "椅子三頭肌稱體";
-            else if(itemName.equals("High Kniess Running"))
-                comment = "原地提膝踏步";
-            else if(itemName.equals("Lunges"))
-                comment = "前屈深蹲";
-            else if(itemName.equals("Burpees"))
-                comment = "波比跳";
-            else if(itemName.equals("Step On Chair"))
-                comment = "登階運動";
-            else if(itemName.equals("PushUp Rotation"))
-                comment = "T型伏地挺身";
-
-            totalInterval = task.getTabataSettings().getIntervalTime();
-            cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
-            mTabataActionItemFM.setActionItemCommentView(comment);
-            mTabataActionItemFM.setActionItemView(itemName);
-
-            Handler handler = new Handler();
-            Handler handler1 = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mTabataActionItemFM.setActionItemStartView("start");
-                    if (mTabataActionItemFM.isVisible()) {
-                        resetFragments(TABATA_ACTION_ITEM_POSITION);
-                    } else
-                        setFragments(TABATA_ACTION_ITEM_POSITION);
-                }
-            },1000);
-            handler1.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
-                }
-            },1000);
-        }
-        else{
-            setFragments(TABATA_WORK_POSITION);
-        }
-    }
-
-    public void sendActionItemEnd(){
-        curentDoneItems++;
-        mTabataShowFM.setItems(curentDoneItems, totalItems);
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
-
-        if(mTabataQueue.size() != 0){
             cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0, 0, 0);
-            totalInterval = mTabataSettings.getIntervalTime();
+            totalInterval = task.getTabataSettings().getIntervalTime();
             setFragments(TABATA_INTERVAL_POSITION);
 
-            /*************************reset time***************************/
             //開始倒數
             timer = new CountDownTimer(totalInterval*1000,1000){
 
@@ -840,7 +780,54 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                         @Override
                         public void run() {
                             setFragments(TABATA_ACTION_ITEM_POSITION);
-                            selectActionItemFromQueue();
+                            int itemPos;
+                            String itemName;
+                            itemPos = task.getTabataSettings().getItemPos();
+                            itemName = task.getTabataSettings().getItemName();
+                            if(itemName.equals("Push Up"))
+                                comment = "伏地挺身";
+                            else if(itemName.equals("Crunch"))
+                                comment = "捲腹";
+                            else if(itemName.equals("Squart"))
+                                comment = "深蹲";
+                            else if(itemName.equals("Jumping Jack"))
+                                comment = "開合跳";
+                            else if(itemName.equals("Dips"))
+                                comment = "椅子三頭肌稱體";
+                            else if(itemName.equals("High Kniess Running"))
+                                comment = "原地提膝踏步";
+                            else if(itemName.equals("Lunges"))
+                                comment = "前屈深蹲";
+                            else if(itemName.equals("Burpees"))
+                                comment = "波比跳";
+                            else if(itemName.equals("Step On Chair"))
+                                comment = "登階運動";
+                            else if(itemName.equals("PushUp Rotation"))
+                                comment = "T型伏地挺身";
+
+                            totalInterval = task.getTabataSettings().getIntervalTime();
+                            cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
+                            mTabataActionItemFM.setActionItemCommentView(comment);
+                            mTabataActionItemFM.setActionItemView(itemName);
+
+                            Handler handler = new Handler();
+                            Handler handler1 = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mTabataActionItemFM.setActionItemStartView("start");
+                                    if (mTabataActionItemFM.isVisible()) {
+                                        resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                    } else
+                                        setFragments(TABATA_ACTION_ITEM_POSITION);
+                                }
+                            },1000);
+                            handler1.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
+                                }
+                            },1000);
                         }
                     },1000);
 
@@ -848,7 +835,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    mTabataIntervalFM.setIntervalNextAction(mTabataSettings.getItemName());
+                    mTabataIntervalFM.setIntervalNextAction(task.getTabataSettings().getItemName());
                     mTabataIntervalFM.setIntervalCountView(Long.toString((millisUntilFinished+50)/1000));
                     if(mTabataIntervalFM.isVisible())
                         resetFragments(TABATA_INTERVAL_POSITION);
@@ -858,33 +845,16 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                 }
 
             }.start();
-            /*************************reset time***************************/
-
-
         }
         else{
-            if(currnetCycle < totalCycle){
-                Log.d("bernie","current cycle:"+Integer.toString(currnetCycle)+" totalCycle:"+Integer.toString(totalCycle));
-                currnetCycle++;
-                mTabataShowFM.setCycles(currnetCycle, totalCycle);
-                if(mTabataShowFM.isVisible())
-                    resetFragments(TABATA_SHOW_POSITION);
-                else
-                    setFragments(TABATA_SHOW_POSITION);
-
-                if(currnetCycle == totalCycle){
-                    Toast.makeText(this,"You have accomplished tabata!",Toast.LENGTH_SHORT).show();
-                    setFragments(TABATA_SHOW_POSITION);
-                }
-                else {
-                    // new round
-                }
-            }
-            else{
-                cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
-                setFragments(TABATA_WORK_POSITION);
-            }
+            setFragments(TABATA_SHOW_POSITION);
         }
+    }
+
+    public void sendActionItemEnd(){
+        curentDoneItems++;
+        mTabataShowFM.setItems(curentDoneItems, totalItems);
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
     }
 
     @Override
