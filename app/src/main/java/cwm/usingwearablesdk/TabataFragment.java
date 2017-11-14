@@ -235,13 +235,13 @@ public class TabataFragment extends Fragment {
 
                                                     tabataTask.setTabataSettings(tempTabataSettings);
 
-                                                    String name = tabataTask.getTabataSettings().getItemName();
-                                                    String prepare = Integer.toString(tabataTask.getTabataSettings().getPrepareTime());;
-                                                    String interval = Integer.toString(tabataTask.getTabataSettings().getIntervalTime());;
-                                                    String actionTimes = Integer.toString(tabataTask.getTabataSettings().getActionTimes());
-                                                    scheduler.append(name+"→"+" Prepare: "+prepare+" Rest: "+interval+" Times:"+actionTimes+"\n");
-                                                    itemSchedule.append(name+",");
-                                                    parameterSchedule.append(prepare+","+interval+","+actionTimes+":");
+                                                    String nameString = tabataTask.getTabataSettings().getItemName();
+                                                    String prepareString = Integer.toString(tabataTask.getTabataSettings().getPrepareTime());;
+                                                    String intervalString = Integer.toString(tabataTask.getTabataSettings().getIntervalTime());;
+                                                    String actionTimesString = Integer.toString(tabataTask.getTabataSettings().getActionTimes());
+                                                    scheduler.append(nameString+"→"+" Prepare: "+prepareString+" Rest: "+intervalString+" Times:"+actionTimesString+"\n");
+                                                    itemSchedule.append(nameString+",");
+                                                    parameterSchedule.append(prepare+","+interval+","+actionTimesString+":");
                                                     mTabataQ.add(tabataTask);
 
                                                     Toast.makeText(getContext(), "Add One Task", Toast.LENGTH_SHORT).show();
@@ -249,6 +249,9 @@ public class TabataFragment extends Fragment {
 
                                                     //reset
                                                     index = 0;
+                                                    prepare = 5;
+                                                    interval = 10;
+                                                    times = 5;
                                                     tatataSettings = new TabataSettings();
                                                 }
                                             }
