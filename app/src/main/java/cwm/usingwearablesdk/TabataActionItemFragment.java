@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
@@ -28,8 +29,11 @@ public class TabataActionItemFragment extends Fragment {
     private TextView actionItemView;
     private TextView actionItemStartView;
 
+    private ImageView exerciseView;
+
     private String actionItem="";
     private String actionItemStart="";
+    private String actionComment="";
 
 
     @Override
@@ -44,10 +48,32 @@ public class TabataActionItemFragment extends Fragment {
         }
 
         actionItemView = (TextView)mView.findViewById(R.id.action_item_view);
-        actionItemView.setText("Action Item: "+actionItem);
+        actionItemView.setText(actionItem+"/"+actionComment);
         actionItemStartView = (TextView)mView.findViewById(R.id.action_item_start_view);
         actionItemStartView.setText(actionItemStart);
-
+        exerciseView = (ImageView)mView.findViewById(R.id.exerceise_view);
+        //exerciseView.setImageResource(R.drawable.pushup);
+        Log.d("bernie","actionView is"+actionItem);
+        if(actionItem.equals("Push Up"))
+            exerciseView.setImageResource(R.drawable.pushup);
+        else if(actionItem.equals("Crunch"))
+            exerciseView.setImageResource(R.drawable.crunch);
+        else if(actionItem.equals("Squart"))
+            exerciseView.setImageResource(R.drawable.squart);
+        else if(actionItem.equals("Jumping Jack"))
+            exerciseView.setImageResource(R.drawable.jumpjack);
+        else if(actionItem.equals("Dips"))
+            exerciseView.setImageResource(R.drawable.dips);
+        else if(actionItem.equals("High Kniess Running"))
+            exerciseView.setImageResource(R.drawable.highknessrunning);
+        else if(actionItem.equals("Lunges"))
+            exerciseView.setImageResource(R.drawable.lungues);
+        else if(actionItem.equals("Burpees"))
+            exerciseView.setImageResource(R.drawable.burpees);
+        else if(actionItem.equals("Step On Chair"))
+            exerciseView.setImageResource(R.drawable.steponchair);
+        else if(actionItem.equals("PushUp Rotation"))
+            exerciseView.setImageResource(R.drawable.pushuprotation);
 
         return mView;
     }
@@ -58,5 +84,6 @@ public class TabataActionItemFragment extends Fragment {
     public void setActionItemStartView(String s){
         actionItemStart = s;
     }
+    public void setActionItemCommentView(String s){actionComment = s;}
 
 }

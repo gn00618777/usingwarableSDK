@@ -30,6 +30,7 @@ public class TabataIntervalFragment extends Fragment {
 
     private String intervalCount = "";
     private String nextAction = "";
+    private String actionComment = "";
 
 
     @Override
@@ -56,6 +57,7 @@ public class TabataIntervalFragment extends Fragment {
         intervalCount = s;
     }
     public void setIntervalNextAction(String s){nextAction = s;}
+    public void setIntervalActionComment(String s){actionComment = s;}
 
 
 

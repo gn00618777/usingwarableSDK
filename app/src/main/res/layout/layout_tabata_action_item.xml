@@ -6,20 +6,31 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-        <TextView
-            android:id="@+id/action_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="30dp"
-            android:text="Action Item: "/>
 
-        <TextView
-            android:id="@+id/action_item_start_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_gravity="center"
-            android:text="status"/>
+                <TextView
+                    android:id="@+id/action_item_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="20dp"
+                    android:text="Item: "/>
+                  <TextView
+                    android:id="@+id/action_item_start_view"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center"
+                    android:text="status"/>
+
+                <ImageView
+                    android:id="@+id/exerceise_view"
+                    android:layout_below="@id/action_item_view"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+
+
+
 
 </LinearLayout>

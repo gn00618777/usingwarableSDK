@@ -126,6 +126,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private int curentDoneItems = 0;
     private TabataTask firstTask = null;
 
+    private String comment = "";
+
     private Queue<TabataTask> mTabataQueue;
 
     private boolean isPressPrepareEnd = false;
@@ -523,7 +525,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
                                      @Override
                                      public void onTick(long millisUntilFinished) {
-                                         mTabataPrepareFM.setPrepareActionView(firstTask.getTabataSettings().getItemName());
+                                         mTabataPrepareFM.setPrepareActionView(firstTask.getTabataSettings().getItemName()+"/"+comment);
                                          mTabataPrepareFM.setPrepareCountView(Long.toString((millisUntilFinished+50)/1000));
                                          cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), (int)((millisUntilFinished+50)/1000), 0, 0);
                                          if(mTabataPrepareFM.isVisible())
@@ -679,6 +681,27 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         int size = mTabataQueue.size();
         isTabataInitStart = true;
         firstTask = mTabataQ.poll();
+        if(firstTask.getTabataSettings().getItemName().equals("Push Up"))
+            comment = "伏地挺身";
+        else if(firstTask.getTabataSettings().getItemName().equals("Crunch"))
+            comment = "捲腹";
+        else if(firstTask.getTabataSettings().getItemName().equals("Squart"))
+            comment = "深蹲";
+        else if(firstTask.getTabataSettings().getItemName().equals("Jumping Jack"))
+            comment = "開合跳";
+        else if(firstTask.getTabataSettings().getItemName().equals("Dips"))
+            comment = "椅子三頭肌稱體";
+        else if(firstTask.getTabataSettings().getItemName().equals("High Kniess Running"))
+            comment = "原地提膝踏步";
+        else if(firstTask.getTabataSettings().getItemName().equals("Lunges"))
+            comment = "前屈深蹲";
+        else if(firstTask.getTabataSettings().getItemName().equals("Burpees"))
+            comment = "波比跳";
+        else if(firstTask.getTabataSettings().getItemName().equals("Step On Chair"))
+            comment = "登階運動";
+        else if(firstTask.getTabataSettings().getItemName().equals("PushUp Rotation"))
+            comment = "T型伏地挺身";
+
         mTabataSettings = firstTask.getTabataSettings();
         totalCycle = mTabataSettings.getCycle();
         totalPrepare = mTabataSettings.getPrepareTime();
@@ -714,6 +737,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         Log.d("bernie","from q firstTask name is"+firstTask.getTabataSettings().getItemName());
         totalInterval = firstTask.getTabataSettings().getIntervalTime();
         cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
+        mTabataActionItemFM.setActionItemCommentView(comment);
         mTabataActionItemFM.setActionItemView(itemName);
 
         Handler handler = new Handler();
@@ -746,8 +770,31 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             task = mTabataQueue.poll();
             itemPos = task.getTabataSettings().getItemPos();
             itemName = task.getTabataSettings().getItemName();
+
+            if(itemName.equals("Push Up"))
+                comment = "伏地挺身";
+            else if(itemName.equals("Crunch"))
+                comment = "捲腹";
+            else if(itemName.equals("Squart"))
+                comment = "深蹲";
+            else if(itemName.equals("Jumping Jack"))
+                comment = "開合跳";
+            else if(itemName.equals("Dips"))
+                comment = "椅子三頭肌稱體";
+            else if(itemName.equals("High Kniess Running"))
+                comment = "原地提膝踏步";
+            else if(itemName.equals("Lunges"))
+                comment = "前屈深蹲";
+            else if(itemName.equals("Burpees"))
+                comment = "波比跳";
+            else if(itemName.equals("Step On Chair"))
+                comment = "登階運動";
+            else if(itemName.equals("PushUp Rotation"))
+                comment = "T型伏地挺身";
+
             totalInterval = task.getTabataSettings().getIntervalTime();
             cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
+            mTabataActionItemFM.setActionItemCommentView(comment);
             mTabataActionItemFM.setActionItemView(itemName);
 
             Handler handler = new Handler();
