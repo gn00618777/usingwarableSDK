@@ -29,14 +29,11 @@ public class TabataShowFragment extends Fragment {
     private TextView caloriesView;
     private TextView heartBeatView;
     private TextView historyView;
-    private TextView cycleView;
     private TextView itemsView;
 
     private Button tabataDoneButton;
     private Button tabataPauseButton;
 
-    private int cycle = 0;
-    private int currentCycle = 0;
     private int currentDoneItm = 0;
     private int totalItems = 0;
 
@@ -76,8 +73,6 @@ public class TabataShowFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.layout_tabata_show, null);
         }
-        cycleView = (TextView)mView.findViewById(R.id.cycle_view);
-        cycleView.setText("cycle: "+Integer.toString(currentCycle)+"/"+Integer.toString(cycle));
         itemsView = (TextView)mView.findViewById(R.id.items_view);
         itemsView.setText("items: "+Integer.toString(currentDoneItm)+"/"+Integer.toString(totalItems) );
         statusView = (TextView) mView.findViewById(R.id.status);
@@ -131,19 +126,9 @@ public class TabataShowFragment extends Fragment {
         actionItemEnd = s;
     }
 
-    public void setCycles(int currentCycle, int totalCycle){
-        this.currentCycle = currentCycle;
-        this.cycle = totalCycle;
-    }
-
     public void setItems(int currentDone, int totalItems){
         currentDoneItm = currentDone;
         this.totalItems = totalItems;
     }
-    public void setCycleView(int s, int s1){
-        currentCycle = s;
-        cycle = s1;
-    }
-
 
 }

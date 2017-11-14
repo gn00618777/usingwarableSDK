@@ -75,10 +75,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             //do reinitial
             cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
-            currnetCycle = 0;
             curentDoneItems = 0;
             mTabataQueue = null;
-            mTabataShowFM.setCycles(0,0);
             mTabataShowFM.setItems(0,0);
 
             navigateTo(item);
@@ -116,10 +114,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private CountDownTimer timer;
 
     private TabataSettings mTabataSettings;
-    private int totalCycle = 0;
     private int totalPrepare = 0;
     private int totalInterval = 0;
-    private int currnetCycle = 0;
     private int goalTimes = 0;
     private int totalItems = 0;
     private int curentDoneItems = 0;
@@ -332,7 +328,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
                 case 0x05:
                     Log.d("bernie", "0x05");
-                        mTabataShowFM.setCycles(currnetCycle, totalCycle);
                         String status = "";
                         String item = "";
                         String count = "";
@@ -695,7 +690,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             comment = "T型伏地挺身";
 
         mTabataSettings = firstTask.getTabataSettings();
-        totalCycle = mTabataSettings.getCycle();
         totalPrepare = mTabataSettings.getPrepareTime();
         totalInterval = mTabataSettings.getIntervalTime();
         totalItems = size;
@@ -868,10 +862,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     @Override
     public void onPressTabataDoneButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
-        currnetCycle = 0;
         curentDoneItems = 0;
         mTabataQueue = null;
-        mTabataShowFM.setCycles(0,0);
         mTabataShowFM.setItems(0,0);
         if(mTabataFM.isVisible())
             resetFragments(TABATA_WORK_POSITION);
