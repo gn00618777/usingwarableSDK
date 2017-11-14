@@ -74,7 +74,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             //do reinitial
-            outSide = true;
             cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
             currnetCycle = 0;
             curentDoneItems = 0;
@@ -385,14 +384,9 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
                         if(status.equals("stop")){
                             mTabataFM.setReset();
-                            if(outSide == false)
-                               setFragments(TABATA_WORK_POSITION);
-                            else {
-                                timer.cancel();
-                                mTabataPrepareFM.setPrepareCountView("");
-                                mTabataIntervalFM.setIntervalCountView("");
-                                outSide = false;
-                            }
+                            timer.cancel();
+                            if(mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() || mTabataActionItemFM.isVisible())
+                                setFragments(TABATA_WORK_POSITION);
                         }
 
                         // goal is achievement
@@ -501,9 +495,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             resetFragments(TABATA_PREPARE_POSITION);
                         else
                             setFragments(TABATA_PREPARE_POSITION);
-                         handler.postDelayed(new Runnable() {
-                             @Override
-                             public void run() {
+
                                  //開始倒數
                                  timer = new CountDownTimer(totalPrepare*1000,1000){
 
@@ -535,8 +527,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                                      }
 
                                  }.start();
-                             }
-                         },2000);
                         /**********************************************************************/
                         //cwmManager
 
