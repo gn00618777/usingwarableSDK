@@ -385,7 +385,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                         if(status.equals("stop")){
                             mTabataFM.setReset();
                             timer.cancel();
-                            if(mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() || mTabataActionItemFM.isVisible())
+                            if(mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() ||
+                                    mTabataActionItemFM.isVisible() || mTabataShowFM.isVisible())
                                 setFragments(TABATA_WORK_POSITION);
                         }
 
@@ -758,6 +759,28 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
         if(mTabataQueue.size() != 0) {
             task = mTabataQueue.poll();
+
+            if(task.getTabataSettings().getItemName().equals("Push Up"))
+                comment = "伏地挺身";
+            else if(task.getTabataSettings().getItemName().equals("Crunch"))
+                comment = "捲腹";
+            else if(task.getTabataSettings().getItemName().equals("Squart"))
+                comment = "深蹲";
+            else if(task.getTabataSettings().getItemName().equals("Jumping Jack"))
+                comment = "開合跳";
+            else if(task.getTabataSettings().getItemName().equals("Dips"))
+                comment = "椅子三頭肌稱體";
+            else if(task.getTabataSettings().getItemName().equals("High Kniess Running"))
+                comment = "原地提膝踏步";
+            else if(task.getTabataSettings().getItemName().equals("Lunges"))
+                comment = "前屈深蹲";
+            else if(task.getTabataSettings().getItemName().equals("Burpees"))
+                comment = "波比跳";
+            else if(task.getTabataSettings().getItemName().equals("Step On Chair"))
+                comment = "登階運動";
+            else if(task.getTabataSettings().getItemName().equals("PushUp Rotation"))
+                comment = "T型伏地挺身";
+            mTabataIntervalFM.setIntervalActionComment(comment);
             cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0, 0, 0);
             totalInterval = task.getTabataSettings().getIntervalTime();
             setFragments(TABATA_INTERVAL_POSITION);
@@ -784,26 +807,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             String itemName;
                             itemPos = task.getTabataSettings().getItemPos();
                             itemName = task.getTabataSettings().getItemName();
-                            if(itemName.equals("Push Up"))
-                                comment = "伏地挺身";
-                            else if(itemName.equals("Crunch"))
-                                comment = "捲腹";
-                            else if(itemName.equals("Squart"))
-                                comment = "深蹲";
-                            else if(itemName.equals("Jumping Jack"))
-                                comment = "開合跳";
-                            else if(itemName.equals("Dips"))
-                                comment = "椅子三頭肌稱體";
-                            else if(itemName.equals("High Kniess Running"))
-                                comment = "原地提膝踏步";
-                            else if(itemName.equals("Lunges"))
-                                comment = "前屈深蹲";
-                            else if(itemName.equals("Burpees"))
-                                comment = "波比跳";
-                            else if(itemName.equals("Step On Chair"))
-                                comment = "登階運動";
-                            else if(itemName.equals("PushUp Rotation"))
-                                comment = "T型伏地挺身";
 
                             totalInterval = task.getTabataSettings().getIntervalTime();
                             cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);

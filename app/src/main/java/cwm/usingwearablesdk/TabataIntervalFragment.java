@@ -48,7 +48,7 @@ public class TabataIntervalFragment extends Fragment {
         intervalCountView = (TextView)mView.findViewById(R.id.interval_count_view);
         intervalCountView.setText(intervalCount);
         intervalNextActionView = (TextView)mView.findViewById(R.id.prepare_action);
-        intervalNextActionView.setText(nextAction);
+        intervalNextActionView.setText(nextAction+"/"+actionComment);
 
         return mView;
     }
