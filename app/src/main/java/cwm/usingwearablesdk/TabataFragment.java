@@ -305,7 +305,7 @@ public class TabataFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(mTabataQ.size() != 0)
-                   mCallback.onInitTabata(mTabataQ);
+                    mCallback.onInitTabata(mTabataQ);
                 scheduler = new StringBuilder();
             }
         });

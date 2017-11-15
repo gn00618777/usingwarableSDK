@@ -120,15 +120,34 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private int totalItems = 0;
     private int curentDoneItems = 0;
     private TabataTask firstTask = null;
+    private TabataTask laterTask = null;
 
     private String comment = "";
 
     private Queue<TabataTask> mTabataQueue;
 
-    private boolean isPressPrepareEnd = false;
-    private boolean isPressActionItemEnd = false;
-    private boolean isPressTabataDone = false;
     private boolean isTabataInitStart = false;
+    private boolean isTabataPrepareStart = false;
+    private boolean isTabataPrepareCount = false;
+    private boolean isTabataPrepareEnd = false;
+    private boolean isTabataActionItem = false;
+    private boolean isTabataActionStart = false;
+    private boolean isTabataActionEnd = false;
+    private boolean isTabataIntervalStart = false;
+    private boolean isTabataIntervalCount = false;
+    private boolean isTabataIntervalEnd = false;
+    private boolean isTabataDone = false;
+
+    //tabata request related
+    private Handler requestHandler = new Handler();
+    private Runnable requestTask = new Runnable() {
+        @Override
+        public void run() {
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_REQUEST.ordinal(), 0, 0, 0);
+            requestHandler.postDelayed(requestTask,1000);
+        }
+    };
+    private int tabataNoResponseCount = 0;
 
     final int SHOWDATA_POSITION = 0;
     final int PERSONAL_POSITION = 1;
@@ -157,8 +176,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         TABATA_ACTION_ITEM,
         TABATA_ACTION_START,
         TABATA_ACTION_END,
+        TABATA_REQUEST,
         TABATA_DONE,
-        TABATA_RESUME
     };
 
     private ProgressDialog mProgressDialog = null;
@@ -327,6 +346,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     break;
 
                 case 0x05:
+                    tabataNoResponseCount = 0;
                     Log.d("bernie", "0x05");
                         String status = "";
                         String item = "";
@@ -380,18 +400,21 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                         if(status.equals("stop")){
                             mTabataFM.setReset();
                             timer.cancel();
+                            requestHandler.removeCallbacks(requestTask);
                             if(mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() ||
                                     mTabataActionItemFM.isVisible() || mTabataShowFM.isVisible())
                                 setFragments(TABATA_WORK_POSITION);
                         }
 
                         // goal is achievement
-                        if (cwmEvents.getDoItemCount() == goalTimes && goalTimes!= 0) {
-                            Log.d("bernie","goalTimes: "+Integer.toString(goalTimes));
+                        if (cwmEvents.getDoItemCount() >= goalTimes && goalTimes!= 0) {
+                            goalTimes = 0;
+                            Log.d("bernie","goal is achievement");
+                            requestHandler.removeCallbacks(requestTask);
                             builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
                             mTabataShowFM.setHistory(builder.toString());
                             sendActionItemEnd();
-                            selectActionItemFromQueue();
+                           // selectActionItemFromQueue();
                         }
                         mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
                     if(!status.equals("stop"))
@@ -480,58 +503,166 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     Toast.makeText(getApplicationContext(),"Intelligent has sync !",Toast.LENGTH_SHORT).show();
                     break;
                 case 0x05:
-                    if(isTabataInitStart == true){
+                    if(isTabataInitStart){
                         isTabataInitStart = false;
-                        setFragments(TABATA_PREPARE_POSITION);
-
-                        /***************tabata preapare********************/
+                        isTabataPrepareStart = true;
                         cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_START.ordinal(), 0 , 0, 0);
-                        Handler handler = new Handler();
-
-                        if(mTabataPrepareFM.isVisible())
-                            resetFragments(TABATA_PREPARE_POSITION);
+                    }
+                    else if(isTabataPrepareStart){
+                        isTabataPrepareStart = false;
+                        setFragments(TABATA_PREPARE_POSITION);
+                        tabataPrepareWork();
+                    }
+                    else if(isTabataPrepareCount){
+                        isTabataPrepareCount = false;
+                        isTabataPrepareEnd = true;
+                        cwmManager.CwmTabataCommand(ITEMS.TABATA_PREARE_END.ordinal(), 0, 0, 0);
+                    }
+                    else if(isTabataPrepareEnd){
+                        isTabataPrepareEnd = false;
+                        if(firstTask != null)
+                            doFirstTabataTask();
                         else
-                            setFragments(TABATA_PREPARE_POSITION);
+                            selectActionItemFromQueue();
+                    }
+                    else if(isTabataActionItem){
+                        isTabataActionItem = false;
+                        setFragments(TABATA_ACTION_ITEM_POSITION);
+                        if(firstTask != null)
+                            mTabataActionItemFM.setActionItemView(firstTask.getTabataSettings().getItemName());
+                        else
+                            mTabataActionItemFM.setActionItemView(laterTask.getTabataSettings().getItemName());
+                        mTabataActionItemFM.setActionItemCommentView(comment);
+                        resetFragments(TABATA_ACTION_ITEM_POSITION);
 
-                                 //開始倒數
-                                 timer = new CountDownTimer(totalPrepare*1000,1000){
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mTabataActionItemFM.setActionItemStartView("start");
+                                resetFragments(TABATA_ACTION_ITEM_POSITION);
+                            }
+                        },1000);
 
-                                     @Override
-                                     public void onFinish() {
-                                         mTabataPrepareFM.setPrepareCountView("0");
-                                         cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), 0, 0, 0);
-                                         if(mTabataPrepareFM.isVisible())
-                                             resetFragments(TABATA_PREPARE_POSITION);
-                                         else
-                                             setFragments(TABATA_PREPARE_POSITION);
+                        Handler handler1 = new Handler();
+                        handler1.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                isTabataActionStart = true;
+                                cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
+                            }
+                        },1000);
+                        firstTask = null;
 
-                                         setFragments(TABATA_ACTION_ITEM_POSITION);
-                                         if(firstTask != null)
-                                             doFirstTabataTask();
-                                         else
-                                            selectActionItemFromQueue();
-                                     }
+                    }
+                    else if(isTabataActionStart){
+                        isTabataActionStart = false;
+                        requestHandler.post(requestTask);
+                    }
+                    else if(isTabataActionEnd){
+                        isTabataActionEnd = false;
+                        selectActionItemFromQueue();
+                    }
+                    else if(isTabataIntervalStart){
+                        isTabataIntervalStart = false;
+                        //開始倒數
+                        timer = new CountDownTimer(totalInterval*1000,1000){
+                            @Override
+                            public void onFinish() {
+                                isTabataIntervalCount = true;
+                                cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, 0, 0);
+                            }
 
-                                     @Override
-                                     public void onTick(long millisUntilFinished) {
-                                         mTabataPrepareFM.setPrepareActionView(firstTask.getTabataSettings().getItemName()+"/"+comment);
-                                         mTabataPrepareFM.setPrepareCountView(Long.toString((millisUntilFinished+50)/1000));
-                                         cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), (int)((millisUntilFinished+50)/1000), 0, 0);
-                                         if(mTabataPrepareFM.isVisible())
-                                             resetFragments(TABATA_PREPARE_POSITION);
-                                         else
-                                             setFragments(TABATA_PREPARE_POSITION);
-                                     }
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                mTabataIntervalFM.setIntervalNextAction(laterTask.getTabataSettings().getItemName());
+                                mTabataIntervalFM.setIntervalCountView(Long.toString((millisUntilFinished+50)/1000));
+                                if(mTabataIntervalFM.isVisible())
+                                    resetFragments(TABATA_INTERVAL_POSITION);
+                                else
+                                    setFragments(TABATA_INTERVAL_POSITION);
+                                cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, (int)((millisUntilFinished+50)/1000), 0);
+                            }
 
-                                 }.start();
-                        /**********************************************************************/
-                        //cwmManager
+                        }.start();
+                    }
+                    else if(isTabataIntervalCount){
+                        isTabataIntervalCount = false;
+                        mTabataIntervalFM.setIntervalCountView("0");
+                        resetFragments(TABATA_INTERVAL_POSITION);
+                        isTabataIntervalEnd = true;
+                        cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_END.ordinal(), 0, 0, 0);
 
+
+
+
+                              /*  Handler handler = new Handler();
+                                Handler handler1 = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mTabataActionItemFM.setActionItemStartView("start");
+                                        if (mTabataActionItemFM.isVisible()) {
+                                            resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                        } else
+                                            setFragments(TABATA_ACTION_ITEM_POSITION);
+                                    }
+                                },1000);
+                                handler1.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
+                                    }
+                                },1000);*/
+
+                    }
+                    else if(isTabataIntervalEnd){
+                        isTabataIntervalEnd = false;
+                        mTabataActionItemFM.setActionItemView(laterTask.getTabataSettings().getItemName());
+                        mTabataActionItemFM.setActionItemCommentView(comment);
+
+                        int itemPos = laterTask.getTabataSettings().getItemPos();
+                        totalInterval = laterTask.getTabataSettings().getIntervalTime();
+                        isTabataActionItem = true;
+                        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
+                    }
+                    else if(isTabataDone){
+                        isTabataDone = false;
+                        curentDoneItems = 0;
+                        mTabataQueue = null;
+                        mTabataShowFM.setItems(0,0);
+                       if(mTabataFM.isVisible())
+                         resetFragments(TABATA_WORK_POSITION);
+                       else
+                         setFragments(TABATA_WORK_POSITION);
                     }
                     break;
             }
         }
     };
+
+    public void tabataPrepareWork(){
+        //開始倒數
+        timer = new CountDownTimer(totalPrepare*1000,1000){
+            @Override
+            public void onFinish() {
+                mTabataPrepareFM.setPrepareCountView("0");
+                resetFragments(TABATA_PREPARE_POSITION);
+                isTabataPrepareCount = true;
+                cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), 0, 0, 0);
+            }
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTabataPrepareFM.setPrepareActionView(firstTask.getTabataSettings().getItemName()+"/"+comment);
+                mTabataPrepareFM.setPrepareCountView(Long.toString((millisUntilFinished+50)/1000));
+                cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), (int)((millisUntilFinished+50)/1000), 0, 0);
+                if(mTabataPrepareFM.isVisible())
+                    resetFragments(TABATA_PREPARE_POSITION);
+            }
+
+        }.start();
+    }
 
     public CwmManager.ErrorListener errorListener = new CwmManager.ErrorListener(){
         @Override
@@ -555,6 +686,17 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                        setFragments(FLASH_TEST_POSITION);
                    Toast.makeText(getApplication(), "Flash Header Lost!", Toast.LENGTH_SHORT).show();
 
+               }
+               else if(command == 0x17){
+                   tabataNoResponseCount++;
+                   if(tabataNoResponseCount == 3){
+                       requestHandler.removeCallbacks(requestTask);
+                       resetFragments(TABATA_WORK_POSITION);
+                       tabataNoResponseCount = 0;
+                       Toast.makeText(getApplicationContext(),
+                               "There is problem with Tabata, please check you hava in connection.",
+                               Toast.LENGTH_SHORT);
+                   }
                }
             }
             else if(id == 0x02){ //packet lost
@@ -583,7 +725,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                 Toast.makeText(getApplicationContext(), "Sync Aborted!", Toast.LENGTH_SHORT).show();
 
             }
-
         }
     };
 
@@ -695,6 +836,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         totalItems = size;
         mTabataShowFM.setItems(curentDoneItems, totalItems);
         goalTimes = mTabataSettings.getActionTimes();
+        Log.d("bernie","Tabata init");
         cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0 , 0, 0);
     }
 
@@ -718,130 +860,44 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     }
 
     public void doFirstTabataTask(){
-        int itemPos = firstTask.getTabataSettings().getItemPos();;
-        String itemName = firstTask.getTabataSettings().getItemName();;
-        Log.d("bernie","from q firstTask name is"+firstTask.getTabataSettings().getItemName());
-        totalInterval = firstTask.getTabataSettings().getIntervalTime();
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
-        mTabataActionItemFM.setActionItemCommentView(comment);
-        mTabataActionItemFM.setActionItemView(itemName);
 
-        Handler handler = new Handler();
-        Handler handler1 = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mTabataActionItemFM.setActionItemStartView("start");
-                if (mTabataActionItemFM.isVisible()) {
-                    resetFragments(TABATA_ACTION_ITEM_POSITION);
-                } else
-                    setFragments(TABATA_ACTION_ITEM_POSITION);
-            }
-        },1000);
-        handler1.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
-            }
-        },1000);
-        firstTask = null;
+        int itemPos = firstTask.getTabataSettings().getItemPos();;
+
+        totalInterval = firstTask.getTabataSettings().getIntervalTime();
+        isTabataActionItem = true;
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
     }
 
     public void selectActionItemFromQueue(){
 
-        final TabataTask task;
-
         if(mTabataQueue.size() != 0) {
-            task = mTabataQueue.poll();
-
-            if(task.getTabataSettings().getItemName().equals("Push Up"))
+            laterTask = mTabataQueue.poll();
+            if(laterTask.getTabataSettings().getItemName().equals("Push Up"))
                 comment = "伏地挺身";
-            else if(task.getTabataSettings().getItemName().equals("Crunch"))
+            else if(laterTask.getTabataSettings().getItemName().equals("Crunch"))
                 comment = "捲腹";
-            else if(task.getTabataSettings().getItemName().equals("Squart"))
+            else if(laterTask.getTabataSettings().getItemName().equals("Squart"))
                 comment = "深蹲";
-            else if(task.getTabataSettings().getItemName().equals("Jumping Jack"))
+            else if(laterTask.getTabataSettings().getItemName().equals("Jumping Jack"))
                 comment = "開合跳";
-            else if(task.getTabataSettings().getItemName().equals("Dips"))
+            else if(laterTask.getTabataSettings().getItemName().equals("Dips"))
                 comment = "椅子三頭肌稱體";
-            else if(task.getTabataSettings().getItemName().equals("High Kniess Running"))
+            else if(laterTask.getTabataSettings().getItemName().equals("High Kniess Running"))
                 comment = "原地提膝踏步";
-            else if(task.getTabataSettings().getItemName().equals("Lunges"))
+            else if(laterTask.getTabataSettings().getItemName().equals("Lunges"))
                 comment = "前屈深蹲";
-            else if(task.getTabataSettings().getItemName().equals("Burpees"))
+            else if(laterTask.getTabataSettings().getItemName().equals("Burpees"))
                 comment = "波比跳";
-            else if(task.getTabataSettings().getItemName().equals("Step On Chair"))
+            else if(laterTask.getTabataSettings().getItemName().equals("Step On Chair"))
                 comment = "登階運動";
-            else if(task.getTabataSettings().getItemName().equals("PushUp Rotation"))
+            else if(laterTask.getTabataSettings().getItemName().equals("PushUp Rotation"))
                 comment = "T型伏地挺身";
             mTabataIntervalFM.setIntervalActionComment(comment);
-            cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0, 0, 0);
-            totalInterval = task.getTabataSettings().getIntervalTime();
             setFragments(TABATA_INTERVAL_POSITION);
-
-            //開始倒數
-            timer = new CountDownTimer(totalInterval*1000,1000){
-
-                @Override
-                public void onFinish() {
-                    mTabataIntervalFM.setIntervalCountView("0");
-                    cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, 0, 0);
-                    cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_END.ordinal(), 0, 0, 0);
-                    if(mTabataIntervalFM.isVisible())
-                        resetFragments(TABATA_INTERVAL_POSITION);
-                    else
-                        setFragments(TABATA_INTERVAL_POSITION);
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            setFragments(TABATA_ACTION_ITEM_POSITION);
-                            int itemPos;
-                            String itemName;
-                            itemPos = task.getTabataSettings().getItemPos();
-                            itemName = task.getTabataSettings().getItemName();
-
-                            totalInterval = task.getTabataSettings().getIntervalTime();
-                            cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
-                            mTabataActionItemFM.setActionItemCommentView(comment);
-                            mTabataActionItemFM.setActionItemView(itemName);
-
-                            Handler handler = new Handler();
-                            Handler handler1 = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mTabataActionItemFM.setActionItemStartView("start");
-                                    if (mTabataActionItemFM.isVisible()) {
-                                        resetFragments(TABATA_ACTION_ITEM_POSITION);
-                                    } else
-                                        setFragments(TABATA_ACTION_ITEM_POSITION);
-                                }
-                            },1000);
-                            handler1.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
-                                }
-                            },1000);
-                        }
-                    },1000);
-
-                }
-
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    mTabataIntervalFM.setIntervalNextAction(task.getTabataSettings().getItemName());
-                    mTabataIntervalFM.setIntervalCountView(Long.toString((millisUntilFinished+50)/1000));
-                    if(mTabataIntervalFM.isVisible())
-                        resetFragments(TABATA_INTERVAL_POSITION);
-                    else
-                        setFragments(TABATA_INTERVAL_POSITION);
-                    cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, (int)((millisUntilFinished+50)/1000), 0);
-                }
-
-            }.start();
+            totalInterval = laterTask.getTabataSettings().getIntervalTime();
+            goalTimes = laterTask.getTabataSettings().getActionTimes();
+            isTabataIntervalStart = true;
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0, 0, 0);
         }
         else{
             setFragments(TABATA_SHOW_POSITION);
@@ -851,6 +907,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     public void sendActionItemEnd(){
         curentDoneItems++;
         mTabataShowFM.setItems(curentDoneItems, totalItems);
+        Log.d("bernie","sendActionItemEnd");
+        isTabataActionEnd = true;
         cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
     }
 
@@ -861,14 +919,15 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
     @Override
     public void onPressTabataDoneButton(){
+        isTabataDone = true;
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
-        curentDoneItems = 0;
+       /* curentDoneItems = 0;
         mTabataQueue = null;
         mTabataShowFM.setItems(0,0);
         if(mTabataFM.isVisible())
             resetFragments(TABATA_WORK_POSITION);
         else
-            setFragments(TABATA_WORK_POSITION);
+            setFragments(TABATA_WORK_POSITION);*/
     }
 
     @Override
