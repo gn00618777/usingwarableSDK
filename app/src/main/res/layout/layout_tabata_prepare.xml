@@ -27,4 +27,12 @@
           android:textSize="50dp"
           android:text=" count"/>
 
+    <ImageView
+        android:id="@+id/exerceise_view"
+        android:layout_below="@id/action_item_view"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

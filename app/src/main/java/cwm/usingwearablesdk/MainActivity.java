@@ -417,9 +417,12 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                            // selectActionItemFromQueue();
                         }
                         mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
-                    if(!status.equals("stop"))
-                       makeTextAndShow("item: "+item+"\ncount: "+
-                               count+"\nheartRate: "+heartRate+"\ncalories: "+calories,Toast.LENGTH_SHORT);
+                    if(!status.equals("stop")){
+                        mTabataActionItemFM.setActionCountView(count);
+                        resetFragments(TABATA_ACTION_ITEM_POSITION);
+                    }
+                       //makeTextAndShow("item: "+item+"\ncount: "+
+                        //       count+"\nheartRate: "+heartRate+"\ncalories: "+calories,Toast.LENGTH_SHORT);
 
                     break;
                 case 0x21: // flash feedback command
@@ -510,6 +513,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     }
                     else if(isTabataPrepareStart){
                         isTabataPrepareStart = false;
+                        mTabataPrepareFM.setPrepareCommentView(firstTask.getTabataSettings().getItemName());
                         setFragments(TABATA_PREPARE_POSITION);
                         tabataPrepareWork();
                     }
@@ -807,6 +811,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     public void onInitTabata(Queue<TabataTask> mTabataQ){
         mTabataQueue = mTabataQ;
         int size = mTabataQueue.size();
+        Log.d("bernie","size is "+Integer.toString(size));
         isTabataInitStart = true;
         firstTask = mTabataQ.poll();
         if(firstTask.getTabataSettings().getItemName().equals("Push Up"))
@@ -832,11 +837,13 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
         mTabataSettings = firstTask.getTabataSettings();
         totalPrepare = mTabataSettings.getPrepareTime();
+        Log.d("bernie","Tabata prepare is"+Integer.toString(totalPrepare));
         totalInterval = mTabataSettings.getIntervalTime();
+        Log.d("bernie","Tabata interval is"+Integer.toString(totalInterval));
         totalItems = size;
         mTabataShowFM.setItems(curentDoneItems, totalItems);
         goalTimes = mTabataSettings.getActionTimes();
-        Log.d("bernie","Tabata init");
+        Log.d("bernie","Tabata goal is"+Integer.toString(goalTimes));
         cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0 , 0, 0);
     }
 

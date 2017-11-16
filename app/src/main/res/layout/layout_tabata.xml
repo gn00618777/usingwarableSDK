@@ -8,46 +8,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"/>
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
         <Button
-                android:id="@+id/load"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/add_item_new"
-                android:layout_alignParentRight="true"
-                android:text="LOAD"/>
-        <Button
-                android:id="@+id/edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/add_item_new"
-                android:text="EDIT"/>
-
-        <Button
-            android:id="@+id/add_item_new"
+            android:id="@+id/prepare_time"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#227700"
-            android:layout_above="@+id/remove_item"
-            android:text="Add"/>
+            android:text="預備時間"/>
+         <Button
+            android:id="@+id/action_type"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="達標類型"/>
         <Button
-            android:id="@+id/remove_item"
+            android:id="@+id/action_times"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#DDAA00"
-            android:layout_above="@+id/start"
-            android:text="REMOVE"/>
+            android:text="運動次數"/>
         <Button
-            android:id="@+id/start"
+            android:id="@+id/interval_time"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#550088"
-            android:layout_alignParentBottom="true"
-            android:text="START"/>
-    </RelativeLayout>
+            android:text="間隔時間"/>
 
+        <Button
+                android:id="@+id/exercise_item"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="運動項目"/>
+        <Button
+                android:id="@+id/cycle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="循環次數"/>
+
+        <Button
+               android:id="@+id/start_button"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="20dp"
+               android:layout_gravity="center"
+               android:text="start"/>
 
 </LinearLayout>

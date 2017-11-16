@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ public class TabataIntervalFragment extends Fragment {
     private String intervalCount = "";
     private String nextAction = "";
     private String actionComment = "";
+    private ImageView exerciseView;
 
 
     @Override
@@ -49,6 +51,28 @@ public class TabataIntervalFragment extends Fragment {
         intervalCountView.setText(intervalCount);
         intervalNextActionView = (TextView)mView.findViewById(R.id.prepare_action);
         intervalNextActionView.setText(nextAction+"/"+actionComment);
+        exerciseView = (ImageView)mView.findViewById(R.id.exerceise_view);
+        Log.d("bernie","exercise view is"+actionComment);
+        if(nextAction.equals("Push Up"))
+            exerciseView.setImageResource(R.drawable.pushup);
+        else if(nextAction.equals("Crunch"))
+            exerciseView.setImageResource(R.drawable.crunch);
+        else if(nextAction.equals("Squart"))
+            exerciseView.setImageResource(R.drawable.squart);
+        else if(nextAction.equals("Jumping Jack"))
+            exerciseView.setImageResource(R.drawable.jumpjack);
+        else if(nextAction.equals("Dips"))
+            exerciseView.setImageResource(R.drawable.dips);
+        else if(nextAction.equals("High Kniess Running"))
+            exerciseView.setImageResource(R.drawable.highknessrunning);
+        else if(nextAction.equals("Lunges"))
+            exerciseView.setImageResource(R.drawable.lungues);
+        else if(nextAction.equals("Burpees"))
+            exerciseView.setImageResource(R.drawable.burpees);
+        else if(nextAction.equals("Step On Chair"))
+            exerciseView.setImageResource(R.drawable.steponchair);
+        else if(nextAction.equals("PushUp Rotation"))
+            exerciseView.setImageResource(R.drawable.pushuprotation);
 
         return mView;
     }
