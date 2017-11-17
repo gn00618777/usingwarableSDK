@@ -25,9 +25,32 @@
                     android:id="@+id/action_item_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                      android:layout_marginTop="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="50dp"
                     android:layout_gravity="center"
-                    android:text=""/>
+                    android:text="123"/>
+
+    <Button
+        android:id="@+id/tabata_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Tabata結束"
+        />
+    <Button
+        android:id="@+id/tabata_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Tabata暫停"/>
+
+    <ImageView
+        android:id="@+id/exerceise_view"
+        android:layout_below="@id/action_item_view"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 

@@ -4,6 +4,8 @@ package cwm.usingwearablesdk;
  * Created by user on 2017/9/10.
  */
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,7 +32,10 @@ public class TabataActionItemFragment extends Fragment {
     private TextView actionItemStartView;
     private TextView actionCountView;
 
-   // private ImageView exerciseView;
+    private Button tabataPauseButton;
+    private Button tabataDoneButton;
+
+    private ImageView exerciseView;
 
     private String actionItem="";
     private String actionItemStart="";
@@ -38,10 +43,25 @@ public class TabataActionItemFragment extends Fragment {
 
     private String count = "";
 
+    ListenForTabataActionItemFragment mCallback;
+
+
+    public interface ListenForTabataActionItemFragment {
+        public void onPressTabataDoneButton();
+        public void onPressTabataPauseButton();
+    }
+
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
+        try {
+            mCallback = (ListenForTabataActionItemFragment) context;
+        }catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement ListenForTabataActionItemFragment");
+        }
+
     }
 
     @Override
@@ -54,10 +74,57 @@ public class TabataActionItemFragment extends Fragment {
         actionItemView.setText(actionItem+"/"+actionComment);
         actionItemStartView = (TextView)mView.findViewById(R.id.action_item_start_view);
         actionItemStartView.setText(actionItemStart);
-        //exerciseView = (ImageView)mView.findViewById(R.id.exerceise_view);
+        exerciseView = (ImageView)mView.findViewById(R.id.exerceise_view);
         actionCountView = (TextView)mView.findViewById(R.id.action_item_count);
         actionCountView.setText(count);
-        //exerciseView.setImageResource(R.drawable.pushup);
+
+        if(actionItem.equals("Push Up"))
+            exerciseView.setBackgroundResource(R.drawable.anim_pushup_gif);
+        else if(actionItem.equals("Crunch"))
+            exerciseView.setBackgroundResource(R.drawable.anim_crunch_gif);
+        else if(actionItem.equals("Squart"))
+            exerciseView.setBackgroundResource(R.drawable.anim_squart_gif);
+        else if(actionItem.equals("Jumping Jack"))
+            exerciseView.setBackgroundResource(R.drawable.anim_jumpjack_gif);
+        else if(actionItem.equals("Dips"))
+            exerciseView.setBackgroundResource(R.drawable.anim_dip_gif);
+        else if(actionItem.equals("High Kniess Running"))
+            exerciseView.setBackgroundResource(R.drawable.anim_highknessrunning_gif);
+        else if(actionItem.equals("Lunges"))
+            exerciseView.setBackgroundResource(R.drawable.anim_lunge_gif);
+        else if(actionItem.equals("Burpees"))
+            exerciseView.setBackgroundResource(R.drawable.anim_burpee_gif);
+        else if(actionItem.equals("Step On Chair"))
+            exerciseView.setBackgroundResource(R.drawable.anim_steponchair_gif);
+        else if(actionItem.equals("PushUp Rotation"))
+            exerciseView.setBackgroundResource(R.drawable.anim_pushuprotation_gif);
+        exerciseView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+        AnimationDrawable anim = null;
+        Object ob = exerciseView.getBackground();
+        anim = (AnimationDrawable) ob;
+        anim.stop();
+        anim.start();
+            }
+        });
+
+        tabataPauseButton = (Button)mView.findViewById(R.id.tabata_pause);
+        tabataPauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressTabataPauseButton();
+            }
+        });
+
+
+        tabataDoneButton = (Button)mView.findViewById(R.id.tabata_done);
+        tabataDoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressTabataDoneButton();
+            }
+        });
 
        /* if(actionItem.equals("Push Up"))
             exerciseView.setImageResource(R.drawable.pushup);

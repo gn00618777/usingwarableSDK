@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements SelectTypeFragmen
 RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncTimeFragment,
         IntelligentFragment.ListenerForIntellignetFragment,PersonalInfoFragment.ListenForPersonalInfoFragment,
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
-SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment, TabataShowFragment.ListenForTabataShowFragment,
+SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
+        TabataActionItemFragment.ListenForTabataActionItemFragment,
 FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
