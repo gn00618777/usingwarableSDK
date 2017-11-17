@@ -31,6 +31,8 @@ public class TabataShowFragment extends Fragment {
     private TextView historyView;
     private TextView itemsView;
 
+    private Button doneButton;
+
     private int currentDoneItm = 0;
     private int totalItems = 0;
 
@@ -46,22 +48,22 @@ public class TabataShowFragment extends Fragment {
     String actionItemEnd = "";
     //String strength = null;
 
-    /*ListenForTabataShowFragment mCallback;
+    ListenForTabataShowFragment mCallback;
 
     public interface ListenForTabataShowFragment {
         public void onPressTabataDoneButton();
         public void onPressTabataPauseButton();
-    }*/
+    }
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-       // try {
-       //         mCallback = (ListenForTabataShowFragment) context;
-       // }catch (ClassCastException e) {
-        //        throw new ClassCastException(context.toString()
-         //               + " must implement ListenForSwVersionFragment");
-        //}
+        try {
+                mCallback = (ListenForTabataShowFragment) context;
+        }catch (ClassCastException e) {
+                throw new ClassCastException(context.toString()
+                        + " must implement ListenForShowFragment");
+        }
 
     }
 
@@ -78,6 +80,13 @@ public class TabataShowFragment extends Fragment {
         caloriesView = (TextView) mView.findViewById(R.id.action_calories);
         heartBeatView = (TextView) mView.findViewById(R.id.action_heart);
         historyView = (TextView) mView.findViewById(R.id.histroy);
+        doneButton = (Button)mView.findViewById(R.id.tabata_done);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressTabataDoneButton();
+            }
+        });
 
         historyView.setText(history);
         statusView.setText("Status:  "+status);

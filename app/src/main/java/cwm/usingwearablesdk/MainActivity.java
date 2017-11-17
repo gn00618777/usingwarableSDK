@@ -56,7 +56,7 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
         IntelligentFragment.ListenerForIntellignetFragment,PersonalInfoFragment.ListenForPersonalInfoFragment,
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
 SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
-        TabataActionItemFragment.ListenForTabataActionItemFragment,
+        TabataActionItemFragment.ListenForTabataActionItemFragment, TabataShowFragment.ListenForTabataShowFragment,
 FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
