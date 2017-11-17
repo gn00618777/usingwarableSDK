@@ -79,6 +79,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             curentDoneItems = 0;
             mTabataQueue = null;
             mTabataShowFM.setItems(0,0);
+            isHide = true;
 
             navigateTo(item);
             return true;
@@ -138,6 +139,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private boolean isTabataIntervalCount = false;
     private boolean isTabataIntervalEnd = false;
     private boolean isTabataDone = false;
+    private boolean isHide = true;
 
     //tabata request related
     private Handler requestHandler = new Handler();
@@ -240,21 +242,25 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
                 case 0x01:
                     Type = "TAP";
+                    if(isHide)
                     Toast.makeText(getApplicationContext(),Type,Toast.LENGTH_SHORT).show();
                     break;
 
                 case 0x02:
                     Type = "WRIST";
+                    if(isHide)
                     Toast.makeText(getApplicationContext(),Type,Toast.LENGTH_SHORT).show();
                     break;
 
                 case 0x06:
                     Type = "SHAKE";
+                    if(isHide)
                     Toast.makeText(getApplicationContext(),Type,Toast.LENGTH_SHORT).show();
                     break;
 
                 case  0x08:
                     Type = "SIGNIFICANT";
+                    if(isHide)
                     Toast.makeText(getApplicationContext(),Type,Toast.LENGTH_SHORT).show();
                     break;
 
@@ -810,6 +816,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
     @Override
     public void onInitTabata(Queue<TabataTask> mTabataQ){
+        isHide = false;
         mTabataQueue = mTabataQ;
         int size = mTabataQueue.size();
         Log.d("bernie","size is "+Integer.toString(size));
