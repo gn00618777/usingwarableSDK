@@ -1029,6 +1029,25 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         super.onPause();
         Log.d("bernie","onPause");
     }
+    @Override
+    public void onBackPressed() {
+        timer.cancel();
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                cwmManager.CwmBleDisconnect();
+                cwmManager.CwmReleaseSource();
+                finish();
+            }
+        },1000);
+
+
+
+
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
