@@ -41,6 +41,8 @@ public class TabataActionItemFragment extends Fragment {
     private String actionItemStart="";
     private String actionComment="";
 
+    private boolean mAniStarted = false;
+
     private String count = "";
 
     ListenForTabataActionItemFragment mCallback;
@@ -78,36 +80,127 @@ public class TabataActionItemFragment extends Fragment {
         actionCountView = (TextView)mView.findViewById(R.id.action_item_count);
         actionCountView.setText(count);
 
-        if(actionItem.equals("Push Up"))
+        if(actionItem.equals("Push Up")) {
             exerciseView.setBackgroundResource(R.drawable.anim_pushup_gif);
-        else if(actionItem.equals("Crunch"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("Crunch")) {
             exerciseView.setBackgroundResource(R.drawable.anim_crunch_gif);
-        else if(actionItem.equals("Squart"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("Squart")) {
             exerciseView.setBackgroundResource(R.drawable.anim_squart_gif);
-        else if(actionItem.equals("Jumping Jack"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("Jumping Jack")) {
             exerciseView.setBackgroundResource(R.drawable.anim_jumpjack_gif);
-        else if(actionItem.equals("Dips"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("Dips")) {
             exerciseView.setBackgroundResource(R.drawable.anim_dip_gif);
-        else if(actionItem.equals("High Kniess Running"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("High Kniess Running")) {
             exerciseView.setBackgroundResource(R.drawable.anim_highknessrunning_gif);
-        else if(actionItem.equals("Lunges"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("Lunges")) {
             exerciseView.setBackgroundResource(R.drawable.anim_lunge_gif);
-        else if(actionItem.equals("Burpees"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("Burpees")) {
             exerciseView.setBackgroundResource(R.drawable.anim_burpee_gif);
-        else if(actionItem.equals("Step On Chair"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("Step On Chair")) {
             exerciseView.setBackgroundResource(R.drawable.anim_steponchair_gif);
-        else if(actionItem.equals("PushUp Rotation"))
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+        else if(actionItem.equals("PushUp Rotation")) {
             exerciseView.setBackgroundResource(R.drawable.anim_pushuprotation_gif);
-        exerciseView.setOnClickListener(new View.OnClickListener() {
+            if(!mAniStarted) {
+                mAniStarted = true;
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
+            }
+        }
+
+       /* exerciseView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-        AnimationDrawable anim = null;
-        Object ob = exerciseView.getBackground();
-        anim = (AnimationDrawable) ob;
-        anim.stop();
-        anim.start();
+                AnimationDrawable anim = null;
+                Object ob = exerciseView.getBackground();
+                anim = (AnimationDrawable) ob;
+                anim.stop();
+                anim.start();
             }
-        });
+        });*/
 
         tabataPauseButton = (Button)mView.findViewById(R.id.tabata_pause);
         tabataPauseButton.setOnClickListener(new View.OnClickListener() {
@@ -158,5 +251,6 @@ public class TabataActionItemFragment extends Fragment {
     }
     public void setActionItemCommentView(String s){actionComment = s;}
     public void setActionCountView(String c){count = c;}
+    public void setAni(boolean b){mAniStarted = b;}
 
 }

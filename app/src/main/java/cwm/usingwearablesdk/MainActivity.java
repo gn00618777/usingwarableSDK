@@ -538,6 +538,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     }
                     else if(isTabataActionItem){
                         isTabataActionItem = false;
+                        mTabataActionItemFM.setAni(false);
                         setFragments(TABATA_ACTION_ITEM_POSITION);
                         if(firstTask != null)
                             mTabataActionItemFM.setActionItemView(firstTask.getTabataSettings().getItemName());
