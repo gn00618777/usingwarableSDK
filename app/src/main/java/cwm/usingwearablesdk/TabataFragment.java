@@ -297,7 +297,7 @@ public class TabataFragment extends Fragment {
         exerciseList.add("CRUNCH/捲腹");
         exerciseList.add("SQUART/深蹲");
         exerciseList.add("JUMPING_JACK/開合跳");
-        exerciseList.add("DIPS/椅子三頭肌稱體");
+        exerciseList.add("DIPS/椅子三頭肌撐體");
         exerciseList.add("HIGH_KNESSRUNNING/原地提膝踏步");
         exerciseList.add("LUNGES/前屈深蹲");
         exerciseList.add("BURPEES/波比跳");
