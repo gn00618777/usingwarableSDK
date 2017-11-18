@@ -75,11 +75,14 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             //do reinitial
-            cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
-            curentDoneItems = 0;
-            mTabataQueue = null;
-            mTabataShowFM.setItems(0,0);
-            isHide = true;
+            if(mTabataPrepareFM.isVisible() ||
+                    mTabataActionItemFM.isVisible() || mTabataShowFM.isVisible()) {
+                cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
+                curentDoneItems = 0;
+                mTabataQueue = null;
+                mTabataShowFM.setItems(0, 0);
+                isHide = true;
+            }
 
             navigateTo(item);
             return true;
