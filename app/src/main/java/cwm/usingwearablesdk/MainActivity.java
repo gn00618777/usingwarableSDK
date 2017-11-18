@@ -1033,20 +1033,10 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     @Override
     public void onBackPressed() {
         timer.cancel();
+        requestHandler.removeCallbacks(requestTask);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cwmManager.CwmBleDisconnect();
-                cwmManager.CwmReleaseSource();
-                finish();
-            }
-        },1000);
-
-
-
-
+        cwmManager.CwmReleaseResource();
+        finish();
 
     }
 
