@@ -1035,7 +1035,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     }
     @Override
     public void onBackPressed() {
-        timer.cancel();
+        if(timer != null)
+          timer.cancel();
         requestHandler.removeCallbacks(requestTask);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
         cwmManager.CwmReleaseResource();
