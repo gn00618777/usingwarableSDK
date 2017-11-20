@@ -78,7 +78,7 @@ public class TabataFragment extends Fragment {
 
     private int prepare = 5;
     private int interval = 10;
-    private int times = 5;
+    private int times = 3;
     private int type = 1;
     private int cycle = 1;
 
@@ -226,7 +226,7 @@ public class TabataFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //reset
-                times = 5;
+                times = 3;
                 actionTimesButton.setText("運動次數\n"+Integer.toString(times));
                 final View configs = LayoutInflater.from(getContext()).inflate(R.layout.layout_custom_times, null);
                 radioGroupTimes = (RadioGroup)configs.findViewById(R.id.radio_group3);
@@ -236,7 +236,7 @@ public class TabataFragment extends Fragment {
                     @Override
                     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                         if(checkedId == R.id.times_one){
-                            times = 5;
+                            times = 3;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
                         }
                         else if(checkedId == R.id.times_two){
