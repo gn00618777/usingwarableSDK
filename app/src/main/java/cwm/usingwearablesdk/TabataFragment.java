@@ -240,14 +240,18 @@ public class TabataFragment extends Fragment {
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
                         }
                         else if(checkedId == R.id.times_two){
-                            times = 10;
+                            times = 5;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
                         }
                         else if(checkedId == R.id.times_three){
-                            times = 15;
+                            times = 10;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
                         }
                         else if(checkedId == R.id.times_four){
+                            times = 15;
+                            actionTimesButton.setText("運動次數\n"+Integer.toString(times));
+                        }
+                        else if(checkedId == R.id.times_five){
                             times = 30;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
                         }

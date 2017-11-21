@@ -18,14 +18,20 @@
             android:id="@+id/times_two"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10" />
+            android:checked="true"
+            android:text="5" />
         <RadioButton
             android:id="@+id/times_three"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15" />
+            android:text="10" />
         <RadioButton
             android:id="@+id/times_four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15" />
+        <RadioButton
+            android:id="@+id/times_five"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="30" />
