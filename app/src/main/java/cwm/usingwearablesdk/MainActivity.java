@@ -38,6 +38,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Environment;
@@ -144,6 +145,11 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private boolean isTabataDone = false;
     private boolean isHide = true;
 
+    private ProgressBar mProgressBar;
+    int totalLogsSize = 0;
+    int deviceCurrentRecord = 0;
+    int apkCurrentRecord = 0;
+
     //tabata request related
     private Handler requestHandler = new Handler();
     private Runnable requestTask = new Runnable() {
@@ -208,6 +214,29 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private BodySettings testS1ettings;
 
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 3;
+
+    public CwmManager.LogSyncListener syncListener = new CwmManager.LogSyncListener(){
+        @Override
+        public void onSyncFailed() {
+            Log.d("bernie","onSyncFailed");
+              cwmManager.CwmFlashSyncFail();
+        }
+
+        @Override
+        public void onProgressChanged(int currentPart, int totalParts) {
+              apkCurrentRecord = currentPart;
+              Log.d("bernie","onProgressChanged");
+              if(currentPart <= totalParts){
+                  mProgressBar.setProgress(currentPart);
+                  cwmManager.CwmFlashSyncSuccess();
+              }
+        }
+
+        @Override
+        public void onSyncDone() {
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
+    };
 
     public CwmManager.EventListener eventListener = new CwmManager.EventListener() {
         @Override
@@ -443,6 +472,12 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                         setFragments(FLASH_TEST_POSITION);
                     mProgressDialog.dismiss();
                     break;
+                case 0x22:
+                       totalLogsSize = cwmEvents.getMaxByte();
+                       deviceCurrentRecord = cwmEvents.getDeviceCurrent();
+                       mProgressBar.setMax(totalLogsSize);
+                       cwmManager.CwmFlashSyncStart();
+                    break;
                  default:
                     break;
             }
@@ -478,6 +513,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             mSelectTypeFM.setDevice(mDeviceName, mDeviceAddress, mDeviceStatus);
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
+
+            cwmManager.CwmRequestMaxLogPackets();
         }
 
         @Override
@@ -983,6 +1020,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         Log.d("bernie","onCreate");
         // set toolbar to be action bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mProgressBar = (ProgressBar)findViewById(R.id.progressbar);
 
         LayoutInflater inflater = getLayoutInflater();
         layout = inflater.inflate(R.layout.layout_custom_toast, (ViewGroup)findViewById(R.id.llToast));
@@ -1024,7 +1062,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         mFragments.add(mCommandTestFM);
         //testS1ettings.
         //testSettings.
-        cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
+        cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener);
         statusCheck();
         setFragments(SELECT_DEVICE_POSITION);
     }
