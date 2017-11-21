@@ -441,7 +441,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             timer.cancel();
                             requestHandler.removeCallbacks(requestTask);
                             if(mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() ||
-                                    mTabataActionItemFM.isVisible() || mTabataShowFM.isVisible())
+                                    mTabataActionItemFM.isVisible())
                                 setFragments(TABATA_WORK_POSITION);
                         }
 
@@ -514,7 +514,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
 
-            cwmManager.CwmRequestMaxLogPackets();
+            //cwmManager.CwmRequestMaxLogPackets();
         }
 
         @Override
@@ -956,6 +956,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0, 0, 0);
         }
         else{
+            Toast.makeText(getApplicationContext(),"You have accomplished a round",Toast.LENGTH_SHORT);
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
             setFragments(TABATA_SHOW_POSITION);
         }
     }
