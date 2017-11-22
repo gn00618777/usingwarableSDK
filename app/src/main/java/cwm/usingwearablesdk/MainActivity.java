@@ -190,6 +190,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         TABATA_ACTION_END,
         TABATA_REQUEST,
         TABATA_DONE,
+        TABATA_RESUME
     };
 
     private ProgressDialog mProgressDialog = null;
@@ -514,7 +515,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
 
-            //cwmManager.CwmRequestMaxLogPackets();
+           // cwmManager.CwmRequestMaxLogPackets();
         }
 
         @Override
@@ -986,6 +987,11 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             resetFragments(TABATA_WORK_POSITION);
         else
             setFragments(TABATA_WORK_POSITION);*/
+    }
+
+    @Override
+    public void onPressTabataResumeButton(){
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_RESUME.ordinal(), 0, 0, 0);
     }
 
     @Override
