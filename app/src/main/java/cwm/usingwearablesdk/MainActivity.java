@@ -58,7 +58,7 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
 SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
         TabataActionItemFragment.ListenForTabataActionItemFragment, TabataShowFragment.ListenForTabataShowFragment,
-FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFragment{
+FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFragment,GestureRequestFragment.ListenerForGestureRequestFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -108,6 +108,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private TabataIntervalFragment mTabataIntervalFM = new TabataIntervalFragment();
     private FlashFragment mFlashFM = new FlashFragment();
     private CommandTestFragment mCommandTestFM = new CommandTestFragment();
+    private GestureRequestFragment mGestureRequestFM = new GestureRequestFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -175,6 +176,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     final int SW_VERSION_POSITION = 12;
     final int FLASH_TEST_POSITION = 13;
     final int REQUEST_TEST_POSITION = 14;
+    final int REQUEST_GESTURE_POSITION = 15;
 
     public enum ITEMS{
         TABATA_INIT,
@@ -465,6 +467,27 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                         //       count+"\nheartRate: "+heartRate+"\ncalories: "+calories,Toast.LENGTH_SHORT);
 
                     break;
+
+                case 0x20:
+                    int syncStatus;
+                    String statusStr="";
+                    syncStatus = cwmEvents.getSyncStatus();
+                    if(syncStatus == 0)
+                        statusStr = "Sync Start";
+                    else if(syncStatus == 1)
+                        statusStr = "Sync Success";
+                    else if(syncStatus == 2)
+                        statusStr = "Sync Faile";
+                    else if(syncStatus == 3)
+                        statusStr = "Sync Abort";
+                    else if(syncStatus == 4)
+                        statusStr = "Sync Resume";
+                    else if(syncStatus == 5)
+                        statusStr = "Sync Resume Done";
+                    else if(syncStatus == 6)
+                        statusStr = "Sync Dobe";
+                    Toast.makeText(getApplicationContext(),statusStr,Toast.LENGTH_SHORT).show();
+                    break;
                 case 0x21: // flash feedback command
                     mFlashFM.setReceivedStatus("true");
                     if(mFlashFM.isVisible())
@@ -479,6 +502,32 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                        mProgressBar.setMax(totalLogsSize);
                        cwmManager.CwmFlashSyncStart();
                     break;
+                case 0xB:
+                    Log.d("bernie","0x0b event");
+                     int[] gestureList = cwmEvents.getGestureList();
+                     StringBuilder builder = new StringBuilder();
+                     if(gestureList[0]!=0){
+                         builder.append("Wrist\n");
+                     }
+                     if(gestureList[1]!=0){
+                         builder.append("Tap\n");
+                     }
+                     if(gestureList[2]!=0){
+                         builder.append("Hand Up\n");
+                     }
+                     if(gestureList[3]!=0){
+                         builder.append("Sedentary Remind\n");
+                     }
+                     if(gestureList[4]!=0){
+                         builder.append("On Wear\n");
+                     }
+                     if(gestureList[5]!=0){
+                         builder.append("Shake\n");
+                     }
+                     if(gestureList[6]!=0){
+                         builder.append("Significant\n");
+                     }
+                     Toast.makeText(getApplicationContext(),builder.toString(),Toast.LENGTH_LONG).show();
                  default:
                     break;
             }
@@ -515,7 +564,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
 
-           // cwmManager.CwmRequestMaxLogPackets();
+            cwmManager.CwmRequestMaxLogPackets();
         }
 
         @Override
@@ -689,6 +738,9 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                        else
                          setFragments(TABATA_WORK_POSITION);
                     }
+                    break;
+                case 0x20:
+                    mProgressDialog.dismiss();
                     break;
             }
         }
@@ -977,6 +1029,11 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     }
 
     @Override
+    public void onRequestGesture(){
+        cwmManager.CwmRequestGestureList();
+    }
+
+    @Override
     public void onPressTabataDoneButton(){
         isTabataDone = true;
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
@@ -1018,6 +1075,12 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     @Override
     public void onPressTestButton(){
         cwmManager.CwmTestRequest();
+    }
+
+    @Override
+    public void onPressSyncEraseButton(){
+        mProgressDialog = ProgressDialog.show(this,"按下 Start Erase","處理中...");
+        cwmManager.CwmFlashErase();
     }
 
 
@@ -1068,6 +1131,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         mFragments.add(mSwVersionFM);
         mFragments.add(mFlashFM);
         mFragments.add(mCommandTestFM);
+        mFragments.add(mGestureRequestFM);
         //testS1ettings.
         //testSettings.
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener);
@@ -1169,6 +1233,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             case R.id.navigation_item_11:
                 setFragments(REQUEST_TEST_POSITION);
                 break;
+            case R.id.navigation_item_12:
+                setFragments(REQUEST_GESTURE_POSITION);
             default: break;
         }
         mDrawerLayout.closeDrawers();
