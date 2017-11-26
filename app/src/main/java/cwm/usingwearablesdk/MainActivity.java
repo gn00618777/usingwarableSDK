@@ -51,6 +51,8 @@ import java.util.List;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements SelectTypeFragment.ListenForSelectTypeFragment,
 RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncTimeFragment,
@@ -118,7 +120,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
 
     private BluetoothAdapter mBtAdapter = null;
 
-    private CountDownTimer timer;
+    private Timer timer;
+    private int countDown;
 
     private TabataSettings mTabataSettings;
     private int totalPrepare = 0;
@@ -667,26 +670,25 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     }
                     else if(isTabataIntervalStart){
                         isTabataIntervalStart = false;
-                        //開始倒數
-                        timer = new CountDownTimer(totalInterval*1000,1000){
+                        countDown = totalInterval;
+                        timer = new Timer();
+                        timer.schedule(new TimerTask() {
                             @Override
-                            public void onFinish() {
-                                isTabataIntervalCount = true;
-                                cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, 0, 0);
+                            public void run() {
+                                if(countDown >= 0) {
+                                    mTabataIntervalFM.setIntervalNextAction(laterTask.getTabataSettings().getItemName());
+                                    mTabataIntervalFM.setIntervalCountView(Integer.toString(countDown));
+                                    if(mTabataIntervalFM.isVisible())
+                                        resetFragments(TABATA_INTERVAL_POSITION);
+                                    if(countDown == 0){
+                                        timer.cancel();
+                                        isTabataIntervalCount = true;
+                                    }
+                                    cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, countDown, 0);
+                                    countDown--;
+                                }
                             }
-
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                mTabataIntervalFM.setIntervalNextAction(laterTask.getTabataSettings().getItemName());
-                                mTabataIntervalFM.setIntervalCountView(Long.toString((millisUntilFinished+50)/1000));
-                                if(mTabataIntervalFM.isVisible())
-                                    resetFragments(TABATA_INTERVAL_POSITION);
-                                else
-                                    setFragments(TABATA_INTERVAL_POSITION);
-                                cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, (int)((millisUntilFinished+50)/1000), 0);
-                            }
-
-                        }.start();
+                        }, 0, 1000);
                     }
                     else if(isTabataIntervalCount){
                         isTabataIntervalCount = false;
@@ -749,26 +751,26 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     };
 
     public void tabataPrepareWork(){
+        countDown = totalPrepare;
         //開始倒數
-        timer = new CountDownTimer(totalPrepare*1000,1000){
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
-            public void onFinish() {
-                mTabataPrepareFM.setPrepareCountView("0");
-                resetFragments(TABATA_PREPARE_POSITION);
-                isTabataPrepareCount = true;
-                cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), 0, 0, 0);
+            public void run() {
+                if(countDown >= 0) {
+                    mTabataPrepareFM.setPrepareActionView(firstTask.getTabataSettings().getItemName()+"/"+comment);
+                    mTabataPrepareFM.setPrepareCountView(Integer.toString(countDown));
+                    if(mTabataPrepareFM.isVisible())
+                        resetFragments(TABATA_PREPARE_POSITION);
+                    if(countDown == 0){
+                        timer.cancel();
+                        isTabataPrepareCount = true;
+                    }
+                    cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), countDown, 0, 0);
+                    countDown--;
+                }
             }
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mTabataPrepareFM.setPrepareActionView(firstTask.getTabataSettings().getItemName()+"/"+comment);
-                mTabataPrepareFM.setPrepareCountView(Long.toString((millisUntilFinished+50)/1000));
-                cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), (int)((millisUntilFinished+50)/1000), 0, 0);
-                if(mTabataPrepareFM.isVisible())
-                    resetFragments(TABATA_PREPARE_POSITION);
-            }
-
-        }.start();
+        }, 0, 1000);
     }
 
     public CwmManager.ErrorListener errorListener = new CwmManager.ErrorListener(){
