@@ -45,8 +45,6 @@ public class TabataFragment extends Fragment {
 
     private View mView;
 
-    private TextView scheduleList;
-
     /*********************************/
     private Button prepareButton;
     private Button intervalButton;
@@ -55,6 +53,13 @@ public class TabataFragment extends Fragment {
     private Button exerciseItemsButton;
     private Button startButton;
     private Button cycleButton;
+    private Button adxl50EnableButton;
+    private Button adxl100EnableButton;
+    private Button adxl200EnableButton;
+    private Button bmil50EnableButton;
+    private Button bmi100EnableButton;
+    private Button bmil200EnableButton;
+
     /*********************************/
 
     private List<String> exerciseList;
@@ -100,6 +105,12 @@ public class TabataFragment extends Fragment {
     // Container Activity must implement this interface
     public interface ListenForTabataFragment {
         public void onInitTabata(Queue<TabataTask> mTabataQ);
+        public void onPressADXL50Enable();
+        public void onPressADXL100Enable();
+        public void onPressADXL200Enable();
+        public void onPressBMI50Enable();
+        public void onPressBMI100Enable();
+        public void onPressBMI200Enable();
     }
 
     private ListenForTabataFragment mCallback;
@@ -123,8 +134,6 @@ public class TabataFragment extends Fragment {
         }
         myDBHelper = new MyDBHelper(getContext(), Environment.getExternalStorageDirectory().toString() + "/Download/"+"tabatamenu.db", null, 1);
         scheduler = new StringBuilder();
-        scheduleList = (TextView)mView.findViewById(R.id.schedule_list);
-        scheduleList.setText("");
 
         prepareButton = (Button)mView.findViewById(R.id.prepare_time);
         prepareButton.setText("預備時間\n"+Integer.toString(prepare));
@@ -138,6 +147,13 @@ public class TabataFragment extends Fragment {
         typeButton.setText("達標類型\n"+Integer.toString(type));
         exerciseItemsButton = (Button)mView.findViewById(R.id.exercise_item);
         startButton = (Button)mView.findViewById(R.id.start_button);
+
+        adxl50EnableButton = (Button)mView.findViewById(R.id.sensor_operate1);
+        adxl100EnableButton = (Button)mView.findViewById(R.id.sensor_operate2);
+        adxl200EnableButton = (Button)mView.findViewById(R.id.sensor_operate3);
+        bmil50EnableButton = (Button)mView.findViewById(R.id.sensor_operate4);
+        bmi100EnableButton = (Button)mView.findViewById(R.id.sensor_operate5);
+        bmil200EnableButton = (Button)mView.findViewById(R.id.sensor_operate6);
 
 
 
@@ -368,6 +384,44 @@ public class TabataFragment extends Fragment {
             }
         });
 
+        adxl50EnableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressADXL50Enable();
+            }
+        });
+        adxl100EnableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressADXL100Enable();
+            }
+        });
+        adxl200EnableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressADXL200Enable();
+            }
+        });
+
+        bmil50EnableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressBMI50Enable();
+            }
+        });
+        bmi100EnableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressBMI100Enable();
+            }
+        });
+        bmil200EnableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressBMI200Enable();
+            }
+        });
+
         return mView;
     }
 
@@ -389,7 +443,6 @@ public class TabataFragment extends Fragment {
     public void setReset(){
         mTabataQ = new LinkedList<>();
         scheduler = new StringBuilder();
-        scheduleList.setText("");
     }
 
    class ListAdapter extends BaseAdapter

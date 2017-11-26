@@ -3,11 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/schedule_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"/>
         <Button
             android:id="@+id/prepare_time"
             android:layout_width="fill_parent"
@@ -50,5 +45,54 @@
                android:layout_marginTop="20dp"
                android:layout_gravity="center"
                android:text="start"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/sensor_operate1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="ADXL   50Hz Enable"/>
+        <Button
+            android:id="@+id/sensor_operate4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="BMI160   50Hz Enable"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/sensor_operate2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ADXL 100Hz Enable"/>
+        <Button
+            android:id="@+id/sensor_operate5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BMI160 100Hz Enable"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/sensor_operate3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ADXL 200Hz Enable"/>
+        <Button
+            android:id="@+id/sensor_operate6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BMI160 200Hz Enable"/>
+    </LinearLayout>
+
+
 
 </LinearLayout>

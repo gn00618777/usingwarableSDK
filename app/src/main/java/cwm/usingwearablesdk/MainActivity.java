@@ -564,7 +564,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
 
-            cwmManager.CwmRequestMaxLogPackets();
+            //cwmManager.CwmRequestMaxLogPackets();
         }
 
         @Override
@@ -742,6 +742,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                 case 0x20:
                     mProgressDialog.dismiss();
                     break;
+                case 0x82:
+                    Toast.makeText(getApplicationContext(),"Wearable has acked",Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -1061,6 +1063,57 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         mProgressDialog = ProgressDialog.show(this,"正在 Start Sync","處理中...");
         cwmManager.CwmFlashSyncStart();
     }
+
+    @Override
+    public void onPressADXL50Enable(){
+        cwmManager.CwmRecordSensorToFlash(1, 1, 1);
+    }
+    @Override
+    public void onPressADXL100Enable(){
+        cwmManager.CwmRecordSensorToFlash(1, 2, 1);
+    }
+    @Override
+    public void onPressADXL200Enable(){
+        cwmManager.CwmRecordSensorToFlash(1, 3, 1);
+    }
+    @Override
+    public void onPressBMI50Enable(){
+        cwmManager.CwmRecordSensorToFlash(2, 1, 1);
+    }
+    @Override
+    public void onPressBMI100Enable(){
+        cwmManager.CwmRecordSensorToFlash(2, 2, 1);
+    }
+    @Override
+    public void onPressBMI200Enable(){
+        cwmManager.CwmRecordSensorToFlash(2, 3, 1);
+    }
+
+    @Override
+    public void onPressADXL50Disable(){
+        cwmManager.CwmRecordSensorToFlash(1, 1, 0);
+    }
+    @Override
+    public void onPressADXL100Disable(){
+        cwmManager.CwmRecordSensorToFlash(1, 2, 0);
+    }
+    @Override
+    public void onPressADXL200Disable(){
+        cwmManager.CwmRecordSensorToFlash(1, 3, 0);
+    }
+    @Override
+    public void onPressBMI50Disable(){
+        cwmManager.CwmRecordSensorToFlash(2, 1, 0);
+    }
+    @Override
+    public void onPressBMI100Disable(){
+        cwmManager.CwmRecordSensorToFlash(2, 2, 0);
+    }
+    @Override
+    public void onPressBMI200Disable(){
+        cwmManager.CwmRecordSensorToFlash(2, 3, 0);
+    }
+
     @Override
     public void onPressSyncSuccessButton(){
         mProgressDialog = ProgressDialog.show(this,"按下 Start Success","處理中...");

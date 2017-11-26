@@ -36,6 +36,13 @@ public class TabataActionItemFragment extends Fragment {
     private Button tabataDoneButton;
     private Button tabataResumeButton;
 
+    private Button adxl50DisableButton;
+    private Button adxl100DisableButton;
+    private Button adxl200DisableButton;
+    private Button bmil50DisableButton;
+    private Button bmi100DisableButton;
+    private Button bmil200DisableButton;
+
     private ImageView exerciseView;
 
     private String actionItem="";
@@ -53,6 +60,12 @@ public class TabataActionItemFragment extends Fragment {
         public void onPressTabataDoneButton();
         public void onPressTabataPauseButton();
         public void onPressTabataResumeButton();
+        public void onPressADXL50Disable();
+        public void onPressADXL100Disable();
+        public void onPressADXL200Disable();
+        public void onPressBMI50Disable();
+        public void onPressBMI100Disable();
+        public void onPressBMI200Disable();
     }
 
 
@@ -228,6 +241,49 @@ public class TabataActionItemFragment extends Fragment {
                 mCallback.onPressTabataResumeButton();
             }
         });
+
+         adxl50DisableButton = (Button)mView.findViewById(R.id.sensor_operate1);
+         adxl50DisableButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mCallback.onPressADXL50Disable();
+             }
+         });
+         adxl100DisableButton = (Button)mView.findViewById(R.id.sensor_operate2);
+         adxl100DisableButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mCallback.onPressADXL100Disable();
+             }
+         });
+         adxl200DisableButton = (Button)mView.findViewById(R.id.sensor_operate3);
+         adxl200DisableButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mCallback.onPressADXL200Disable();
+             }
+         });
+         bmil50DisableButton = (Button)mView.findViewById(R.id.sensor_operate4);
+         bmil50DisableButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mCallback.onPressBMI50Disable();
+             }
+         });
+         bmi100DisableButton = (Button)mView.findViewById(R.id.sensor_operate5);
+         bmi100DisableButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mCallback.onPressBMI100Disable();
+             }
+         });
+         bmil200DisableButton = (Button)mView.findViewById(R.id.sensor_operate6);
+         bmil200DisableButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mCallback.onPressBMI200Disable();
+             }
+         });
 
        /* if(actionItem.equals("Push Up"))
             exerciseView.setImageResource(R.drawable.pushup);
