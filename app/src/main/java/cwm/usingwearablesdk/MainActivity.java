@@ -449,6 +449,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                             if(mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() ||
                                     mTabataActionItemFM.isVisible())
                                 setFragments(TABATA_WORK_POSITION);
+                                return;
                         }
 
                         // goal is achievement
