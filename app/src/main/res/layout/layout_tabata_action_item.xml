@@ -84,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_gravity="center"
+            android:background="#AA0000"
             android:text="Tabata結束"/>
 
         <Button
@@ -91,14 +92,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_gravity="center"
+            android:background="#BBBB00"
             android:text="Tabata暫停"/>
         <Button
             android:id="@+id/tabata_resume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_gravity="center"
+            android:background="#227700"
             android:text="Tabata回復"/>
     </LinearLayout>
 

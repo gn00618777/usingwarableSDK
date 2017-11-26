@@ -31,6 +31,7 @@
                 android:id="@+id/exercise_item"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:background="#009FCC"
                 android:text="運動項目"/>
         <Button
                 android:id="@+id/cycle"
@@ -44,6 +45,7 @@
                android:layout_height="wrap_content"
                android:layout_marginTop="20dp"
                android:layout_gravity="center"
+               android:background="#AA0000"
                android:text="start"/>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -52,13 +54,13 @@
             android:id="@+id/sensor_operate1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:text="ADXL   50Hz Enable"/>
         <Button
             android:id="@+id/sensor_operate4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:text="BMI160   50Hz Enable"/>
     </LinearLayout>
 
