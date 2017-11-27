@@ -27,6 +27,7 @@ public class FlashFragment extends Fragment {
     private Button syncSuccessButton;
     private Button syncFailButton;
     private Button syncEraseButton;
+    private Button syncAutoButton;
 
     private TextView receivedStatus;
     private String status = "";
@@ -38,6 +39,7 @@ public class FlashFragment extends Fragment {
         public void onPressSyncSuccessButton();
         public void onPressSyncFailButton();
         public void onPressSyncEraseButton();
+        public void onPressSyncAutoButton();
 
     }
 
@@ -65,6 +67,7 @@ public class FlashFragment extends Fragment {
         syncSuccessButton = (Button)mView.findViewById(R.id.sync_sucess);
         syncFailButton = (Button)mView.findViewById(R.id.sync_failed);
         syncEraseButton = (Button)mView.findViewById(R.id.sync_erase);
+        syncAutoButton = (Button)mView.findViewById(R.id.sync_auto_sync);
 
         receivedStatus = (TextView)mView.findViewById(R.id.received_status);
         receivedStatus.setText("Status: "+status);
@@ -91,6 +94,12 @@ public class FlashFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallback.onPressSyncEraseButton();
+            }
+        });
+        syncAutoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressSyncAutoButton();
             }
         });
 

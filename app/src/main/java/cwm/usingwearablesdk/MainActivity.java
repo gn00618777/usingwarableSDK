@@ -487,9 +487,15 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     else if(syncStatus == 4)
                         statusStr = "Sync Resume";
                     else if(syncStatus == 5)
-                        statusStr = "Sync Resume Done";
-                    else if(syncStatus == 6)
-                        statusStr = "Sync Dobe";
+                        statusStr = "Sync Erase";
+                    else if(syncStatus == 6) {
+                        statusStr = "Sync Erase Done";
+                        mProgressDialog.dismiss();
+                    }
+                    else if(syncStatus == 7) {
+                        statusStr = "Sync Done";
+                        mProgressDialog.dismiss();
+                    }
                     Toast.makeText(getApplicationContext(),statusStr,Toast.LENGTH_SHORT).show();
                     break;
                 case 0x21: // flash feedback command
@@ -568,7 +574,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
 
-            //cwmManager.CwmRequestMaxLogPackets();
         }
 
         @Override
@@ -1068,6 +1073,11 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     }
 
     @Override
+    public void onPressSyncAutoButton(){
+        cwmManager.CwmRequestMaxLogPackets();
+    }
+
+    @Override
     public void onPressADXL50Enable(){
         cwmManager.CwmRecordSensorToFlash(1, 1, 1);
     }
@@ -1193,6 +1203,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener);
         statusCheck();
         setFragments(SELECT_DEVICE_POSITION);
+
+        cwmManager.CwmRemoveLog();
     }
     @Override
     protected void onPause(){

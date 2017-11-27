@@ -29,10 +29,23 @@
          android:layout_height="wrap_content"
          android:text="Sync Failed"/>
 
-    <Button
-        android:id="@+id/sync_erase"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sync Erase"/>
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/sync_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Sync Erase"/>
+
+        <Button
+            android:id="@+id/sync_auto_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Start auto Sync"/>
+    </LinearLayout>
+
 
 </LinearLayout>
