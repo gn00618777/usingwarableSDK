@@ -510,7 +510,9 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                        totalLogsSize = cwmEvents.getMaxByte();
                        deviceCurrentRecord = cwmEvents.getDeviceCurrent();
                        mProgressBar.setMax(totalLogsSize);
-                       cwmManager.CwmFlashSyncStart();
+                       Log.d("bernie","max size is"+Integer.toString(totalLogsSize));
+                       if(totalLogsSize > 0)
+                          cwmManager.CwmFlashSyncStart();
                     break;
                 case 0xB:
                     Log.d("bernie","0x0b event");
@@ -1203,8 +1205,6 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener);
         statusCheck();
         setFragments(SELECT_DEVICE_POSITION);
-
-        cwmManager.CwmRemoveLog();
     }
     @Override
     protected void onPause(){
