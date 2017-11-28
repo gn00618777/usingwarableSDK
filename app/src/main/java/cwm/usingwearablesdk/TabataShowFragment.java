@@ -32,6 +32,9 @@ public class TabataShowFragment extends Fragment {
     private TextView itemsView;
 
     private Button doneButton;
+    private Button bmil50DisableButton;
+    private Button bmi100DisableButton;
+    private Button bmil200DisableButton;
 
     private int currentDoneItm = 0;
     private int totalItems = 0;
@@ -53,6 +56,9 @@ public class TabataShowFragment extends Fragment {
     public interface ListenForTabataShowFragment {
         public void onPressTabataDoneButton();
         public void onPressTabataPauseButton();
+        public void onPressBMI50Disable();
+        public void onPressBMI100Disable();
+        public void onPressBMI200Disable();
     }
 
     @Override
@@ -85,6 +91,28 @@ public class TabataShowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallback.onPressTabataDoneButton();
+            }
+        });
+
+        bmil50DisableButton = (Button)mView.findViewById(R.id.sensor_operate1);
+        bmil50DisableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressBMI50Disable();
+            }
+        });
+        bmi100DisableButton = (Button)mView.findViewById(R.id.sensor_operate2);
+        bmi100DisableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressBMI100Disable();
+            }
+        });
+        bmil200DisableButton = (Button)mView.findViewById(R.id.sensor_operate3);
+        bmil200DisableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressBMI200Disable();
             }
         });
 

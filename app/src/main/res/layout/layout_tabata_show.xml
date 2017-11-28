@@ -69,6 +69,30 @@
         android:layout_height="wrap_content"
         android:text="Tabata結束"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/sensor_operate1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="BMI50HzDiable"/>
+        <Button
+            android:id="@+id/sensor_operate2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="BMI100HzDiable"/>
+        <Button
+            android:id="@+id/sensor_operate3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="BMI200HzDiable"/>
+
+    </LinearLayout>
+
 
 
 </LinearLayout>
