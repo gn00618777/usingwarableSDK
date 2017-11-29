@@ -149,6 +149,8 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private boolean isTabataDone = false;
     private boolean isHide = true;
 
+    private int getEraseProgressCount = 0;
+
     private ProgressBar mProgressBar;
     int totalLogsSize = 0;
     int deviceCurrentRecord = 0;
@@ -540,6 +542,18 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                          builder.append("Significant\n");
                      }
                      Toast.makeText(getApplicationContext(),builder.toString(),Toast.LENGTH_LONG).show();
+                    break;
+                case 0x23:
+                    if(mProgressDialog != null){
+                        int progress = cwmEvents.getEraseProgress();
+                        mProgressDialog.setMessage("Erase Progress: "+Integer.toString(progress)+"%");
+                        if(timer != null){
+                            if(progress == 100){
+                                timer.cancel();
+                            }
+                        }
+                    }
+                    break;
                  default:
                     break;
             }
@@ -813,6 +827,16 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                        Toast.makeText(getApplicationContext(),
                                "There is problem with Tabata, please check you hava in connection.",
                                Toast.LENGTH_SHORT);
+                   }
+               }
+               else if(command == 0x23){
+                   getEraseProgressCount++;
+                   Toast.makeText(getApplication(), "Erase request header lost", Toast.LENGTH_SHORT).show();
+                   if(getEraseProgressCount == 3){
+                       if(timer != null){
+                           timer.cancel();
+                           Toast.makeText(getApplication(), "Please check your device is connecting", Toast.LENGTH_SHORT).show();
+                       }
                    }
                }
             }
@@ -1149,6 +1173,14 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     public void onPressSyncEraseButton(){
         mProgressDialog = ProgressDialog.show(this,"按下 Start Erase","處理中...");
         cwmManager.CwmFlashErase();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                cwmManager.CwmRequestEraseProgress();
+            }
+        }, 0 , 1000);
+
     }
 
 
@@ -1211,6 +1243,13 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         super.onPause();
         Log.d("bernie","onPause");
     }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.d("bernie","onStop");
+    }
+
     @Override
     public void onBackPressed() {
         if(timer != null)
