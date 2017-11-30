@@ -60,7 +60,7 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
 SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
         TabataActionItemFragment.ListenForTabataActionItemFragment, TabataShowFragment.ListenForTabataShowFragment,
-FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFragment,GestureRequestFragment.ListenerForGestureRequestFragment{
+FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFragment,GestureRequestFragment.ListenerForGestureRequestFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -109,7 +109,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     private TabataActionItemFragment mTabataActionItemFM = new TabataActionItemFragment();
     private TabataIntervalFragment mTabataIntervalFM = new TabataIntervalFragment();
     private FlashFragment mFlashFM = new FlashFragment();
-    private CommandTestFragment mCommandTestFM = new CommandTestFragment();
+    private CalibrateFragment mCalibrateFM = new CalibrateFragment();
     private GestureRequestFragment mGestureRequestFM = new GestureRequestFragment();
 
     private String mDeviceName = null;
@@ -180,7 +180,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     final int TABATA_INTERVAL_POSITION = 11;
     final int SW_VERSION_POSITION = 12;
     final int FLASH_TEST_POSITION = 13;
-    final int REQUEST_TEST_POSITION = 14;
+    final int CALIBRATE_POSITION = 14;
     final int REQUEST_GESTURE_POSITION = 15;
 
     public enum ITEMS{
@@ -246,6 +246,14 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         }
     };
 
+    public CwmManager.RawDataListener rawDataListener = new CwmManager.RawDataListener(){
+        @Override
+        public void onRawDataArrival(byte[] rawData){
+            if(mCalibrateFM.isVisible())
+                mCalibrateFM.setRawByte(rawData);
+        }
+    };
+
     public CwmManager.EventListener eventListener = new CwmManager.EventListener() {
         @Override
         public void onEventArrival(CwmEvents cwmEvents) {
@@ -268,7 +276,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     }
                     mShowDataFM.setValue(cwmEvents.getWalkStep(),cwmEvents.getDistance(),
                             cwmEvents.getCalories(),gesture);
-                    if(mShowDataFM.isVisible()){
+                    if(mShowDataFM.isVisible()) {
                         resetFragments(SHOWDATA_POSITION);
                     }
                     break;
@@ -337,224 +345,226 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                     }
 
                     builder1.append("Parser:\n");
-                    builder1.append("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100)+"\n");
-                    builder1.append("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100)+"\n");
+                    builder1.append("Start Sleep Time: " + Integer.toString(mParser[startSleepPos + 2] / 100) + ":" + Integer.toString(mParser[startSleepPos + 2] % 100) + "\n");
+                    builder1.append("Awake Time: " + Integer.toString(mParser[getup + 2] / 100) + ":" + Integer.toString(mParser[getup + 2] % 100) + "\n");
 
                     /***************************************************************/
-                    for(int i = 0; i <= getup ; i+=3) {
-                      if(mParser[i] % 100 == 1) {
-                         light.append("Day-"+Integer.toString(mParser[i+1]/100)+"/"+Integer.toString(mParser[i+1]%100)+" Time-"+
-                                 Integer.toString(mParser[i+2]/100)+":"+Integer.toString(mParser[i+2]%100)+"\n");
-                     }
-                 }
-                 for(int i = 0; i <= getup ; i+=3) {
-                     if(mParser[i] % 100 == 2) {
-                         deep.append("Day-"+Integer.toString(mParser[i+1]/100)+"/"+Integer.toString(mParser[i+1]%100)+" Time-"+
-                                 Integer.toString(mParser[i+2]/100)+":"+Integer.toString(mParser[i+2]%100)+"\n");
-                     }
-                 }
+                    for (int i = 0; i <= getup; i += 3) {
+                        if (mParser[i] % 100 == 1) {
+                            light.append("Day-" + Integer.toString(mParser[i + 1] / 100) + "/" + Integer.toString(mParser[i + 1] % 100) + " Time-" +
+                                    Integer.toString(mParser[i + 2] / 100) + ":" + Integer.toString(mParser[i + 2] % 100) + "\n");
+                        }
+                    }
+                    for (int i = 0; i <= getup; i += 3) {
+                        if (mParser[i] % 100 == 2) {
+                            deep.append("Day-" + Integer.toString(mParser[i + 1] / 100) + "/" + Integer.toString(mParser[i + 1] % 100) + " Time-" +
+                                    Integer.toString(mParser[i + 2] / 100) + ":" + Integer.toString(mParser[i + 2] % 100) + "\n");
+                        }
+                    }
                     /***************************************************************/
-                 for(int i = 0; i < cwmEvents.getParserLength() ; i+=3) {
-                     if(mParser[i] == 100)
-                         startSleepPos = i;
-                 }
+                    for (int i = 0; i < cwmEvents.getParserLength(); i += 3) {
+                        if (mParser[i] == 100)
+                            startSleepPos = i;
+                    }
 
-                 builder1.append(light.toString()+"\n");
-                 builder1.append(deep.toString()+"\n");
+                    builder1.append(light.toString() + "\n");
+                    builder1.append(deep.toString() + "\n");
 
-                 try {
-                     FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/Download/CwmSleepLog.txt", false);
-                     BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
-                     int count = 0;
-                     for(int i = 0 ; i < cwmEvents.getParserLength() ; i++) {
-                         count++;
-                         bw.write(Integer.toString(mParser[i]));
-                         bw.newLine();
-                         if(count == 3) {
-                             count = 0;
-                             bw.newLine();
-                         }
-                     }
+                    try {
+                        FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/Download/CwmSleepLog.txt", false);
+                        BufferedWriter bw = new BufferedWriter(fw); //將BufferedWeiter與FileWrite物件做連結
+                        int count = 0;
+                        for (int i = 0; i < cwmEvents.getParserLength(); i++) {
+                            count++;
+                            bw.write(Integer.toString(mParser[i]));
+                            bw.newLine();
+                            if (count == 3) {
+                                count = 0;
+                                bw.newLine();
+                            }
+                        }
 
-                     bw.write("Start Sleep Time: "+Integer.toString(mParser[startSleepPos+2]/100)+":"+Integer.toString(mParser[startSleepPos+2]%100));
-                     bw.newLine();
-                     bw.write("Awake Time: "+Integer.toString(mParser[getup+2]/100)+":"+Integer.toString(mParser[getup+2]%100));
-                     bw.newLine();
-                     bw.write(light.toString());
-                     bw.newLine();
-                     bw.write(deep.toString());
-                     bw.close();
-                 } catch (IOException e){
-                     e.printStackTrace();
-                 }
-                mSleepFM.setParserValue(builder1.toString());
-                 if(mSleepFM.isVisible())
-                     resetFragments(SLEEP_POSITION);
+                        bw.write("Start Sleep Time: " + Integer.toString(mParser[startSleepPos + 2] / 100) + ":" + Integer.toString(mParser[startSleepPos + 2] % 100));
+                        bw.newLine();
+                        bw.write("Awake Time: " + Integer.toString(mParser[getup + 2] / 100) + ":" + Integer.toString(mParser[getup + 2] % 100));
+                        bw.newLine();
+                        bw.write(light.toString());
+                        bw.newLine();
+                        bw.write(deep.toString());
+                        bw.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mSleepFM.setParserValue(builder1.toString());
+                    if (mSleepFM.isVisible())
+                        resetFragments(SLEEP_POSITION);
                     break;
 
                 case 0x05:
                     tabataNoResponseCount = 0;
                     Log.d("bernie", "0x05");
-                        String status = "";
-                        String item = "";
-                        String count = "";
-                        String calories = "";
-                        String heartRate = "";
+                    String status = "";
+                    String item = "";
+                    String count = "";
+                    String calories = "";
+                    String heartRate = "";
 
-                        Log.d("bernie", "tatabata status = " + Integer.toString(cwmEvents.getTabataStatus()));
+                    Log.d("bernie", "tatabata status = " + Integer.toString(cwmEvents.getTabataStatus()));
 
-                        if (cwmEvents.getTabataStatus() == 0) {
-                            status = "stop";
-                        } else if (cwmEvents.getTabataStatus() == 1) {
-                            status = "start";
-                        } else if (cwmEvents.getTabataStatus() == 2) {
-                            status = "continue";
-                        } else if (cwmEvents.getTabataStatus() == 3) {
-                            status = "pause";
-                        }
+                    if (cwmEvents.getTabataStatus() == 0) {
+                        status = "stop";
+                    } else if (cwmEvents.getTabataStatus() == 1) {
+                        status = "start";
+                    } else if (cwmEvents.getTabataStatus() == 2) {
+                        status = "continue";
+                    } else if (cwmEvents.getTabataStatus() == 3) {
+                        status = "pause";
+                    }
 
-                        if (cwmEvents.getExerciseItem() == 1) {
-                            item = "Push Up";
-                        } else if (cwmEvents.getExerciseItem() == 2) {
-                            item = "Crunch";
-                        } else if (cwmEvents.getExerciseItem() == 3) {
-                            item = "Squart";
-                        } else if (cwmEvents.getExerciseItem() == 4) {
-                            item = "Jumping Jack";
-                        } else if (cwmEvents.getExerciseItem() == 5) {
-                            item = "Dips";
-                        } else if (cwmEvents.getExerciseItem() == 6) {
-                            item = "High Knees Running";
-                        } else if (cwmEvents.getExerciseItem() == 7) {
-                            item = "Lunges";
-                        } else if (cwmEvents.getExerciseItem() == 8) {
-                            item = "Burpee";
-                        } else if (cwmEvents.getExerciseItem() == 9) {
-                            item = "Step On Chair";
-                        } else if (cwmEvents.getExerciseItem() == 10) {
-                            item = "Push Up Rotation";
-                        }
+                    if (cwmEvents.getExerciseItem() == 1) {
+                        item = "Push Up";
+                    } else if (cwmEvents.getExerciseItem() == 2) {
+                        item = "Crunch";
+                    } else if (cwmEvents.getExerciseItem() == 3) {
+                        item = "Squart";
+                    } else if (cwmEvents.getExerciseItem() == 4) {
+                        item = "Jumping Jack";
+                    } else if (cwmEvents.getExerciseItem() == 5) {
+                        item = "Dips";
+                    } else if (cwmEvents.getExerciseItem() == 6) {
+                        item = "High Knees Running";
+                    } else if (cwmEvents.getExerciseItem() == 7) {
+                        item = "Lunges";
+                    } else if (cwmEvents.getExerciseItem() == 8) {
+                        item = "Burpee";
+                    } else if (cwmEvents.getExerciseItem() == 9) {
+                        item = "Step On Chair";
+                    } else if (cwmEvents.getExerciseItem() == 10) {
+                        item = "Push Up Rotation";
+                    }
 
-                        count = Integer.toString(cwmEvents.getDoItemCount());
-                        calories = Integer.toString(cwmEvents.getCalories());
-                        heartRate = Integer.toString(cwmEvents.getHeartBeat());
+                    count = Integer.toString(cwmEvents.getDoItemCount());
+                    calories = Integer.toString(cwmEvents.getCalories());
+                    heartRate = Integer.toString(cwmEvents.getHeartBeat());
 
-                        if (status.equals("start")) {
-                            previous_item = item;
-                            previous_count = count;
-                        }
+                    if (status.equals("start")) {
+                        previous_item = item;
+                        previous_count = count;
+                    }
 
-                        if(status.equals("stop")){
-                            mTabataFM.setReset();
-                            timer.cancel();
-                            requestHandler.removeCallbacks(requestTask);
-                            if(mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() ||
-                                    mTabataActionItemFM.isVisible())
-                                setFragments(TABATA_WORK_POSITION);
-                                return;
-                        }
+                    if (status.equals("stop")) {
+                        mTabataFM.setReset();
+                        timer.cancel();
+                        requestHandler.removeCallbacks(requestTask);
+                        if (mTabataPrepareFM.isVisible() || mTabataIntervalFM.isVisible() ||
+                                mTabataActionItemFM.isVisible())
+                            setFragments(TABATA_WORK_POSITION);
+                        return;
+                    }
 
-                        // goal is achievement
-                        if (cwmEvents.getDoItemCount() >= goalTimes && goalTimes!= 0) {
-                            goalTimes = 0;
-                            Log.d("bernie","goal is achievement");
-                            requestHandler.removeCallbacks(requestTask);
-                            builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
-                            mTabataShowFM.setHistory(builder.toString());
-                            sendActionItemEnd();
-                           // selectActionItemFromQueue();
-                        }
-                        mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
-                    if(!status.equals("stop")){
+                    // goal is achievement
+                    if (cwmEvents.getDoItemCount() >= goalTimes && goalTimes != 0) {
+                        goalTimes = 0;
+                        Log.d("bernie", "goal is achievement");
+                        requestHandler.removeCallbacks(requestTask);
+                        builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
+                        mTabataShowFM.setHistory(builder.toString());
+                        sendActionItemEnd();
+                        // selectActionItemFromQueue();
+                    }
+                    mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
+                    if (!status.equals("stop")) {
                         mTabataActionItemFM.setActionCountView(count);
                         resetFragments(TABATA_ACTION_ITEM_POSITION);
                     }
-                       //makeTextAndShow("item: "+item+"\ncount: "+
-                        //       count+"\nheartRate: "+heartRate+"\ncalories: "+calories,Toast.LENGTH_SHORT);
+                    //makeTextAndShow("item: "+item+"\ncount: "+
+                    //       count+"\nheartRate: "+heartRate+"\ncalories: "+calories,Toast.LENGTH_SHORT);
 
                     break;
 
                 case 0x20:
                     int syncStatus;
-                    String statusStr="";
+                    String statusStr = "";
                     syncStatus = cwmEvents.getSyncStatus();
-                    if(syncStatus == 0)
+                    if (syncStatus == 0)
                         statusStr = "Sync Start";
-                    else if(syncStatus == 1)
+                    else if (syncStatus == 1)
                         statusStr = "Sync Success";
-                    else if(syncStatus == 2)
+                    else if (syncStatus == 2)
                         statusStr = "Sync Faile";
-                    else if(syncStatus == 3)
+                    else if (syncStatus == 3)
                         statusStr = "Sync Abort";
-                    else if(syncStatus == 4)
+                    else if (syncStatus == 4)
                         statusStr = "Sync Resume";
-                    else if(syncStatus == 5)
+                    else if (syncStatus == 5)
                         statusStr = "Sync Erase";
-                    else if(syncStatus == 6) {
+                    else if (syncStatus == 6) {
                         statusStr = "Sync Erase Done";
                         mProgressDialog.dismiss();
-                    }
-                    else if(syncStatus == 7) {
+                    } else if (syncStatus == 7) {
                         statusStr = "Sync Done";
                         mProgressDialog.dismiss();
                     }
-                    Toast.makeText(getApplicationContext(),statusStr,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), statusStr, Toast.LENGTH_SHORT).show();
                     break;
                 case 0x21: // flash feedback command
                     mFlashFM.setReceivedStatus("true");
-                    if(mFlashFM.isVisible())
+                    if (mFlashFM.isVisible())
                         resetFragments(FLASH_TEST_POSITION);
                     else
                         setFragments(FLASH_TEST_POSITION);
                     mProgressDialog.dismiss();
                     break;
                 case 0x22:
-                       totalLogsSize = cwmEvents.getMaxByte();
-                       deviceCurrentRecord = cwmEvents.getDeviceCurrent();
-                       mProgressBar.setMax(totalLogsSize);
-                       Log.d("bernie","max size is"+Integer.toString(totalLogsSize));
-                       if(totalLogsSize > 0)
-                          cwmManager.CwmFlashSyncStart();
+                    totalLogsSize = cwmEvents.getMaxByte();
+                    deviceCurrentRecord = cwmEvents.getDeviceCurrent();
+                    mProgressBar.setMax(totalLogsSize);
+                    Log.d("bernie", "max size is" + Integer.toString(totalLogsSize));
+                    if (totalLogsSize > 0)
+                        cwmManager.CwmFlashSyncStart();
                     break;
                 case 0xB:
-                    Log.d("bernie","0x0b event");
-                     int[] gestureList = cwmEvents.getGestureList();
-                     StringBuilder builder = new StringBuilder();
-                     if(gestureList[0]!=0){
-                         builder.append("Wrist\n");
-                     }
-                     if(gestureList[1]!=0){
-                         builder.append("Tap\n");
-                     }
-                     if(gestureList[2]!=0){
-                         builder.append("Hand Up\n");
-                     }
-                     if(gestureList[3]!=0){
-                         builder.append("Sedentary Remind\n");
-                     }
-                     if(gestureList[4]!=0){
-                         builder.append("On Wear\n");
-                     }
-                     if(gestureList[5]!=0){
-                         builder.append("Shake\n");
-                     }
-                     if(gestureList[6]!=0){
-                         builder.append("Significant\n");
-                     }
-                     Toast.makeText(getApplicationContext(),builder.toString(),Toast.LENGTH_LONG).show();
+                    Log.d("bernie", "0x0b event");
+                    int[] gestureList = cwmEvents.getGestureList();
+                    StringBuilder builder = new StringBuilder();
+                    if (gestureList[0] != 0) {
+                        builder.append("Wrist\n");
+                    }
+                    if (gestureList[1] != 0) {
+                        builder.append("Tap\n");
+                    }
+                    if (gestureList[2] != 0) {
+                        builder.append("Hand Up\n");
+                    }
+                    if (gestureList[3] != 0) {
+                        builder.append("Sedentary Remind\n");
+                    }
+                    if (gestureList[4] != 0) {
+                        builder.append("On Wear\n");
+                    }
+                    if (gestureList[5] != 0) {
+                        builder.append("Shake\n");
+                    }
+                    if (gestureList[6] != 0) {
+                        builder.append("Significant\n");
+                    }
+                    Toast.makeText(getApplicationContext(), builder.toString(), Toast.LENGTH_LONG).show();
                     break;
                 case 0x23:
-                    if(mProgressDialog != null){
+                    if (mProgressDialog != null) {
                         int progress = cwmEvents.getEraseProgress();
-                        mProgressDialog.setMessage("Erase Progress: "+Integer.toString(progress)+"%");
-                        if(timer != null){
-                            if(progress == 100){
+                        mProgressDialog.setMessage("Erase Progress: " + Integer.toString(progress) + "%");
+                        if (timer != null) {
+                            if (progress == 100) {
                                 timer.cancel();
                             }
                         }
                     }
                     break;
-                 default:
+                case 0x91:
+                    Toast.makeText(getApplicationContext(),"Calibration has done",Toast.LENGTH_SHORT).show();
+                    break;
+                default:
                     break;
             }
         }
@@ -1165,8 +1175,13 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
     }
 
     @Override
-    public void onPressTestButton(){
-        cwmManager.CwmTestRequest();
+    public void onPressCalibrateADXL(){
+        cwmManager.CwmCalibrate(1);
+    }
+
+    @Override
+    public void onPressCalibrateBMI160(){
+        cwmManager.CwmCalibrate(2);
     }
 
     @Override
@@ -1230,11 +1245,11 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
         mFragments.add(mTabataIntervalFM);
         mFragments.add(mSwVersionFM);
         mFragments.add(mFlashFM);
-        mFragments.add(mCommandTestFM);
+        mFragments.add(mCalibrateFM);
         mFragments.add(mGestureRequestFM);
         //testS1ettings.
         //testSettings.
-        cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener);
+        cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener,rawDataListener);
         statusCheck();
         setFragments(SELECT_DEVICE_POSITION);
     }
@@ -1338,7 +1353,7 @@ FlashFragment.ListenForFlashFragment, CommandTestFragment.ListenForCommandTestFr
                 setFragments(FLASH_TEST_POSITION);
                 break;
             case R.id.navigation_item_11:
-                setFragments(REQUEST_TEST_POSITION);
+                setFragments(CALIBRATE_POSITION);
                 break;
             case R.id.navigation_item_12:
                 setFragments(REQUEST_GESTURE_POSITION);

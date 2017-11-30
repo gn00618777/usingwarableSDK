@@ -48,7 +48,7 @@
         <item
             android:id="@+id/navigation_item_11"
             android:checked="true"
-            android:title="Request測試"/>
+            android:title="Calibrate手環"/>
         <item
             android:id="@+id/navigation_item_12"
             android:checked="true"
