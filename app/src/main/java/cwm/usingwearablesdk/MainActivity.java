@@ -60,7 +60,8 @@ RingBatteryFragment.ListenForRingStatusFragment, TimeSyncFragment.ListenForSyncT
          TabataFragment.ListenForTabataFragment, RequestSleepFragment.ListenForRequestSleepFragment,
 SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
         TabataActionItemFragment.ListenForTabataActionItemFragment, TabataShowFragment.ListenForTabataShowFragment,
-FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFragment,GestureRequestFragment.ListenerForGestureRequestFragment{
+FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFragment,GestureRequestFragment.ListenerForGestureRequestFragment,
+        SensorsFragment.ListenForSensorFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int WRITE_EXTERNAL_STORAGE = 4;
@@ -111,6 +112,7 @@ FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFrag
     private FlashFragment mFlashFM = new FlashFragment();
     private CalibrateFragment mCalibrateFM = new CalibrateFragment();
     private GestureRequestFragment mGestureRequestFM = new GestureRequestFragment();
+    private SensorsFragment mSensorsFM = new SensorsFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -182,6 +184,7 @@ FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFrag
     final int FLASH_TEST_POSITION = 13;
     final int CALIBRATE_POSITION = 14;
     final int REQUEST_GESTURE_POSITION = 15;
+    final int SENSORS_POSITION = 16;
 
     public enum ITEMS{
         TABATA_INIT,
@@ -563,6 +566,28 @@ FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFrag
                     break;
                 case 0x91:
                     Toast.makeText(getApplicationContext(),"Calibration has done",Toast.LENGTH_SHORT).show();
+                    break;
+                case 0x80:
+                    float[] sensorAcc;
+                    float[] sensorGyro;
+                    int sensorType;
+                    int trustLevel;
+                    int heartBeat;
+                    int signalGrade;
+                    float temperature;
+                    float pressure;
+                    sensorAcc = cwmEvents.getSensorAccData();
+                    sensorGyro = cwmEvents.getSensorGyroData();
+                    sensorType = cwmEvents.getSensorType();
+                    signalGrade = cwmEvents.getSignalGrade();
+                    trustLevel = cwmEvents.getTrustLevel();
+                    heartBeat = cwmEvents.getHeartBeat();
+                    temperature = cwmEvents.getTemperature();
+                    pressure = cwmEvents.getPressure();
+                    if(mSensorsFM.isVisible()){
+                        mSensorsFM.refreshTextView(sensorType, sensorAcc, sensorGyro, trustLevel,
+                                heartBeat, signalGrade, temperature, pressure);
+                    }
                     break;
                 default:
                     break;
@@ -1164,6 +1189,11 @@ FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFrag
     }
 
     @Override
+    public void onPressCheckBox(int sensorType){
+      cwmManager.CwmSensorReport(sensorType);
+    }
+
+    @Override
     public void onPressSyncSuccessButton(){
         mProgressDialog = ProgressDialog.show(this,"按下 Start Success","處理中...");
         cwmManager.CwmFlashSyncSuccess();
@@ -1247,6 +1277,7 @@ FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFrag
         mFragments.add(mFlashFM);
         mFragments.add(mCalibrateFM);
         mFragments.add(mGestureRequestFM);
+        mFragments.add(mSensorsFM);
         //testS1ettings.
         //testSettings.
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener,rawDataListener);
@@ -1357,6 +1388,11 @@ FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFrag
                 break;
             case R.id.navigation_item_12:
                 setFragments(REQUEST_GESTURE_POSITION);
+                break;
+            case R.id.navigation_item_13:
+                mToolbar.setTitle("SensorsData");
+                setFragments(SENSORS_POSITION);
+                break;
             default: break;
         }
         mDrawerLayout.closeDrawers();

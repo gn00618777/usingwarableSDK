@@ -53,6 +53,10 @@
             android:id="@+id/navigation_item_12"
             android:checked="true"
             android:title="Gesture測試"/>
+        <item
+            android:id="@+id/navigation_item_13"
+            android:checked="true"
+            android:title="SensorsData"/>
 
     </group>
 </menu>
