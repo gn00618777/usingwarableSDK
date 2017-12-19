@@ -865,14 +865,14 @@ FlashFragment.ListenForFlashFragment, CalibrateFragment.ListenForCommandTestFrag
                    }
                }
                else if(command == 0x23){
-                   getEraseProgressCount++;
-                   Toast.makeText(getApplication(), "Erase request header lost", Toast.LENGTH_SHORT).show();
-                   if(getEraseProgressCount == 3){
-                       if(timer != null){
-                           timer.cancel();
-                           Toast.makeText(getApplication(), "Please check your device is connecting", Toast.LENGTH_SHORT).show();
-                       }
-                   }
+                   //getEraseProgressCount++;
+                   //Toast.makeText(getApplication(), "Erase request header lost", Toast.LENGTH_SHORT).show();
+                   //if(getEraseProgressCount == 3){
+                    //   if(timer != null){
+                     //      timer.cancel();
+                      //     Toast.makeText(getApplication(), "Please check your device is connecting", Toast.LENGTH_SHORT).show();
+                      // }
+                   //}
                }
             }
             else if(id == 0x02){ //packet lost
