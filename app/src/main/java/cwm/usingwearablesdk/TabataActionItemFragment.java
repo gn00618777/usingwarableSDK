@@ -31,17 +31,11 @@ public class TabataActionItemFragment extends Fragment {
     private TextView actionItemView;
     private TextView actionItemStartView;
     private TextView actionCountView;
+    private TextView connectionView;
 
     private Button tabataPauseButton;
     private Button tabataDoneButton;
     private Button tabataResumeButton;
-
-    private Button adxl50DisableButton;
-    private Button adxl100DisableButton;
-    private Button adxl200DisableButton;
-    private Button bmil50DisableButton;
-    private Button bmi100DisableButton;
-    private Button bmil200DisableButton;
 
     private ImageView exerciseView;
 
@@ -50,6 +44,7 @@ public class TabataActionItemFragment extends Fragment {
     private String actionComment="";
 
     private boolean mAniStarted = false;
+    private boolean mConnectState = false;
 
     private String count = "";
 
@@ -60,12 +55,6 @@ public class TabataActionItemFragment extends Fragment {
         public void onPressTabataDoneButton();
         public void onPressTabataPauseButton();
         public void onPressTabataResumeButton();
-        public void onPressADXL50Disable();
-        public void onPressADXL100Disable();
-        public void onPressADXL200Disable();
-        public void onPressBMI50Disable();
-        public void onPressBMI100Disable();
-        public void onPressBMI200Disable();
     }
 
 
@@ -86,7 +75,11 @@ public class TabataActionItemFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.layout_tabata_action_item, null);
         }
-
+        connectionView = (TextView)mView.findViewById(R.id.connect_state);
+        if(mConnectState == false)
+          connectionView.setText("connect status: "+"斷線");
+        else
+            connectionView.setText("connect status: "+"連線");
         actionItemView = (TextView)mView.findViewById(R.id.action_item_view);
         actionItemView.setText(actionItem+"/"+actionComment);
         actionItemStartView = (TextView)mView.findViewById(R.id.action_item_start_view);
@@ -94,7 +87,6 @@ public class TabataActionItemFragment extends Fragment {
         exerciseView = (ImageView)mView.findViewById(R.id.exerceise_view);
         actionCountView = (TextView)mView.findViewById(R.id.action_item_count);
         actionCountView.setText(count);
-
         if(actionItem.equals("Push Up")) {
             exerciseView.setBackgroundResource(R.drawable.anim_pushup_gif);
             if(!mAniStarted) {
@@ -206,17 +198,6 @@ public class TabataActionItemFragment extends Fragment {
             }
         }
 
-       /* exerciseView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
-        });*/
-
         tabataPauseButton = (Button)mView.findViewById(R.id.tabata_pause);
         tabataPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,70 +223,6 @@ public class TabataActionItemFragment extends Fragment {
             }
         });
 
-         adxl50DisableButton = (Button)mView.findViewById(R.id.sensor_operate1);
-         adxl50DisableButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 mCallback.onPressADXL50Disable();
-             }
-         });
-         adxl100DisableButton = (Button)mView.findViewById(R.id.sensor_operate2);
-         adxl100DisableButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 mCallback.onPressADXL100Disable();
-             }
-         });
-         adxl200DisableButton = (Button)mView.findViewById(R.id.sensor_operate3);
-         adxl200DisableButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 mCallback.onPressADXL200Disable();
-             }
-         });
-         bmil50DisableButton = (Button)mView.findViewById(R.id.sensor_operate4);
-         bmil50DisableButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 mCallback.onPressBMI50Disable();
-             }
-         });
-         bmi100DisableButton = (Button)mView.findViewById(R.id.sensor_operate5);
-         bmi100DisableButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 mCallback.onPressBMI100Disable();
-             }
-         });
-         bmil200DisableButton = (Button)mView.findViewById(R.id.sensor_operate6);
-         bmil200DisableButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 mCallback.onPressBMI200Disable();
-             }
-         });
-
-       /* if(actionItem.equals("Push Up"))
-            exerciseView.setImageResource(R.drawable.pushup);
-        else if(actionItem.equals("Crunch"))
-            exerciseView.setImageResource(R.drawable.crunch);
-        else if(actionItem.equals("Squart"))
-            exerciseView.setImageResource(R.drawable.squart);
-        else if(actionItem.equals("Jumping Jack"))
-            exerciseView.setImageResource(R.drawable.jumpjack);
-        else if(actionItem.equals("Dips"))
-            exerciseView.setImageResource(R.drawable.dips);
-        else if(actionItem.equals("High Kniess Running"))
-            exerciseView.setImageResource(R.drawable.highknessrunning);
-        else if(actionItem.equals("Lunges"))
-            exerciseView.setImageResource(R.drawable.lungues);
-        else if(actionItem.equals("Burpees"))
-            exerciseView.setImageResource(R.drawable.burpees);
-        else if(actionItem.equals("Step On Chair"))
-            exerciseView.setImageResource(R.drawable.steponchair);
-        else if(actionItem.equals("PushUp Rotation"))
-            exerciseView.setImageResource(R.drawable.pushuprotation);*/
-
         return mView;
     }
 
@@ -317,6 +234,7 @@ public class TabataActionItemFragment extends Fragment {
     }
     public void setActionItemCommentView(String s){actionComment = s;}
     public void setActionCountView(String c){count = c;}
+    public void setConnectStatus(boolean s) {mConnectState = s;}
     public void setAni(boolean b){mAniStarted = b;}
 
 }

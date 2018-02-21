@@ -53,12 +53,12 @@ public class TabataFragment extends Fragment {
     private Button exerciseItemsButton;
     private Button startButton;
     private Button cycleButton;
-    private Button adxl50EnableButton;
+    /*private Button adxl50EnableButton;
     private Button adxl100EnableButton;
     private Button adxl200EnableButton;
     private Button bmil50EnableButton;
     private Button bmi100EnableButton;
-    private Button bmil200EnableButton;
+    private Button bmil200EnableButton;*/
 
     /*********************************/
 
@@ -105,12 +105,6 @@ public class TabataFragment extends Fragment {
     // Container Activity must implement this interface
     public interface ListenForTabataFragment {
         public void onInitTabata(Queue<TabataTask> mTabataQ);
-        public void onPressADXL50Enable();
-        public void onPressADXL100Enable();
-        public void onPressADXL200Enable();
-        public void onPressBMI50Enable();
-        public void onPressBMI100Enable();
-        public void onPressBMI200Enable();
     }
 
     private ListenForTabataFragment mCallback;
@@ -148,15 +142,6 @@ public class TabataFragment extends Fragment {
         exerciseItemsButton = (Button)mView.findViewById(R.id.exercise_item);
         startButton = (Button)mView.findViewById(R.id.start_button);
 
-        adxl50EnableButton = (Button)mView.findViewById(R.id.sensor_operate1);
-        adxl100EnableButton = (Button)mView.findViewById(R.id.sensor_operate2);
-        adxl200EnableButton = (Button)mView.findViewById(R.id.sensor_operate3);
-        bmil50EnableButton = (Button)mView.findViewById(R.id.sensor_operate4);
-        bmi100EnableButton = (Button)mView.findViewById(R.id.sensor_operate5);
-        bmil200EnableButton = (Button)mView.findViewById(R.id.sensor_operate6);
-
-
-
         prepareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,18 +158,26 @@ public class TabataFragment extends Fragment {
                         if(checkedId == R.id.prepare_one){
                             prepare = 5;
                             prepareButton.setText("預備時間\n"+Integer.toString(prepare));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setPrepareTime(prepare);
                         }
                         else if(checkedId == R.id.preapre_two){
                             prepare = 10;
                             prepareButton.setText("預備時間\n"+Integer.toString(prepare));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setPrepareTime(prepare);
                         }
                         else if(checkedId == R.id.prepare_three){
                             prepare = 15;
                             prepareButton.setText("預備時間\n"+Integer.toString(prepare));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setPrepareTime(prepare);
                         }
                         else if(checkedId == R.id.prepare_four){
                             prepare = 20;
                             prepareButton.setText("預備時間\n"+Integer.toString(prepare));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setPrepareTime(prepare);
                         }
                     }
                 });
@@ -214,18 +207,26 @@ public class TabataFragment extends Fragment {
                         if(checkedId == R.id.interval_one){
                             interval = 10;
                             intervalButton.setText("間隔時間\n"+Integer.toString(interval));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setIntervalTime(interval);
                         }
                         else if(checkedId == R.id.interval_two){
                             interval = 15;
                             intervalButton.setText("間隔時間\n"+Integer.toString(interval));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setIntervalTime(interval);
                         }
                         else if(checkedId == R.id.interval_three){
                             interval = 20;
                             intervalButton.setText("間隔時間\n"+Integer.toString(interval));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setIntervalTime(interval);
                         }
                         else if(checkedId == R.id.interval_four){
                             interval = 60;
                             intervalButton.setText("間隔時間\n"+Integer.toString(interval));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setIntervalTime(interval);
                         }
                     }
                 });
@@ -254,22 +255,32 @@ public class TabataFragment extends Fragment {
                         if(checkedId == R.id.times_one){
                             times = 3;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setActionTimes(times);
                         }
                         else if(checkedId == R.id.times_two){
                             times = 5;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setActionTimes(times);
                         }
                         else if(checkedId == R.id.times_three){
                             times = 10;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setActionTimes(times);
                         }
                         else if(checkedId == R.id.times_four){
                             times = 15;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setActionTimes(times);
                         }
                         else if(checkedId == R.id.times_five){
                             times = 30;
                             actionTimesButton.setText("運動次數\n"+Integer.toString(times));
+                            for(TabataTask task : mTabataQ)
+                                task.getTabataSettings().setActionTimes(times);
                         }
                     }
                 });
@@ -381,44 +392,6 @@ public class TabataFragment extends Fragment {
                         mCallback.onInitTabata(mTabataQ);
                 }
 
-            }
-        });
-
-        adxl50EnableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressADXL50Enable();
-            }
-        });
-        adxl100EnableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressADXL100Enable();
-            }
-        });
-        adxl200EnableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressADXL200Enable();
-            }
-        });
-
-        bmil50EnableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressBMI50Enable();
-            }
-        });
-        bmi100EnableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressBMI100Enable();
-            }
-        });
-        bmil200EnableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressBMI200Enable();
             }
         });
 

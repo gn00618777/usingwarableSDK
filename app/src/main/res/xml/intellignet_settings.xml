@@ -7,6 +7,7 @@
         <SwitchPreference
             android:summaryOn="久坐提醒"
             android:key="sedentary_remind"
+            android:defaultValue="true"
             android:title="久坐提醒" />
         <SwitchPreference
             android:key="hand_up"
@@ -16,19 +17,19 @@
             android:key="on-wear"
             android:defaultValue="true"
             android:title="配戴偵測" />
-        <SwitchPreference
+       <!-- <SwitchPreference
             android:key="double-tap"
-            android:title="雙擊切換" />
+            android:title="雙擊切換" />-->
         <SwitchPreference
             android:key="wrist-scroll"
-            android:title="扭轉切換" />
-        <SwitchPreference
-            android:key="shake"
             android:defaultValue="true"
+            android:title="扭轉切換" />
+       <!-- <SwitchPreference
+            android:key="shake"
             android:title="搖動偵測" />
         <SwitchPreference
             android:key="significant"
-            android:title="Significant" />
+            android:title="Significant" />-->
 
         <EditTextPreference
             android:defaultValue="8000"
@@ -45,8 +46,14 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="操作設定">
        <Preference
-         android:key="intelligent_sync"
-         android:title="儲存/同步"/>
+         android:key="intelligent_save"
+         android:title="儲存"/>
+        <Preference
+            android:key="intelligent_request"
+            android:title="要求"/>
+        <Preference
+            android:key="intelligent_sync"
+            android:title="同步"/>
     </PreferenceCategory>
 </PreferenceScreen>
 

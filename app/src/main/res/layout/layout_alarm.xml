@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="時間設定:"/>
+        <EditText
+            android:id="@+id/hour_edit_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="時"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="20dp"/>
+
+        <EditText
+            android:id="@+id/minute_edit_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="分"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="震動設定:"/>
+
+        <EditText
+            android:id="@+id/vibrate_edit_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="秒"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="星期設定:"/>
+
+        <CheckBox
+            android:id="@+id/week1_1g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一"/>
+        <CheckBox
+            android:id="@+id/week2_1g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="二"/>
+        <CheckBox
+            android:id="@+id/week3_1g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三"/>
+        <CheckBox
+            android:id="@+id/week4_1g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="四"/>
+        <CheckBox
+            android:id="@+id/week5_1g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="五"/>
+        <CheckBox
+            android:id="@+id/week6_1g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="六"/>
+        <CheckBox
+            android:id="@+id/week7_1g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="日"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/save1_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="儲存1"/>
+        <Button
+            android:id="@+id/request1_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="要求1"/>
+       <!-- <Button
+            android:id="@+id/sync1_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="同步1"/>-->
+        />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="時間設定:"/>
+        <EditText
+            android:id="@+id/hour_edit_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="時"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="20dp"/>
+
+        <EditText
+            android:id="@+id/minute_edit_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="分"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="震動設定:"/>
+
+        <EditText
+            android:id="@+id/vibrate_edit_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="秒"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="星期設定:"/>
+
+        <CheckBox
+            android:id="@+id/week1_2g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一"/>
+        <CheckBox
+            android:id="@+id/week2_2g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="二"/>
+        <CheckBox
+            android:id="@+id/week3_2g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三"/>
+        <CheckBox
+            android:id="@+id/week4_2g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="四"/>
+        <CheckBox
+            android:id="@+id/week5_2g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="五"/>
+        <CheckBox
+            android:id="@+id/week6_2g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="六"/>
+        <CheckBox
+            android:id="@+id/week7_2g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="日"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/save2_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="儲存2"/>
+        <Button
+            android:id="@+id/request2_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="要求2"/>
+        <!--<Button
+            android:id="@+id/sync2_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="同步2"/>-->
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="時間設定:"/>
+        <EditText
+            android:id="@+id/hour_edit_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="時"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="20dp"/>
+
+        <EditText
+            android:id="@+id/minute_edit_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="分"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="震動設定:"/>
+
+        <EditText
+            android:id="@+id/vibrate_edit_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="秒"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="星期設定:"/>
+        <CheckBox
+            android:id="@+id/week1_3g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一"/>
+        <CheckBox
+            android:id="@+id/week2_3g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="二"/>
+        <CheckBox
+            android:id="@+id/week3_3g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三"/>
+        <CheckBox
+            android:id="@+id/week4_3g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="四"/>
+        <CheckBox
+            android:id="@+id/week5_3g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="五"/>
+        <CheckBox
+            android:id="@+id/week6_3g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="六"/>
+        <CheckBox
+            android:id="@+id/week7_3g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="日"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/save3_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="儲存3"/>
+        <Button
+            android:id="@+id/request3_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="要求3"/>
+       <!-- <Button
+            android:id="@+id/sync3_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="同步3"/>-->
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

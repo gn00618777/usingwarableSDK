@@ -12,41 +12,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class TimeSyncFragment extends Fragment {
+public class BaseMapFragment extends Fragment {
 
     private View mView;
-    private Button syncButton;
+    private Button updateButton;
 
-    ListenForSyncTimeFragment mCallback;
+    ListenForBaseMapFragment mCallback;
 
     // Container Activity must implement this interface
-    public interface ListenForSyncTimeFragment {
-         void onRequestSyncTime();
+    public interface ListenForBaseMapFragment {
+         void onStartUpdateBaseMap();
     }
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
         try {
-            mCallback = (ListenForSyncTimeFragment) context;
+            mCallback = (ListenForBaseMapFragment) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement ListenForRingStausFragment");
+                    + " must implement ListenForBaseMapFragment");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.layout_time_sync, null);
+            mView = inflater.inflate(R.layout.layout_basemap, null);
         }
-        syncButton = (Button) mView.findViewById(R.id.sync);
 
-        syncButton.setOnClickListener(new View.OnClickListener() {
+        updateButton = (Button) mView.findViewById(R.id.update);
+        updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onRequestSyncTime();
+                mCallback.onStartUpdateBaseMap();
             }
         });
 

@@ -84,6 +84,4 @@ public class TabataPrepareFragment extends Fragment {
     public void setPrepareCountView(String s){prepareCount = s;}
     public void setPrepareCommentView(String s){actionItem = s;}
 
-
-
 }

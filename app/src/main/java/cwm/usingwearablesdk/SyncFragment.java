@@ -11,44 +11,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class GestureRequestFragment extends Fragment {
+public class SyncFragment extends Fragment {
 
-    private ListenerForGestureRequestFragment mCallback;
     private View mView;
-    private Button requestButton;
+    private Button syncButton;
 
-    public interface ListenerForGestureRequestFragment{
+    ListenForSyncFragment mCallback;
 
-        void onRequestGesture();
-
+    // Container Activity must implement this interface
+    public interface ListenForSyncFragment {
+         void onRequestSync();
+         void onRequestUserConfig();
     }
+
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-
         try {
-            mCallback = (ListenerForGestureRequestFragment) context;
+            mCallback = (ListenForSyncFragment) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement ListenForGestureRequestFragment");
+                    + " must implement ListenForSyncFragment");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(mView == null){
-            mView = inflater.inflate(R.layout.layout_request_gesture, null);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.layout_sync, null);
         }
-        requestButton = (Button)mView.findViewById(R.id.request_gesture);
-        requestButton.setOnClickListener(new View.OnClickListener() {
+        syncButton = (Button) mView.findViewById(R.id.sync);
+
+        syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onRequestGesture();
+                mCallback.onRequestSync();
+                Toast.makeText(getContext(),"將組態傳給裝置",Toast.LENGTH_SHORT).show();
             }
         });
 
         return mView;
-    } // onCreateView()
-
+    }
 }

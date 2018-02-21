@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">UsingWearableSDK</string>
+    <string name="notification_listener_service">"Notification Listener Service"</string>
+    <string name="notification_listener_service_explanation">"For the the app. to work you need to enable the Notification Listener Service. Enable it now?"</string>
 </resources>

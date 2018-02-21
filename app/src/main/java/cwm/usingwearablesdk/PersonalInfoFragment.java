@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import cwm.wearablesdk.settings.BodySettings;
+
 public class PersonalInfoFragment extends Fragment {
     private View mView;
     private Button ensure;
+    private Button request;
+    private Button sync;
     private EditText oldEdit;
     private EditText highEdit;
     private EditText sexEdit;
@@ -33,7 +38,9 @@ public class PersonalInfoFragment extends Fragment {
 
     // Container Activity must implement this interface
     public interface ListenForPersonalInfoFragment {
-        public void onPersonalInfoSyncToRing();
+        public void onPersonalInfoSaveToUserConfig();
+        public void onPersonalRequest();
+        public void onSycRequest();
     }
 
     @Override
@@ -66,11 +73,27 @@ public class PersonalInfoFragment extends Fragment {
                     mSex = sexEdit.getText().toString();
                     mWeight = Integer.parseInt(weightEdit.getText().toString());
 
-                    mCallback.onPersonalInfoSyncToRing();
+                    mCallback.onPersonalInfoSaveToUserConfig();
+
+                    Toast.makeText(getContext(),"已儲存設定在手機中",Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(getContext(),"請正確填妥資料!",Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPersonalRequest();
+            }
+        });
+        sync = (Button)mView.findViewById(R.id.sync);
+        sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onSycRequest();
             }
         });
 
@@ -92,6 +115,7 @@ public class PersonalInfoFragment extends Fragment {
         sexEdit = (EditText)mView.findViewById(R.id.sex_edit);
         weightEdit = (EditText)mView.findViewById(R.id.weight_edit);
         ensure = (Button)mView.findViewById(R.id.ensure);
+        request = (Button)mView.findViewById(R.id.request);
 
         return mView;
     } // onCreateView()
@@ -127,4 +151,15 @@ public class PersonalInfoFragment extends Fragment {
     public String getSex() { return mSex;}
 
     public int getWeight() { return mWeight;}
+
+    public void updateSetting(BodySettings body){
+        oldEdit.setText(Integer.toString(body.getOld()));
+        highEdit.setText(Integer.toString(body.getHight()));
+        if(body.getSex() == 0)
+         sexEdit.setText("M");
+        else
+            sexEdit.setText("F");
+        weightEdit.setText(Integer.toString(body.getWeight()));
+
+    }
 }

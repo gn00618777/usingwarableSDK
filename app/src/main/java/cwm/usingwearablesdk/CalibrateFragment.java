@@ -5,6 +5,7 @@ package cwm.usingwearablesdk;
  */
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,6 +21,9 @@ import android.widget.TextView;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import cwm.wearablesdk.TabataSettings;
@@ -95,6 +99,18 @@ public class CalibrateFragment extends Fragment {
         }catch (IOException e){
 
         }
+        try {
+            File file = new File(Environment.getExternalStorageDirectory().toString() + "/Download/CwmLog.txt");
+            FileWriter txt = new FileWriter(file, true);
+            BufferedWriter bw = new BufferedWriter(txt);
+            String log = new String(rawByte, "UTF-8");
+            bw.write(log);
+            bw.newLine();
+            bw.close();
+        }catch (IOException e){
+
+        }
+
     }
 
 }

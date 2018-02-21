@@ -34,6 +34,16 @@
             android:layout_height="wrap_content"/>
 
         <CheckBox
+            android:id="@+id/checkbox_vibrator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vibrator"/>
+        <TextView
+            android:id="@+id/vibrator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+      <!--  <CheckBox
             android:id="@+id/checkbox_pressure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,6 +51,6 @@
         <TextView
             android:id="@+id/pressure_raw"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"/>-->
 
 </LinearLayout>

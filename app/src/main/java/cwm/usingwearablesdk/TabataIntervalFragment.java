@@ -52,7 +52,6 @@ public class TabataIntervalFragment extends Fragment {
         intervalNextActionView = (TextView)mView.findViewById(R.id.prepare_action);
         intervalNextActionView.setText(nextAction+"/"+actionComment);
         exerciseView = (ImageView)mView.findViewById(R.id.exerceise_view);
-        Log.d("bernie","exercise view is"+actionComment);
         if(nextAction.equals("Push Up"))
             exerciseView.setImageResource(R.drawable.pushup);
         else if(nextAction.equals("Crunch"))

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+        <TextView
+            android:id="@+id/os_type_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="作業系統"
+            android:textSize="20dp"/>
+        <RadioGroup
+            android:id="@+id/os_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+                <RadioButton
+                    android:id="@+id/os_type_android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Android"/>
+                <RadioButton
+                    android:id="@+id/os_type_ios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="iOS"/>
+        </RadioGroup>
+        <TextView
+            android:id="@+id/time_format_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="時間格式"
+            android:textSize="20dp"/>
+        <RadioGroup
+            android:id="@+id/time_format_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+                <RadioButton
+                    android:id="@+id/time_fomat_0_23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="0-23 (時)"/>
+                <RadioButton
+                    android:id="@+id/time_fomat_1_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1-12 (時)"/>
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/histroy_detect_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="歷史資料儲存週期"
+            android:textSize="20dp"/>
+
+        <EditText
+            android:id="@+id/history_detect_edit"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:hint="10"
+            android:maxLines="1"
+            android:inputType="number"
+            android:theme="@style/MyEditText"/>
+
+        <TextView
+            android:id="@+id/screen_timeout_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="滅屏時間 :"
+            android:textSize="20dp"/>
+
+        <EditText
+            android:id="@+id/screen_timeout_edit"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:hint="5秒~120秒"
+            android:maxLines="1"
+            android:inputType="number"
+            android:theme="@style/MyEditText"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="手環頁面選擇:"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/pedometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="步數"/>
+                <CheckBox
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="里程/公尺"/>
+                <CheckBox
+                    android:id="@+id/heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="心律"/>
+                <CheckBox
+                    android:id="@+id/battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="電量"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="功能設定:"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+                <CheckBox
+                    android:id="@+id/call_notify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="來電提醒"/>
+                <CheckBox
+                    android:id="@+id/app_notify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="應用程式提醒"/>
+                <CheckBox
+                    android:id="@+id/mail_notify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="信件提醒"/>
+                <CheckBox
+                    android:id="@+id/msg_notify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="簡訊提醒"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/heart_survelliance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="心跳監測"/>
+                <CheckBox
+                    android:id="@+id/vibrate_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="震動開啟"/>
+                <CheckBox
+                    android:id="@+id/no_notify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="勿擾模式"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/afternoon_no_notify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="午休-勿擾模式"/>
+                <CheckBox
+                    android:id="@+id/sleep_detect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="睡眠偵測"/>
+        </LinearLayout>
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
+               <EditText
+                   android:id="@+id/no_disturb_start_time"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:hint="勿擾開始時間小時"
+                   android:maxLines="1"
+                   android:visibility="invisible"
+                   android:inputType="number"
+                   android:theme="@style/MyEditText"/>
+               <EditText
+                   android:id="@+id/sleep_start_time"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:hint="睡眠開始時間小時"
+                   android:maxLines="1"
+                   android:visibility="invisible"
+                   android:inputType="number"
+                   android:theme="@style/MyEditText"/>
+       </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/no_disturb_stop_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:hint="勿擾結束時間小時"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:theme="@style/MyEditText"/>
+                <EditText
+                    android:id="@+id/sleep_stop_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:hint="睡眠結束時間小時"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:theme="@style/MyEditText"/>
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/brightness_bar"
+            android:layout_width="300dp"
+            android:layout_height="5dp"
+            android:max="16"/>
+        <TextView
+            android:id="@+id/brightness_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="亮度:0"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="儲存"/>
+                <Button
+                    android:id="@+id/request"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="要求"/>
+                <Button
+                    android:id="@+id/sync"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="同步"/>
+
+        </LinearLayout>
+
+
+
+
+</LinearLayout>

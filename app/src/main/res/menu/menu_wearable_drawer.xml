@@ -1,9 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_0"
-            android:checked="true"
-            android:title="計步/心跳/距離/卡路里"/>
+        android:id="@+id/navigation_item_0"
+        android:checked="true"
+        android:title="系統設定"/>
         <item
             android:id="@+id/navigation_item_1"
             android:checked="true"
@@ -12,10 +12,6 @@
             android:id="@+id/navigation_item_2"
             android:checked="true"
             android:title="移除/新增手環"/>
-        <item
-            android:id="@+id/navigation_item_3"
-            android:checked="true"
-            android:title="睡眠資料"/>
         <item
             android:id="@+id/navigation_item_4"
             android:checked="true"
@@ -27,36 +23,41 @@
         <item
             android:id="@+id/navigation_item_6"
             android:checked="true"
-            android:title="時間同步"/>
+            android:title="訓練"/>
+
         <item
             android:id="@+id/navigation_item_7"
             android:checked="true"
-            android:title="TABATA"/>
-
-        <item
-            android:id="@+id/navigation_item_8"
-            android:checked="true"
             android:title="裝置版本"/>
         <item
-            android:id="@+id/navigation_item_9"
+            android:id="@+id/navigation_item_8"
             android:checked="true"
             android:title="韌體更新"/>
         <item
             android:id="@+id/navigation_item_10"
             android:checked="true"
-            android:title="Flash測試"/>
+            android:title="工程模式"/>
+
         <item
             android:id="@+id/navigation_item_11"
             android:checked="true"
-            android:title="Calibrate手環"/>
+            android:title="鬧鐘設定"/>
         <item
             android:id="@+id/navigation_item_12"
             android:checked="true"
-            android:title="Gesture測試"/>
+            android:title="工廠模式"/>
         <item
             android:id="@+id/navigation_item_13"
             android:checked="true"
-            android:title="SensorsData"/>
+            android:title="跑步模式"/>
+        <item
+            android:id="@+id/navigation_item_14"
+            android:checked="true"
+            android:title="歷程測試"/>
+        <item
+            android:id="@+id/navigation_item_15"
+            android:checked="true"
+            android:title="底圖更新"/>
 
     </group>
 </menu>

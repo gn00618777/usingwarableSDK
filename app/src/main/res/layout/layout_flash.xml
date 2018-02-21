@@ -5,30 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1">
-    <Button
-        android:id="@+id/sync_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sync Start" />
-
-    <Button
-        android:id="@+id/sync_sucess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sync Sucess" />
-
-    <TextView
-        android:id="@+id/received_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""/>
-
-     <Button
-         android:id="@+id/sync_failed"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="Sync Failed"/>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -36,15 +12,41 @@
             android:id="@+id/sync_erase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Sync Erase"/>
+            android:text="刪除所有歷史紀錄"/>
 
         <Button
             android:id="@+id/sync_auto_sync"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Start auto Sync"/>
+            android:text="開始同步歷史紀錄"/>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/oled_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刪除OLED頁面"/>
+
+        <Button
+            android:id="@+id/bitmap_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刪除BitMap頁面"/>
+
+        <Button
+            android:id="@+id/font_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刪除Font頁面"/>
+
     </LinearLayout>
 
 

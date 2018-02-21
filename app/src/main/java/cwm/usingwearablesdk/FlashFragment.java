@@ -23,23 +23,19 @@ import cwm.wearablesdk.TabataSettings;
 public class FlashFragment extends Fragment {
 
     private View mView;
-    private Button syncStartButton;
-    private Button syncSuccessButton;
-    private Button syncFailButton;
     private Button syncEraseButton;
     private Button syncAutoButton;
-
-    private TextView receivedStatus;
-    private String status = "";
-
+    private Button eraseOledButton;
+    private Button eraseBitMapButton;
+    private Button eraseFontButton;
 
     // Container Activity must implement this interface
     public interface ListenForFlashFragment {
-        public void onPressSyncStartButton();
-        public void onPressSyncSuccessButton();
-        public void onPressSyncFailButton();
         public void onPressSyncEraseButton();
         public void onPressSyncAutoButton();
+        public void onPressEraseOLEDButton();
+        public void onPressEraseBitMapButton();
+        public void onPressEraseFontButton();
 
     }
 
@@ -63,33 +59,12 @@ public class FlashFragment extends Fragment {
             mView = inflater.inflate(R.layout.layout_flash, null);
         }
 
-        syncStartButton = (Button)mView.findViewById(R.id.sync_start);
-        syncSuccessButton = (Button)mView.findViewById(R.id.sync_sucess);
-        syncFailButton = (Button)mView.findViewById(R.id.sync_failed);
         syncEraseButton = (Button)mView.findViewById(R.id.sync_erase);
         syncAutoButton = (Button)mView.findViewById(R.id.sync_auto_sync);
+        eraseOledButton = (Button)mView.findViewById(R.id.oled_erase);
+        eraseBitMapButton = (Button)mView.findViewById(R.id.bitmap_erase);
+        eraseFontButton = (Button)mView.findViewById(R.id.font_erase);
 
-        receivedStatus = (TextView)mView.findViewById(R.id.received_status);
-        receivedStatus.setText("Status: "+status);
-
-        syncStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressSyncStartButton();
-            }
-        });
-        syncSuccessButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressSyncSuccessButton();
-            }
-        });
-        syncFailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressSyncFailButton();
-            }
-        });
         syncEraseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,16 +77,29 @@ public class FlashFragment extends Fragment {
                 mCallback.onPressSyncAutoButton();
             }
         });
+        eraseOledButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressEraseOLEDButton();
+            }
+        });
 
+        eraseBitMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressEraseBitMapButton();
+            }
+        });
+
+        eraseFontButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressEraseFontButton();
+            }
+        });
 
         return mView;
     }
-
-    public void setReceivedStatus(String s){
-        status = s;
-    }
-
-
 
 
 }
