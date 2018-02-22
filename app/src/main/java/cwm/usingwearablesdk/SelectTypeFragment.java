@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.content.Context;
 
@@ -22,6 +23,7 @@ public class SelectTypeFragment extends Fragment {
     private TextView deviceBound;
     private TextView deviceBoundAddress;
     private TextView deviceBoundStatus;
+    private Button unBondButton;
 
     private String mDevice = null;
     private String mDeviceAddress = null;
@@ -87,6 +89,13 @@ public class SelectTypeFragment extends Fragment {
             }
         });
 
+        unBondButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onResetBoundRecord();
+            }
+        });
+
 
     } // onActivityCreated()
 
@@ -101,6 +110,7 @@ public class SelectTypeFragment extends Fragment {
         newDevice = (TextView)mView.findViewById(R.id.new_wearable);
         diconnectDevice = (TextView)mView.findViewById(R.id.disconnet);
         connectDevice = (TextView)mView.findViewById(R.id.connect);
+        unBondButton = (Button)mView.findViewById(R.id.unbond_button);
 
         return mView;
     } // onCreateView()

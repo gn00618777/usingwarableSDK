@@ -60,6 +60,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1141,6 +1142,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                         case ID.DEVICE_VERSION_INFO:
                             break;
+                        case ID.UNBOND:
+                            Toast.makeText(getApplicationContext(),"unBond ack",Toast.LENGTH_SHORT).show();
+                            BluetoothDevice device = mBtAdapter.getRemoteDevice(mDeviceAddress);
+                            unpairDevice(device);
+
+                            break;
                     }
                     break;
                 case Type.SENSOR_GESTURE_COMMAND:
@@ -1431,7 +1438,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
     @Override
     public void onResetBoundRecord(){
-
+      cwmManager.CwmUnBond();
     }
 
     @Override
@@ -2425,6 +2432,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         }
 
         return true;
+    }
+
+    public void unpairDevice(BluetoothDevice device) {
+        try {
+            Method m = device.getClass()
+                    .getMethod("removeBond", (Class[]) null);
+            m.invoke(device, (Object[]) null);
+        } catch (Exception e) {
+           // Log.e(TAG, e.getMessage());
+        }
     }
 
 }

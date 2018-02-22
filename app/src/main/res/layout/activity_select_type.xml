@@ -18,7 +18,7 @@
             android:textSize="20dp"
             android:layout_marginBottom="10dp"
             android:textColor="@color/light_orange"
-            android:text="手環綁定:" />
+            android:text="手環連接狀態:" />
 
         <TextView
             android:id="@+id/device_bound_address"
@@ -73,5 +73,13 @@
         android:clickable="true"
         android:textColor="@color/colorPrimary"
         android:text="連線" />
+
+    <Button
+        android:id="@+id/unbond_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="解除綁定"/>
 
 </LinearLayout>
