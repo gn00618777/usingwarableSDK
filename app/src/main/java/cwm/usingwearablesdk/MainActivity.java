@@ -573,7 +573,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             accData = cwmEvents.getSensorAccData();
                             mSensorsFM.refreshTextView(sensorTag, accData, gyroData);
                             if(mSensorsFM.isVisible()){
-                                resetFragments(SENSORS_POSITION);
+                                resetFragmentsII(SENSORS_POSITION);
                             }
                             break;
                         case ID.GYRO_RAW_DATA_REPORT:
@@ -582,7 +582,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                            // Log.d("bernie","app gyroData:"+Float.toString(gyroData[0])+" "+Float.toString(gyroData[1])+" "+Float.toString(gyroData[2]));
                             mSensorsFM.refreshTextView(sensorTag, accData, gyroData);
                             if(mSensorsFM.isVisible()){
-                                resetFragments(SENSORS_POSITION);
+                                resetFragmentsII(SENSORS_POSITION);
                             }
                             break;
                         case ID.WRIST_SCROLL_EVENT_RESPONSE_MESSAGE:
@@ -2092,6 +2092,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     } // setFragments()
     private void resetFragments(int position) {
         mFM.beginTransaction().detach(mFragments.get(position)).attach(mFragments.get(position)).commitAllowingStateLoss();
+    }
+    private void resetFragmentsII(int position){
+        mFM.beginTransaction().hide(mFragments.get(position)).show(mFragments.get(position)).commitAllowingStateLoss();
     }
     private void setPreferencedFragments(){
         mFM.beginTransaction().replace(R.id.frames, mIntelligentFM).commit();

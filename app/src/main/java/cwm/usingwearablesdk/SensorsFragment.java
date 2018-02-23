@@ -72,6 +72,14 @@ public class SensorsFragment extends Fragment {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidd) {
+        if (hidd) {
+
+        } else {
+
+        }
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
             mView = inflater.inflate(R.layout.layout_sensor, null);
