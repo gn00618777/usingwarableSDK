@@ -22,7 +22,6 @@ public class NotificationListenerExampleService extends NotificationListenerServ
         public static final String WECHRT_PACK_NAME = "com.tencent.mm";
         public static final String DOBAN_PACK_NAME = "com.skype.raider";
         public static final String GOOGLE_EMAIL_NAME = "com.google.android.gm";
-        public static final String TELEPHONE_PACK_NAME = "com.sonymobile.android.dialer";//"com.android.incallui";
         public static final String NEWS_PACK_NAME = "com.sonyericsson.conversations";
         public static final String TELE_SERVER_PACK_NAME = "com.android.server.telecom";
     }
@@ -53,7 +52,6 @@ public class NotificationListenerExampleService extends NotificationListenerServ
            notificationCode == InterceptedNotificationCode.WECHART_CODE ||
            notificationCode == InterceptedNotificationCode.DOBAN_CODE ||
                 notificationCode == InterceptedNotificationCode.GMAIL_CODE||
-                notificationCode == InterceptedNotificationCode.TELE_CODE ||
                 notificationCode == InterceptedNotificationCode.NEW_CODE ||
                 notificationCode == InterceptedNotificationCode.TELE_SERVER_CODE){
             Bundle bundle =  sbn.getNotification().extras;
@@ -84,9 +82,6 @@ public class NotificationListenerExampleService extends NotificationListenerServ
         }
         else if(packageName.equals(ApplicationPackageNames.GOOGLE_EMAIL_NAME)){
             return (InterceptedNotificationCode.GMAIL_CODE);
-        }
-        else if(packageName.equals(ApplicationPackageNames.TELEPHONE_PACK_NAME)){
-            return (InterceptedNotificationCode.TELE_CODE);
         }
         else if(packageName.equals(ApplicationPackageNames.NEWS_PACK_NAME)){
             return (InterceptedNotificationCode.NEW_CODE);

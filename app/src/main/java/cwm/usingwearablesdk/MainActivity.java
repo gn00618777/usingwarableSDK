@@ -69,8 +69,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;
-
 public class MainActivity extends AppCompatActivity implements SelectTypeFragment.ListenForSelectTypeFragment,
 RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerForIntellignetFragment,
         PersonalInfoFragment.ListenForPersonalInfoFragment, TabataFragment.ListenForTabataFragment,
@@ -83,8 +81,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
+    private final int READ_PHONE_STATE = 3;
     private final int WRITE_EXTERNAL_STORAGE = 4;
-    private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
+    private final int READ_CONTACT = 5;
+    private final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
 
     //sdk
     private CwmManager cwmManager;
@@ -186,12 +186,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     UserConfig config = new UserConfig();
     IntelligentSettings mItelligent;
 
+    TelephonyManager telM = null;
+
     private int getEraseProgressCount = 0;
 
     private ProgressBar mProgressBar;
     int totalLogsSize = 0;
     int deviceCurrentRecord = 0;
     int apkCurrentRecord = 0;
+
+    private TelListener telListener = new TelListener(this);
 
     //tabata request related
     private Handler requestHandler = new Handler();
@@ -212,10 +216,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     int progress = 1;
 
     //Notification InComing Call
-    private boolean onHook = false;
-    private int phonePackagesCount = 0;
-    private String[] phoneInfo = new String[3];
-    NotificationData phoneData = new NotificationData();
+    private boolean onRing = false;
 
     final int SYSTEM_POSITION = 0;
     //final int SHOWDATA_POSITION = 1;
@@ -277,7 +278,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         SOCIAL,
         EMAIL,
         NEWS,
-        MISSING_CALL
+        MISSING_CALL,
+        PICK_UP
     }
     public enum SOCIAL_APP{
         QQ,
@@ -308,7 +310,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private IntelligentSettings testSettings;
     private BodySettings testS1ettings;
 
-    private static final int PERMISSION_REQUEST_FINE_LOCATION = 3;
+    private final int PERMISSION_REQUEST_FINE_LOCATION = 3;
 
     public CwmManager.LogSyncListener syncListener = new CwmManager.LogSyncListener(){
         @Override
@@ -1442,6 +1444,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
     public void onRequesEnableRun(int enable){
         Log.d("bernie","set run:"+Integer.toString(enable));
            cwmManager.CwmEnableRun(enable);
@@ -1939,9 +1946,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog.show();
         }
+
+        telM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telM.listen(telListener, PhoneStateListener.LISTEN_CALL_STATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(NotificationReceiver, makeGattUpdateIntentFilter());
-        TelephonyManager telM = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        telM.listen(new TelListener(this), PhoneStateListener.LISTEN_CALL_STATE);
+
         final Set<BluetoothDevice> set = mBtAdapter.getBondedDevices();
 
         if(set.size() != 0){
@@ -1973,14 +1982,15 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        Log.d("bernie","on Destroy");
         if(timer != null)
             timer.cancel();
         requestHandler.removeCallbacks(requestTask);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NotificationReceiver);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
         cwmManager.CwmReleaseResource();
+        telM.listen(telListener, PhoneStateListener.LISTEN_NONE);
         finish();
-        Log.d("bernie","on Destroy");
     }
 
 
@@ -2144,6 +2154,32 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             });
             builder.show();
         }
+        if(this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Phone State");
+            builder.setMessage("Please grant to access phone state");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                   @Override
+                     public void onDismiss(DialogInterface dialog) {
+                       requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE);
+                    }
+             });
+             builder.show();
+        }
+        if(this.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Contact Info");
+            builder.setMessage("Please grant to access contact on the phone");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+            public void onDismiss(DialogInterface dialog) {
+                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, READ_CONTACT);
+                }
+             });
+            builder.show();
+        }
     }
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -2278,7 +2314,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         alertDialogBuilder.setPositiveButton(R.string.yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                        startActivity(new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
                     }
                 });
         alertDialogBuilder.setNegativeButton(R.string.no,
@@ -2296,21 +2332,24 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         public void onReceive(Context context, Intent intent) {
            final  int code = intent.getIntExtra("Notification Code",0);
             final String title = intent.getStringExtra(Notification.EXTRA_TITLE);
-          //  if(title != null) {
+            final String contactName = intent.getStringExtra("CONTACT_NAME");
+            final String contactNumber = intent.getStringExtra("CONTACT_NUMBER");
+
+            //  if(title != null) {
            //     if (title.getBytes().length == title.length())
             //        Log.d("bernie", "title is english" + title);
              //   else
               //      Log.d("bernie", "title is not english" + title);
             //}
-            final String content = intent.getStringExtra(Notification.EXTRA_TEXT);
-            titleView.setText(title);
-            try {
-                Thread.sleep(1000);
-            }
-            catch (Exception e){
+           // final String content = intent.getStringExtra(Notification.EXTRA_TEXT);
+           // titleView.setText(title);
+           // try {
+           //     Thread.sleep(1000);
+           // }
+           // catch (Exception e){
 
-            }
-            contentView.setText(content);
+            //}
+            //contentView.setText(content);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -2341,25 +2380,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         cwmManager.CwmNotification(data);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_CODE){
-                        if(onHook == false) {
-                            if(phonePackagesCount == 0) {
-                                phoneData.setNotifyId(NOTIFICATION.CALL.ordinal());
-                                phoneData.setPhoneNum(title);
-                                phonePackagesCount += 1;
-                                Log.d("bernie","call 1");
-                            }
-                           else if(phonePackagesCount == 1){
-                                phoneData.setPersonName(title);
-                                phonePackagesCount += 1;
-                                Log.d("bernie","call 2");
-                            }
-                           else if(phonePackagesCount == 2){
-                                phoneData.setPersonName(title);
-                                phonePackagesCount += 1;
-                                cwmManager.CwmNotification(phoneData);
-                                Log.d("bernie","call 3");
-                            }
-                        }
+                        onRing = true;
+                        NotificationData phoneData = new NotificationData();
+                        phoneData.setNotifyId(NOTIFICATION.CALL.ordinal());
+                        phoneData.setPhoneNum(contactNumber);
+                        phoneData.setPersonName(contactName);
+                        cwmManager.CwmNotification(phoneData);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.NEW_CODE){
                         NotificationData data = new NotificationData();
@@ -2374,18 +2400,20 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         cwmManager.CwmNotification(data);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_OFF_HOOK){
-                        onHook = true;
-                        phonePackagesCount = 0;
-                        phoneInfo[0] = "";
-                        phoneInfo[1] = "";
-                        phoneInfo[2] = "";
+                        onRing = false;
                         NotificationData data = new NotificationData();
-                        data.setNotifyId(NOTIFICATION.MISSING_CALL.ordinal());
+                        data.setNotifyId(NOTIFICATION.PICK_UP.ordinal());
                         cwmManager.CwmNotification(data);
+
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_IDLE){
-                        onHook = false;
-                        phonePackagesCount = 0;
+                        if(onRing == true){
+                            Log.d("bernie","Missing call");
+                            onRing = false;
+                            NotificationData data = new NotificationData();
+                            data.setNotifyId(NOTIFICATION.MISSING_CALL.ordinal());
+                            cwmManager.CwmNotification(data);
+                        }
                     }
                 }
             });
@@ -2394,7 +2422,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     };
 
     // Intent Filter -------------------------------------------------------------------------------
-    private static IntentFilter makeGattUpdateIntentFilter() {
+    private IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.github.gn00618777");
         return intentFilter;
