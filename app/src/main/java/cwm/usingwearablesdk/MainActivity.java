@@ -1144,12 +1144,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                         case ID.DEVICE_VERSION_INFO:
                             break;
-                        case ID.UNBOND:
+                       /* case ID.UNBOND:
                             Toast.makeText(getApplicationContext(),"unBond ack",Toast.LENGTH_SHORT).show();
                             BluetoothDevice device = mBtAdapter.getRemoteDevice(mDeviceAddress);
                             unpairDevice(device);
 
-                            break;
+                            break;*/
                     }
                     break;
                 case Type.SENSOR_GESTURE_COMMAND:
@@ -1352,27 +1352,27 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public CwmManager.ErrorListener errorListener = new CwmManager.ErrorListener(){
         @Override
         public void onErrorArrival(ErrorEvents errorEvents){
-           /* int id = errorEvents.getId();
-            int command = errorEvents.getCommand();
-            int tag = errorEvents.getTag();
-            String tagString = "";
+            int id = errorEvents.getErrorId();
+           // int command = errorEvents.getCommand();
+           // int tag = errorEvents.getTag();
+           // String tagString = "";
 
             if(id == 0x01){ //header lost
-                mProgressDialog.dismiss();
-               if(command == 0xBE)
-                   Toast.makeText(getApplicationContext(), "Sleep Header Lost!", Toast.LENGTH_SHORT);
-               else if(command == 0x1F)
-                   Toast.makeText(getApplicationContext(), "OTA Header Lost!", Toast.LENGTH_SHORT);
-               else if(command == 0x20) {
-                   mFlashFM.setReceivedStatus("false");
-                   if(mFlashFM.isVisible())
-                       resetFragments(FLASH_TEST_POSITION);
-                   else
-                       setFragments(FLASH_TEST_POSITION);
-                   Toast.makeText(getApplication(), "Flash Header Lost!", Toast.LENGTH_SHORT).show();
+            //    mProgressDialog.dismiss();
+            //   if(command == 0xBE)
+             //      Toast.makeText(getApplicationContext(), "Sleep Header Lost!", Toast.LENGTH_SHORT);
+             //  else if(command == 0x1F)
+              //     Toast.makeText(getApplicationContext(), "OTA Header Lost!", Toast.LENGTH_SHORT);
+              // else if(command == 0x20) {
+               //    mFlashFM.setReceivedStatus("false");
+                //   if(mFlashFM.isVisible())
+                 //      resetFragments(FLASH_TEST_POSITION);
+                  // else
+                   //    setFragments(FLASH_TEST_POSITION);
+                   //Toast.makeText(getApplication(), "Flash Header Lost!", Toast.LENGTH_SHORT).show();
 
                }
-               else if(command == 0x17){
+/*               else if(command == 0x17){
                    tabataNoResponseCount++;
                    if(tabataNoResponseCount == 3){
                        requestHandler.removeCallbacks(requestTask);
@@ -1393,9 +1393,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                       // }
                    //}
                }
-            }
+            }*/
             else if(id == 0x02){ //packet lost
-                if(command == 0xBE) {
+        /*        if(command == 0xBE) {
                     mProgressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Sleep Packets Lost!", Toast.LENGTH_SHORT).show();
                 }
@@ -1413,13 +1413,13 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     else
                         setFragments(FLASH_TEST_POSITION);
                     Toast.makeText(getApplicationContext(), "Flash Packets Lost! "+tagString+"button failed", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
             else if(id == 0x03) { //flash sync aborted
-                mProgressDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "Sync Aborted!", Toast.LENGTH_SHORT).show();
-
-            }*/
+                //mProgressDialog.dismiss();
+                //Toast.makeText(getApplicationContext(), "Sync Aborted!", Toast.LENGTH_SHORT).show();
+                cwmManager.CwmReSendBitMap();
+            }
         }
     };
 
@@ -1440,7 +1440,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
     @Override
     public void onResetBoundRecord(){
-      cwmManager.CwmUnBond();
+     // cwmManager.CwmUnBond();
     }
 
     @Override
