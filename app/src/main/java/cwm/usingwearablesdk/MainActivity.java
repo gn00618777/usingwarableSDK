@@ -1076,21 +1076,22 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                 mTabataActionItemFM.setConnectStatus(mDeviceStatus);
                 resetFragments(TABATA_ACTION_ITEM_POSITION);
             }
-            final Set<BluetoothDevice> set = mBtAdapter.getBondedDevices();
 
-            if(set.size() != 0){
-                mProgressDialog = ProgressDialog.show(MainActivity.this,"正在連線","處理中...");
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        for(BluetoothDevice device : set) {
-                            cwmManager.CwmBleConnect(device.getAddress());
-                            break;
-                        }
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    final Set<BluetoothDevice> set = mBtAdapter.getBondedDevices();
+                    if(set.size() != 0){
+                      for (BluetoothDevice device : set) {
+                          mProgressDialog = ProgressDialog.show(MainActivity.this, "正在連線", "處理中...");
+                          cwmManager.CwmBleConnect(device.getAddress());
+                          break;
+                      }
                     }
-                },500);
-            }
+                }
+            },1500);
+
         }
 
         @Override
@@ -1144,12 +1145,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                         case ID.DEVICE_VERSION_INFO:
                             break;
-                       /* case ID.UNBOND:
+                        case ID.UNBOND:
                             Toast.makeText(getApplicationContext(),"unBond ack",Toast.LENGTH_SHORT).show();
                             BluetoothDevice device = mBtAdapter.getRemoteDevice(mDeviceAddress);
                             unpairDevice(device);
 
-                            break;*/
+                            break;
                     }
                     break;
                 case Type.SENSOR_GESTURE_COMMAND:
@@ -1440,7 +1441,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
     @Override
     public void onResetBoundRecord(){
-     // cwmManager.CwmUnBond();
+      cwmManager.CwmUnBond();
     }
 
     @Override
