@@ -2334,7 +2334,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
            final  int code = intent.getIntExtra("Notification Code",0);
             final String title = intent.getStringExtra(Notification.EXTRA_TITLE);
             final String contactName = intent.getStringExtra("CONTACT_NAME");
-            final String contactNumber = intent.getStringExtra("CONTACT_NUMBER");
 
             //  if(title != null) {
            //     if (title.getBytes().length == title.length())
@@ -2384,7 +2383,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         onRing = true;
                         NotificationData phoneData = new NotificationData();
                         phoneData.setNotifyId(NOTIFICATION.CALL.ordinal());
-                        phoneData.setPhoneNum(contactNumber);
                         phoneData.setPersonName(contactName);
                         cwmManager.CwmNotification(phoneData);
                     }

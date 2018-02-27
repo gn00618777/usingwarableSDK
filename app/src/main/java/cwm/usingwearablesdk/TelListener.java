@@ -29,7 +29,6 @@ public class TelListener extends PhoneStateListener {
                 String name = lookingForContact(incomingNumber);
                 intent = new  Intent("com.github.gn00618777");
                 intent.putExtra("Notification Code", NotificationListenerExampleService.InterceptedNotificationCode.TELE_CODE);
-                intent.putExtra(NUMBER, incomingNumber);
                 intent.putExtra(NAME, name);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                 break;
@@ -78,6 +77,8 @@ public class TelListener extends PhoneStateListener {
                         .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 return name;
             }
+            else
+                name = number;
         }
          return name;
     }
