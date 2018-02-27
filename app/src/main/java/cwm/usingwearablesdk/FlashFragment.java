@@ -25,18 +25,11 @@ public class FlashFragment extends Fragment {
     private View mView;
     private Button syncEraseButton;
     private Button syncAutoButton;
-    private Button eraseOledButton;
-    private Button eraseBitMapButton;
-    private Button eraseFontButton;
 
     // Container Activity must implement this interface
     public interface ListenForFlashFragment {
         public void onPressSyncEraseButton();
         public void onPressSyncAutoButton();
-        public void onPressEraseOLEDButton();
-        public void onPressEraseBitMapButton();
-        public void onPressEraseFontButton();
-
     }
 
     private ListenForFlashFragment mCallback;
@@ -61,9 +54,7 @@ public class FlashFragment extends Fragment {
 
         syncEraseButton = (Button)mView.findViewById(R.id.sync_erase);
         syncAutoButton = (Button)mView.findViewById(R.id.sync_auto_sync);
-        eraseOledButton = (Button)mView.findViewById(R.id.oled_erase);
-        eraseBitMapButton = (Button)mView.findViewById(R.id.bitmap_erase);
-        eraseFontButton = (Button)mView.findViewById(R.id.font_erase);
+
 
         syncEraseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,26 +66,6 @@ public class FlashFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallback.onPressSyncAutoButton();
-            }
-        });
-        eraseOledButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressEraseOLEDButton();
-            }
-        });
-
-        eraseBitMapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressEraseBitMapButton();
-            }
-        });
-
-        eraseFontButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressEraseFontButton();
             }
         });
 

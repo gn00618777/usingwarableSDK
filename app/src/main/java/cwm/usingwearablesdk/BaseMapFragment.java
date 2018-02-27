@@ -18,12 +18,18 @@ public class BaseMapFragment extends Fragment {
 
     private View mView;
     private Button updateButton;
+    private Button eraseOledButton;
+    private Button eraseBitMapButton;
+    private Button eraseFontButton;
 
     ListenForBaseMapFragment mCallback;
 
     // Container Activity must implement this interface
     public interface ListenForBaseMapFragment {
          void onStartUpdateBaseMap();
+         void onPressEraseOLEDButton();
+         void onPressEraseBitMapButton();
+         void onPressEraseFontButton();
     }
 
     @Override
@@ -48,6 +54,29 @@ public class BaseMapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallback.onStartUpdateBaseMap();
+            }
+        });
+        eraseOledButton = (Button)mView.findViewById(R.id.oled_erase);
+        eraseBitMapButton = (Button)mView.findViewById(R.id.bitmap_erase);
+        eraseFontButton = (Button)mView.findViewById(R.id.font_erase);
+        eraseOledButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressEraseOLEDButton();
+            }
+        });
+
+        eraseBitMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressEraseBitMapButton();
+            }
+        });
+
+        eraseFontButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressEraseFontButton();
             }
         });
 
