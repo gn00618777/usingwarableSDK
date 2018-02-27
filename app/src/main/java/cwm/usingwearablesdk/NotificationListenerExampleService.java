@@ -18,9 +18,10 @@ import cwm.wearablesdk.NotificationData;
 public class NotificationListenerExampleService extends NotificationListenerService {
 
     private static final class ApplicationPackageNames {
-        public static final String QQ_PACK_NAME = "jp.naver.line.android";
+        public static final String QQ_PACK_NAME = "jp.naver.line.android1";
         public static final String WECHRT_PACK_NAME = "com.tencent.mm";
         public static final String DOBAN_PACK_NAME = "com.skype.raider";
+        public static final String LINE_PACK_NAME = "jp.naver.line.android";
         public static final String GOOGLE_EMAIL_NAME = "com.google.android.gm";
         public static final String NEWS_PACK_NAME = "com.sonyericsson.conversations";
         public static final String TELE_SERVER_PACK_NAME = "com.android.server.telecom";
@@ -53,7 +54,8 @@ public class NotificationListenerExampleService extends NotificationListenerServ
            notificationCode == InterceptedNotificationCode.DOBAN_CODE ||
                 notificationCode == InterceptedNotificationCode.GMAIL_CODE||
                 notificationCode == InterceptedNotificationCode.NEW_CODE ||
-                notificationCode == InterceptedNotificationCode.TELE_SERVER_CODE){
+                notificationCode == InterceptedNotificationCode.TELE_SERVER_CODE ||
+                notificationCode == InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE){
             Bundle bundle =  sbn.getNotification().extras;
             String title = bundle.getString(Notification.EXTRA_TITLE);
             String content = bundle.getString(Notification.EXTRA_TEXT);

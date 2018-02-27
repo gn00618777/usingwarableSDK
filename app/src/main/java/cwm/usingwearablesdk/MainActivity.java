@@ -284,7 +284,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public enum SOCIAL_APP{
         QQ,
         WECHART,
-        DOBAN
+        DOBAN,
+        OTHER
     }
 
     private ProgressDialog mProgressDialog;
@@ -2413,6 +2414,13 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             data.setNotifyId(NOTIFICATION.MISSING_CALL.ordinal());
                             cwmManager.CwmNotification(data);
                         }
+                    }
+                    else if(code == NotificationListenerExampleService.InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE){
+                        NotificationData data = new NotificationData();
+                        data.setNotifyId(NOTIFICATION.SOCIAL.ordinal());
+                        data.setAppIdentifier(SOCIAL_APP.OTHER.ordinal());
+                        data.setAppName("赖的测试");
+                        cwmManager.CwmNotification(data);
                     }
                 }
             });
