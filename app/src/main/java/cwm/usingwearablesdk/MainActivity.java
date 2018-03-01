@@ -313,28 +313,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     private final int PERMISSION_REQUEST_FINE_LOCATION = 3;
 
-    public CwmManager.LogSyncListener syncListener = new CwmManager.LogSyncListener(){
-        @Override
-        public void onSyncFailed() {
-            Log.d("bernie","onSyncFailed");
-              cwmManager.CwmSyncFail();
-        }
-
-        @Override
-        public void onProgressChanged(int currentPart, int totalParts) {
-              apkCurrentRecord = currentPart;
-              if(currentPart <= totalParts){
-                  mProgressBar.setProgress(currentPart);
-                  cwmManager.CwmSyncSucces();
-              }
-        }
-
-        @Override
-        public void onSyncDone() {
-            mProgressBar.setVisibility(View.INVISIBLE);
-        }
-    };
-
     public CwmManager.EventListener eventListener = new CwmManager.EventListener() {
         @Override
         public void onEventArrival(CwmEvents cwmEvents) {
@@ -712,6 +690,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         case ID.HISTORY_ERASE_DONE:
                             mProgressDialog.dismiss();
                             Toast.makeText(getApplicationContext(),"歷程清除完畢",Toast.LENGTH_SHORT).show();
+                            break;
+                        case ID.LIFE_HISTORY:
+                              int max = cwmEvents.getMaxMapPackages();
+                              int currentProgress = cwmEvents.getCurrentPackages();
+                              if(max != 0){
+                                  if(currentProgress <= max) {
+                                      mProgressBar.setProgress(currentProgress);
+                                      cwmManager.CwmSyncSucces();
+                                  }
+                              }
                             break;
                     }
                     break;
@@ -1937,7 +1925,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mFragments.add(mBaseFM);
         //testS1ettings.
         //testSettings.
-        cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener, syncListener);
+        cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
         //String testMac = "";
        // Log.d("bernie","devices set: "+set.size());
