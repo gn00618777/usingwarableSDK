@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.Settings;
@@ -60,6 +61,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -677,6 +681,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     break;
                 case Type.HISTORY_DATA_RESPONSE:
                     message_id = cwmEvents.getMessageID();
+                    int max = 0;
+                    int current = 0;
                     switch (message_id){
                         case ID.HISTORY_PACKAGES:
                             if(cwmEvents.getRemindPackages() == 0){
@@ -691,12 +697,22 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             mProgressDialog.dismiss();
                             Toast.makeText(getApplicationContext(),"歷程清除完畢",Toast.LENGTH_SHORT).show();
                             break;
+                        case ID.SLEEP_HISTORY:
+                            max = cwmEvents.getMaxMapPackages();
+                            current = cwmEvents.getCurrentPackages();
+                            if(max != 0){
+                                if(current <= max) {
+                                    mProgressBar.setProgress(current);
+                                    cwmManager.CwmSyncSucces();
+                                }
+                            }
+                            break;
                         case ID.LIFE_HISTORY:
-                              int max = cwmEvents.getMaxMapPackages();
-                              int currentProgress = cwmEvents.getCurrentPackages();
+                              max = cwmEvents.getMaxMapPackages();
+                              current = cwmEvents.getCurrentPackages();
                               if(max != 0){
-                                  if(currentProgress <= max) {
-                                      mProgressBar.setProgress(currentProgress);
+                                  if(current <= max) {
+                                      mProgressBar.setProgress(current);
                                       cwmManager.CwmSyncSucces();
                                   }
                               }
