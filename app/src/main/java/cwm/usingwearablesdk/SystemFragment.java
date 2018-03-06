@@ -44,6 +44,7 @@ public class SystemFragment extends Fragment {
     private Button saveButton;
     private Button requestButton;
     private Button syncButton;
+    private Button resetButton;
 
     private CheckBox pedometerCheckBox;
     private CheckBox distanceCheckBox;
@@ -83,6 +84,7 @@ public class SystemFragment extends Fragment {
                                          int sleepStartTime, int sleeepStopTime, int brightnessBar);
         void onSystemRequest();
         void onSycRequest();
+        void onResetDefault();
     }
 
     private ListenForSystemFragment mCallback;
@@ -110,6 +112,7 @@ public class SystemFragment extends Fragment {
         saveButton = (Button)mView.findViewById(R.id.save);
         requestButton = (Button)mView.findViewById(R.id.request);
         syncButton = (Button)mView.findViewById(R.id.sync);
+        resetButton = (Button)mView.findViewById(R.id.reset_default);
 
         sleepStartEdit = (EditText)mView.findViewById(R.id.sleep_start_time);
         sleepStopEdit = (EditText)mView.findViewById(R.id.sleep_stop_time);
@@ -361,6 +364,15 @@ public class SystemFragment extends Fragment {
                  mCallback.onSycRequest();
             }
         });
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onResetDefault();
+            }
+        });
+
+
 
         return mView;
     }

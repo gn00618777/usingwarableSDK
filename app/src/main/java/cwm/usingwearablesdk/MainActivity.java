@@ -1150,6 +1150,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                         case ID.DEVICE_VERSION_INFO:
                             break;
+                        case ID.RESET_USERCONFIG:
+                            Toast.makeText(getApplicationContext(),"回復成原廠設定",Toast.LENGTH_SHORT).show();
+                            break;
                         case ID.UNBOND:
                             Toast.makeText(getApplicationContext(),"unBond ack",Toast.LENGTH_SHORT).show();
                             BluetoothDevice device = mBtAdapter.getRemoteDevice(mDeviceAddress);
@@ -1451,6 +1454,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     public void onSycRequest(){
         cwmManager.CwmSendUserConfig(config);
+    }
+
+    @Override
+    public void onResetDefault(){
+       cwmManager.CwmResetUserConfig();
     }
 
     @Override
