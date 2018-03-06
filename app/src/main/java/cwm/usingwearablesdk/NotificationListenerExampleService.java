@@ -33,7 +33,6 @@ public class NotificationListenerExampleService extends NotificationListenerServ
         public static final int DOBAN_CODE = 2;
         public static final int GMAIL_CODE = 3;
         public static final int TELE_CODE = 4;
-        public static final int NEW_CODE = 5;
         public static final int TELE_SERVER_CODE = 6;
         public static final int TELE_OFF_HOOK = 7;
         public static final int TELE_IDLE = 8;
@@ -53,7 +52,6 @@ public class NotificationListenerExampleService extends NotificationListenerServ
            notificationCode == InterceptedNotificationCode.WECHART_CODE ||
            notificationCode == InterceptedNotificationCode.DOBAN_CODE ||
                 notificationCode == InterceptedNotificationCode.GMAIL_CODE||
-                notificationCode == InterceptedNotificationCode.NEW_CODE ||
                 notificationCode == InterceptedNotificationCode.TELE_SERVER_CODE ||
                 notificationCode == InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE){
             Bundle bundle =  sbn.getNotification().extras;
@@ -72,7 +70,7 @@ public class NotificationListenerExampleService extends NotificationListenerServ
 
     private int matchNotificationCode(StatusBarNotification sbn) {
         String packageName = sbn.getPackageName();
-       // Log.d("bernie",packageName);
+        //Log.d("bernie",packageName);
         if(packageName.equals(ApplicationPackageNames.QQ_PACK_NAME)){
             return(InterceptedNotificationCode.QQ_CODE);
         }
@@ -84,9 +82,6 @@ public class NotificationListenerExampleService extends NotificationListenerServ
         }
         else if(packageName.equals(ApplicationPackageNames.GOOGLE_EMAIL_NAME)){
             return (InterceptedNotificationCode.GMAIL_CODE);
-        }
-        else if(packageName.equals(ApplicationPackageNames.NEWS_PACK_NAME)){
-            return (InterceptedNotificationCode.NEW_CODE);
         }
         else if(packageName.equals(ApplicationPackageNames.TELE_SERVER_PACK_NAME)){
             return (InterceptedNotificationCode.TELE_SERVER_CODE);

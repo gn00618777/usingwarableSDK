@@ -1906,6 +1906,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         telM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         telM.listen(telListener, PhoneStateListener.LISTEN_CALL_STATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(NotificationReceiver, makeGattUpdateIntentFilter());
+        registerReceiver(NewsReceiver, makeNewstFilter());
 
         final Set<BluetoothDevice> set = mBtAdapter.getBondedDevices();
 
@@ -1943,6 +1944,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             timer.cancel();
         requestHandler.removeCallbacks(requestTask);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NotificationReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(NewsReceiver);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
         cwmManager.CwmReleaseResource();
         telM.listen(telListener, PhoneStateListener.LISTEN_NONE);
@@ -1956,6 +1958,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
           timer.cancel();
         requestHandler.removeCallbacks(requestTask);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NotificationReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(NewsReceiver);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
         finish();
 
@@ -2283,6 +2286,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         return(alertDialogBuilder.create());
     }
 
+    private final BroadcastReceiver NewsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("bernie","SMS!!");
+            NotificationData data = new NotificationData();
+            data.setNotifyId(NOTIFICATION.NEWS.ordinal());
+            cwmManager.CwmNotification(data);
+        }
+    };
+
     private final BroadcastReceiver NotificationReceiver = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
@@ -2341,12 +2354,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         phoneData.setPersonName(contactName);
                         cwmManager.CwmNotification(phoneData);
                     }
-                    else if(code == NotificationListenerExampleService.InterceptedNotificationCode.NEW_CODE){
-                        NotificationData data = new NotificationData();
-                        data.setNotifyId(NOTIFICATION.NEWS.ordinal());
-                        //data.setPersonName(title);
-                        cwmManager.CwmNotification(data);
-                    }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_SERVER_CODE){
                         NotificationData data = new NotificationData();
                         data.setNotifyId(NOTIFICATION.MISSING_CALL.ordinal());
@@ -2388,6 +2395,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         intentFilter.addAction("com.github.gn00618777");
         return intentFilter;
     }
+    private IntentFilter makeNewstFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        return intentFilter;
+    }
+
 
     public boolean lookingForContact(String number){
        Cursor contacts_name = getContentResolver().query(
