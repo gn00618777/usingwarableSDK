@@ -86,9 +86,10 @@ public class NotificationListenerExampleService extends NotificationListenerServ
         else if(packageName.equals(ApplicationPackageNames.TELE_SERVER_PACK_NAME)){
             return (InterceptedNotificationCode.TELE_SERVER_CODE);
         }
-        else{
+        else if(packageName.equals(ApplicationPackageNames.LINE_PACK_NAME)){
             return(InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE);
         }
+        return 100;
     }
 
 

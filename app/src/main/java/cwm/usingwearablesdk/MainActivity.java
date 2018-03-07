@@ -1139,9 +1139,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         public void onAckArrival(AckEvents ackEvents) {
             int msgType = ackEvents.getType() & 0xFF;
             int id = ackEvents.getId();
-
             switch (msgType) {
                 case Type.SYSTEM_INFORMATION_COMMAND:
+
                     switch (id){
                         case ID.USER_CONFIG_INFO:
                             Toast.makeText(getApplicationContext(),"同步使用者組態成功",Toast.LENGTH_SHORT).show();
@@ -1308,6 +1308,19 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
                     }
                     break;
+                case 0x86:
+                    switch (id){
+                       case ID.PICK_UP:
+                        Toast.makeText(getApplicationContext(),"pick up ack",Toast.LENGTH_SHORT).show();
+                        break;
+                        case ID.MISSING_CALL:
+                            Toast.makeText(getApplicationContext(),"missing call ack",Toast.LENGTH_SHORT).show();
+                            break;
+                        case ID.INCOMING_CALL:
+                            Toast.makeText(getApplicationContext(),"incoming call ack",Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    break;
                 //case 0x02:
                  //   Toast.makeText(getApplicationContext(),"Time has sync !",Toast.LENGTH_SHORT).show();
                   //  break;
@@ -1458,6 +1471,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onResetDefault(){
+        Log.d("bernie","reseeett");
        cwmManager.CwmResetUserConfig();
     }
 
