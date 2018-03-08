@@ -577,11 +577,15 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         case ID.HEART_RATE_RAW_DATA_REPORT:
                             //mShowDataFM.setHeartValue(cwmEvents.getHeartBeat());
                             mRunFM.setHeartValue(cwmEvents.getHeartBeat());
+                            mTabataActionItemFM.setHeartRate(cwmEvents.getHeartBeat());
                             //Log.d("bernie","app heart reate:"+Integer.toString(cwmEvents.getHeartBeat()));
                             mSensorsFM.refreshHeartTextView(cwmEvents.getHeartBeat());
 
                             if(mRunFM.isVisible()){
                                 resetFragments(RUN_POSITION);
+                            }
+                            if(mTabataActionItemFM.isVisible()){
+                                resetFragments(TABATA_ACTION_ITEM_POSITION);
                             }
                             if(mSensorsFM.isVisible()){
                                 resetFragments(SENSORS_POSITION);
