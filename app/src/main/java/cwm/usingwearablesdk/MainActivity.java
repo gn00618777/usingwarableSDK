@@ -616,7 +616,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             String item = "";
                             String count = "";
                             String calories = "";
-                            String heartRate = "";
+                            String heartRate ="";
+                            int initCode;
 
                             if (cwmEvents.getExerciseItem() == 1) {
                                 item = "Push Up";
@@ -642,7 +643,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
                             count = Integer.toString(cwmEvents.getDoItemCount());
                             calories = Integer.toString(cwmEvents.getTabataCalories());
-                            heartRate = Integer.toString(cwmEvents.getTabataHeart());
+                            initCode = cwmEvents.getTabataInitCode();
+
 
                             if (status.equals("start")) {
                                 //Log.d("bernie","item:"+item);
@@ -670,6 +672,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 if(tabataHasDone == false) {
                                     //Log.d("bernie","set count isTabata done:"+Boolean.toString(isTabataDone));
                                     mTabataActionItemFM.setActionCountView(count);
+                                    mTabataActionItemFM.setInitCode(initCode);
                                     resetFragments(TABATA_ACTION_ITEM_POSITION);
                                 }
                             }

@@ -11,6 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:text="connect status:"/>
+    <TextView
+        android:id="@+id/init_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="initCode status:"/>
                 <TextView
                     android:id="@+id/action_item_view"
                     android:layout_width="wrap_content"

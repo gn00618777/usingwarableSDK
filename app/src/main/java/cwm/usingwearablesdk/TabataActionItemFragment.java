@@ -32,6 +32,7 @@ public class TabataActionItemFragment extends Fragment {
     private TextView actionItemStartView;
     private TextView actionCountView;
     private TextView connectionView;
+    private TextView initCodeView;
 
     private Button tabataPauseButton;
     private Button tabataDoneButton;
@@ -45,6 +46,7 @@ public class TabataActionItemFragment extends Fragment {
 
     private boolean mAniStarted = false;
     private boolean mConnectState = false;
+    private int initCode = 0;
 
     private String count = "";
 
@@ -80,6 +82,11 @@ public class TabataActionItemFragment extends Fragment {
           connectionView.setText("connect status: "+"斷線");
         else
             connectionView.setText("connect status: "+"連線");
+        initCodeView = (TextView)mView.findViewById(R.id.init_state);
+        if(initCode == 0)
+           initCodeView.setText("init status: not pass");
+        else
+            initCodeView.setText("init status: pass");
         actionItemView = (TextView)mView.findViewById(R.id.action_item_view);
         actionItemView.setText(actionItem+"/"+actionComment);
         actionItemStartView = (TextView)mView.findViewById(R.id.action_item_start_view);
@@ -235,6 +242,7 @@ public class TabataActionItemFragment extends Fragment {
     public void setActionItemCommentView(String s){actionComment = s;}
     public void setActionCountView(String c){count = c;}
     public void setConnectStatus(boolean s) {mConnectState = s;}
+    public void setInitCode(int code){initCode = code;}
     public void setAni(boolean b){mAniStarted = b;}
 
 }
