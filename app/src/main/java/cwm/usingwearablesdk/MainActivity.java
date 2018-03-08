@@ -717,6 +717,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                   }
                               }
                             break;
+                        case ID.LOG_HISTORY:
+                            max = cwmEvents.getMaxMapPackages();
+                            current = cwmEvents.getCurrentPackages();
+                            if(max != 0){
+                                if(current <= max) {
+                                    mProgressBar.setProgress(current);
+                                    cwmManager.CwmSyncSucces();
+                                }
+                            }
+                            break;
                     }
                     break;
                 case Type.FACTORY_RESPONSE:
