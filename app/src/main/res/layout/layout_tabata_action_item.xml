@@ -80,13 +80,11 @@
             android:text="Tabata回復"/>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/exerceise_view"
-        android:layout_below="@id/action_item_view"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gif_giv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
 
 

@@ -586,7 +586,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 resetFragments(RUN_POSITION);
                             }
                             if(mTabataActionItemFM.isVisible()){
-                                resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
                             }
                             if(mSensorsFM.isVisible()){
                                 resetFragments(SENSORS_POSITION);
@@ -678,7 +678,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                         //Log.d("bernie","set count isTabata done:"+Boolean.toString(isTabataDone));
                                         mTabataActionItemFM.setActionCountView(count);
                                         mTabataActionItemFM.setInitCode(initCode);
-                                        resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                        resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
                                     }
                                 }
                             }
@@ -1082,7 +1082,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
             if(mTabataActionItemFM.isVisible()){
                 mTabataActionItemFM.setConnectStatus(mDeviceStatus);
-                resetFragments(TABATA_ACTION_ITEM_POSITION);
+                resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
             }
             mDrawerLayout.openDrawer(Gravity.LEFT);
         }
@@ -1098,7 +1098,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             if(mTabataActionItemFM.isVisible()){
                 requestHandler.removeCallbacks(requestTask);
                 mTabataActionItemFM.setConnectStatus(mDeviceStatus);
-                resetFragments(TABATA_ACTION_ITEM_POSITION);
+                resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
             }
 
             Handler handler = new Handler();
@@ -1219,14 +1219,14 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 else
                                     mTabataActionItemFM.setActionItemView(laterTask.getTabataSettings().getItemName());
                                 mTabataActionItemFM.setActionItemCommentView(comment);
-                                resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
 
                                 Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         mTabataActionItemFM.setActionItemStartView("start");
-                                        resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                        resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
                                     }
                                 },1000);
 
@@ -1287,7 +1287,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                     public void run() {
                                         mTabataActionItemFM.setActionItemStartView("start");
                                         if (mTabataActionItemFM.isVisible()) {
-                                            resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                            resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
                                         } else
                                             setFragments(TABATA_ACTION_ITEM_POSITION);
                                     }

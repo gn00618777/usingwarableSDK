@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import cwm.wearablesdk.TabataSettings;
+import pl.droidsonroids.gif.GifImageView;
 
 public class TabataActionItemFragment extends Fragment {
 
@@ -39,7 +40,7 @@ public class TabataActionItemFragment extends Fragment {
     private Button tabataDoneButton;
     private Button tabataResumeButton;
 
-    private ImageView exerciseView;
+    private GifImageView gifImageView;
 
     private String actionItem="";
     private String actionItemStart="";
@@ -75,6 +76,25 @@ public class TabataActionItemFragment extends Fragment {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidd) {
+        if (hidd) {
+
+        } else {
+            if(mConnectState == false)
+                connectionView.setText("connect status: "+"斷線");
+            else
+                connectionView.setText("connect status: "+"連線");
+            if(initCode == 0)
+                initCodeView.setText("init status: not pass");
+            else
+                initCodeView.setText("init status: pass");
+            heartView.setText("heart status:"+Integer.toString(heartRate));
+            actionItemView.setText(actionItem+"/"+actionComment);
+            actionCountView.setText(count);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
             mView = inflater.inflate(R.layout.layout_tabata_action_item, null);
@@ -95,118 +115,38 @@ public class TabataActionItemFragment extends Fragment {
         actionItemView.setText(actionItem+"/"+actionComment);
         actionItemStartView = (TextView)mView.findViewById(R.id.action_item_start_view);
         actionItemStartView.setText(actionItemStart);
-        exerciseView = (ImageView)mView.findViewById(R.id.exerceise_view);
+        gifImageView = (GifImageView) mView.findViewById(R.id.gif_giv);
         actionCountView = (TextView)mView.findViewById(R.id.action_item_count);
         actionCountView.setText(count);
         if(actionItem.equals("Push Up")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_pushup_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.push_up);
         }
         else if(actionItem.equals("Crunch")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_crunch_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.crunches);
         }
         else if(actionItem.equals("Squart")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_squart_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.squat);
         }
         else if(actionItem.equals("Jumping Jack")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_jumpjack_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.jump_jack);
         }
         else if(actionItem.equals("Dips")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_dip_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.dip);
         }
         else if(actionItem.equals("High Kniess Running")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_highknessrunning_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.high_kness_running);
         }
         else if(actionItem.equals("Lunges")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_lunge_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.lunge);
         }
         else if(actionItem.equals("Burpees")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_burpee_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.burpee);
         }
         else if(actionItem.equals("Step On Chair")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_steponchair_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.step_on_chair);
         }
         else if(actionItem.equals("PushUp Rotation")) {
-            exerciseView.setBackgroundResource(R.drawable.anim_pushuprotation_gif);
-            if(!mAniStarted) {
-                mAniStarted = true;
-                AnimationDrawable anim = null;
-                Object ob = exerciseView.getBackground();
-                anim = (AnimationDrawable) ob;
-                anim.stop();
-                anim.start();
-            }
+            gifImageView.setBackgroundResource(R.drawable.push_up_rotation);
         }
 
         tabataPauseButton = (Button)mView.findViewById(R.id.tabata_pause);
