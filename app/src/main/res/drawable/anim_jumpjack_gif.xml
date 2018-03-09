@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-    <animation-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:duration="500" android:drawable="@drawable/jumpingjack0" />
-    <item android:duration="500" android:drawable="@drawable/jumpingjack1" />
-    <item android:duration="500" android:drawable="@drawable/jumpingjack2" />
-    <item android:duration="500" android:drawable="@drawable/jumpingjack3" />
-    </animation-list>
-
