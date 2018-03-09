@@ -186,6 +186,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private boolean tabataHasDone = false;
     private boolean isHide = true;
     private boolean isPopup = false;
+    private boolean tabataActionEnd = false;
 
     UserConfig config = new UserConfig();
     IntelligentSettings mItelligent;
@@ -614,70 +615,71 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             }
                             break;
                         case ID.TABATA_RESPONSE_MESSAGE:
-                            tabataNoResponseCount = 0;
-                            //Log.d("bernie", "tatabata status");
-                            String status = "start";
-                            String item = "";
-                            String count = "";
-                            String calories = "";
-                            String heartRate ="";
-                            int initCode;
+                            if(tabataActionEnd == false) {
+                                tabataNoResponseCount = 0;
+                                //Log.d("bernie", "tatabata status");
+                                String status = "start";
+                                String item = "";
+                                String count = "";
+                                String calories = "";
+                                String heartRate = "";
+                                int initCode;
 
-                            if (cwmEvents.getExerciseItem() == 1) {
-                                item = "Push Up";
-                            } else if (cwmEvents.getExerciseItem() == 2) {
-                                item = "Crunch";
-                            } else if (cwmEvents.getExerciseItem() == 3) {
-                                item = "Squart";
-                            } else if (cwmEvents.getExerciseItem() == 4) {
-                                item = "Jumping Jack";
-                            } else if (cwmEvents.getExerciseItem() == 5) {
-                                item = "Dips";
-                            } else if (cwmEvents.getExerciseItem() == 6) {
-                                item = "High Knees Running";
-                            } else if (cwmEvents.getExerciseItem() == 7) {
-                                item = "Lunges";
-                            } else if (cwmEvents.getExerciseItem() == 8) {
-                                item = "Burpee";
-                            } else if (cwmEvents.getExerciseItem() == 9) {
-                                item = "Step On Chair";
-                            } else if (cwmEvents.getExerciseItem() == 10) {
-                                item = "Push Up Rotation";
-                            }
-
-                            count = Integer.toString(cwmEvents.getDoItemCount());
-                            calories = Integer.toString(cwmEvents.getTabataCalories());
-                            initCode = cwmEvents.getTabataInitCode();
-
-
-                            if (status.equals("start")) {
-                                //Log.d("bernie","item:"+item);
-                                previous_item = item;
-                                previous_count = count;
-                            }
-
-                            // goal is achievement
-                            if (cwmEvents.getDoItemCount() >= goalTimes && goalTimes != 0) {
-                                if(isPopup == false) {
-                                    status = "stop";
-                                    goalTimes = 0;
-                                    requestHandler.removeCallbacks(requestTask);
-                                    Log.d("bernie", "app remove requestTask");
-                                    builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
-                                    mTabataShowFM.setHistory(builder.toString());
-                                    mTabataActionItemFM.setActionCountView("0");
-                                    sendActionItemEnd();
+                                if (cwmEvents.getExerciseItem() == 1) {
+                                    item = "Push Up";
+                                } else if (cwmEvents.getExerciseItem() == 2) {
+                                    item = "Crunch";
+                                } else if (cwmEvents.getExerciseItem() == 3) {
+                                    item = "Squart";
+                                } else if (cwmEvents.getExerciseItem() == 4) {
+                                    item = "Jumping Jack";
+                                } else if (cwmEvents.getExerciseItem() == 5) {
+                                    item = "Dips";
+                                } else if (cwmEvents.getExerciseItem() == 6) {
+                                    item = "High Knees Running";
+                                } else if (cwmEvents.getExerciseItem() == 7) {
+                                    item = "Lunges";
+                                } else if (cwmEvents.getExerciseItem() == 8) {
+                                    item = "Burpee";
+                                } else if (cwmEvents.getExerciseItem() == 9) {
+                                    item = "Step On Chair";
+                                } else if (cwmEvents.getExerciseItem() == 10) {
+                                    item = "Push Up Rotation";
                                 }
-                                else
-                                    isPopup = false;
-                            }
-                            mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
-                            if (!status.equals("stop")) {//continue
-                                if(tabataHasDone == false) {
-                                    //Log.d("bernie","set count isTabata done:"+Boolean.toString(isTabataDone));
-                                    mTabataActionItemFM.setActionCountView(count);
-                                    mTabataActionItemFM.setInitCode(initCode);
-                                    resetFragments(TABATA_ACTION_ITEM_POSITION);
+
+                                count = Integer.toString(cwmEvents.getDoItemCount());
+                                calories = Integer.toString(cwmEvents.getTabataCalories());
+                                initCode = cwmEvents.getTabataInitCode();
+
+
+                                if (status.equals("start")) {
+                                    //Log.d("bernie","item:"+item);
+                                    previous_item = item;
+                                    previous_count = count;
+                                }
+
+                                // goal is achievement
+                                if (cwmEvents.getDoItemCount() >= goalTimes && goalTimes != 0) {
+                                    if (isPopup == false) {
+                                        status = "stop";
+                                        goalTimes = 0;
+                                        requestHandler.removeCallbacks(requestTask);
+                                        Log.d("bernie", "app remove requestTask goal times:" + Integer.toString(goalTimes) + "cwmEvents.getDoItemCount(): " + Integer.toString(cwmEvents.getDoItemCount()));
+                                        builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
+                                        mTabataShowFM.setHistory(builder.toString());
+                                        mTabataActionItemFM.setActionCountView("0");
+                                        sendActionItemEnd();
+                                    } else
+                                        isPopup = false;
+                                }
+                                mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
+                                if (!status.equals("stop")) {//continue
+                                    if (tabataHasDone == false) {
+                                        //Log.d("bernie","set count isTabata done:"+Boolean.toString(isTabataDone));
+                                        mTabataActionItemFM.setActionCountView(count);
+                                        mTabataActionItemFM.setInitCode(initCode);
+                                        resetFragments(TABATA_ACTION_ITEM_POSITION);
+                                    }
                                 }
                             }
 
@@ -1094,7 +1096,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
             if(mTabataActionItemFM.isVisible()){
-                //requestHandler.removeCallbacks(requestTask);
+                requestHandler.removeCallbacks(requestTask);
                 mTabataActionItemFM.setConnectStatus(mDeviceStatus);
                 resetFragments(TABATA_ACTION_ITEM_POSITION);
             }
@@ -1241,6 +1243,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             }
                             else if(isTabataActionStart){
                                 isTabataActionStart = false;
+                                tabataActionEnd = false;
                                 requestHandler.post(requestTask);
                             }
                             else if(isTabataActionEnd){
@@ -1724,6 +1727,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mTabataShowFM.setItems(curentDoneItems, totalItems);
         Log.d("bernie","sendActionItemEnd");
         isTabataActionEnd = true;
+        tabataActionEnd = true;
         cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
     }
 
