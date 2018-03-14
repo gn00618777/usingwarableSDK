@@ -13,6 +13,24 @@
         android:layout_gravity="center"
         android:text="開啟跑步模式"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/sync_100"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="從100步開始算"/>
+        <Button
+            android:id="@+id/request_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="要求手環儲存的步數"/>
+
+    </LinearLayout>
+
+
     <TextView
         android:id="@+id/run_msg"
         android:layout_width="wrap_content"
@@ -22,8 +40,6 @@
         android:textSize="30dp"
         android:text="msg"
         />
-
-
 
 
 </LinearLayout>

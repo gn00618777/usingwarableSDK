@@ -21,6 +21,8 @@ public class RunFragment extends Fragment {
     private View mView;
     private CheckBox enableRunCheckbox;
     private TextView msgView;
+    private Button sync100;
+    private Button requestAddUp;
 
     private int mStep = 0;
     private int mDistance = 0;
@@ -33,6 +35,8 @@ public class RunFragment extends Fragment {
     // Container Activity must implement this interface
     public interface ListenForRunFragment {
          void onRequesEnableRun(int enabled);
+         void onPressSync100(int cmd, float para);
+         void onPressRequestAddUp(int cmd);
     }
 
     @Override
@@ -52,6 +56,20 @@ public class RunFragment extends Fragment {
             mView = inflater.inflate(R.layout.layout_run, null);
         }
         enableRunCheckbox = (CheckBox)mView.findViewById(R.id.enable_run);
+        sync100 = (Button)mView.findViewById(R.id.sync_100);
+        requestAddUp = (Button)mView.findViewById(R.id.request_step);
+        sync100.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressSync100(0x02, (float)100.0);
+            }
+        });
+        requestAddUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressRequestAddUp(0x03);
+            }
+        });
         msgView = (TextView)mView.findViewById(R.id.run_msg);
         msgView.setText("姿態:"+mGesture+"\n"+"步數:"+Integer.toString(mStep)+"\n"+"距離:"+Integer.toString(mDistance)+"\n"+"步頻:"+Integer.toString(mStepFreq)+"\n"+"心律:"+Integer.toString(mHeart));
         enableRunCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

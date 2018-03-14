@@ -608,7 +608,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             }
 
                             mRunFM.setValue(cwmEvents.getStepCount(), cwmEvents.getDistance(),
-                                    cwmEvents.getStepFreq(), gesture);
+                                    cwmEvents.getStepFreq(), /*gesture*/"");
 
                             if(mRunFM.isVisible()){
                                 resetFragments(RUN_POSITION);
@@ -683,6 +683,13 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 }
                             }
 
+                            break;
+                        case ID.SPORT_RESPONSE_MESSAGE:
+                            mRunFM.setHeartValue(cwmEvents.getHeartBeat());
+                            mRunFM.setValue(cwmEvents.getStepCount(),0,cwmEvents.getStepFreq(),"要求跑步步數!");
+                            if(mRunFM.isVisible()){
+                                resetFragments(RUN_POSITION);
+                            }
                             break;
                     }
                     break;
@@ -1443,7 +1450,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     public void onRequesEnableRun(int enable){
         Log.d("bernie","set run:"+Integer.toString(enable));
-           cwmManager.CwmEnableRun(enable);
+        if(enable == 0)
+           cwmManager.CwmEnableRun(1, 0);
+        if(enable == 1)
+            cwmManager.CwmEnableRun(1, 1);
     }
     @Override
     public void onRequestBattery(){
@@ -1482,6 +1492,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             mFactory.updateResult(selfTestBuilder.toString(),calibrateBuilder.toString());
             resetFragments(FACTORY_POSITION);
         }
+    }
+
+    @Override
+    public void onPressSync100(int cmd, float para){
+        cwmManager.CwmEnableRun(cmd, para);
+    }
+
+    @Override
+    public void onPressRequestAddUp(int cmd){
+        cwmManager.CwmEnableRun(cmd, 0);
     }
 
     @Override
