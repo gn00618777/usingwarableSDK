@@ -76,11 +76,11 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements SelectTypeFragment.ListenForSelectTypeFragment,
 RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerForIntellignetFragment,
         PersonalInfoFragment.ListenForPersonalInfoFragment, TabataFragment.ListenForTabataFragment,
-        SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
+        SwVersionFragment.ListenForSwVersionFragment,
         TabataActionItemFragment.ListenForTabataActionItemFragment,
         TabataShowFragment.ListenForTabataShowFragment,
         FlashFragment.ListenForFlashFragment, SensorsFragment.ListenForSensorFragment,
-        SystemFragment.ListenForSystemFragment, SyncFragment.ListenForSyncFragment,
+        SystemFragment.ListenForSystemFragment,
         AlarmFragment.ListenForAlarmFragment, FactoryFragment.ListenForFactoryFragment,
         RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment{
 
@@ -127,7 +127,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private List<Fragment> mFragments = new ArrayList<Fragment>();
     private PersonalInfoFragment mPersonalInfoFM = new PersonalInfoFragment();
     private SelectTypeFragment mSelectTypeFM = new SelectTypeFragment();
-    private SleepFragment mSleepFM = new SleepFragment();
     private IntelligentFragment mIntelligentFM = new IntelligentFragment();
     private RingBatteryFragment mRingBatteryFM = new RingBatteryFragment();
     private TabataFragment mTabataFM = new TabataFragment();
@@ -139,7 +138,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private FlashFragment mFlashFM = new FlashFragment();
     private SensorsFragment mSensorsFM = new SensorsFragment();
     private SystemFragment mSystemFM = new SystemFragment();
-    private SyncFragment mSyncFM = new SyncFragment();
     private AlarmFragment mAlarmFM = new AlarmFragment();
     private FactoryFragment mFactory = new FactoryFragment();
     private RunFragment mRunFM = new RunFragment();
@@ -215,19 +213,19 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     final int SYSTEM_POSITION = 0;
     final int PERSONAL_POSITION = 1;
     final int SELECT_DEVICE_POSITION = 2;
-    final int RING_BATTERY_POSITION = 5;
-    final int TABATA_WORK_POSITION = 7;
-    final int TABATA_PREPARE_POSITION = 8;
-    final int TABATA_ACTION_ITEM_POSITION  = 9;
-    final int TABATA_SHOW_POSITION = 10;
-    final int TABATA_INTERVAL_POSITION = 11;
-    final int SW_VERSION_POSITION = 12;
-    final int FLASH_TEST_POSITION = 13;
-    final int SENSORS_POSITION = 14;
-    final int ALARM_POSITION = 15;
-    final int FACTORY_POSITION = 16;
-    final int RUN_POSITION = 17;
-    final int BASE_MAP_POSITION = 18;
+    final int RING_BATTERY_POSITION = 4;
+    final int TABATA_WORK_POSITION = 5;
+    final int TABATA_PREPARE_POSITION = 6;
+    final int TABATA_ACTION_ITEM_POSITION  = 7;
+    final int TABATA_SHOW_POSITION = 8;
+    final int TABATA_INTERVAL_POSITION = 9;
+    final int SW_VERSION_POSITION = 10;
+    final int FLASH_TEST_POSITION = 11;
+    final int SENSORS_POSITION = 12;
+    final int ALARM_POSITION = 13;
+    final int FACTORY_POSITION = 14;
+    final int RUN_POSITION = 15;
+    final int BASE_MAP_POSITION = 16;
 
     public enum ITEMS{
         TABATA_INIT,
@@ -1330,16 +1328,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
 
     @Override
-    public void onRequestSync(){
-        cwmManager.CwmSendUserConfig(config);
-    }
-
-    @Override
-    public void onRequestUserConfig(){
-        cwmManager.CwmRequestUserConfig();
-    }
-
-    @Override
     public void onSystemRequest(){cwmManager.CwmRequestUserConfig();}
 
     @Override
@@ -1542,13 +1530,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         cwmManager.CwmRequestSwVersion();
     }
 
-
-    @Override
-    public void onRequestSleep(){
-        if(mDeviceStatus == true)
-           mProgressDialog = ProgressDialog.show(this,"要求睡眠資料","處理中...");
-    }
-
     public void doFirstTabataTask(){
 
         int itemPos = firstTask.getTabataSettings().getItemPos();;
@@ -1747,25 +1728,23 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         actionBarDrawerToggle.syncState();
 
         mFM = super.getSupportFragmentManager();
-        mFragments.add(mSystemFM);
-        mFragments.add(mPersonalInfoFM);
-        mFragments.add(mSelectTypeFM);
-        mFragments.add(mSleepFM);
-        mFragments.add(mIntelligentFM);
-        mFragments.add(mRingBatteryFM);
-        mFragments.add(mSyncFM);
-        mFragments.add(mTabataFM);
-        mFragments.add(mTabataPrepareFM);
-        mFragments.add(mTabataActionItemFM);
-        mFragments.add(mTabataShowFM);
-        mFragments.add(mTabataIntervalFM);
-        mFragments.add(mSwVersionFM);
-        mFragments.add(mFlashFM);
-        mFragments.add(mSensorsFM);
-        mFragments.add(mAlarmFM);
-        mFragments.add(mFactory);
-        mFragments.add(mRunFM);
-        mFragments.add(mBaseFM);
+        mFragments.add(mSystemFM); //0
+        mFragments.add(mPersonalInfoFM); //1
+        mFragments.add(mSelectTypeFM);//2
+        mFragments.add(mIntelligentFM);//3
+        mFragments.add(mRingBatteryFM);//4
+        mFragments.add(mTabataFM);//5
+        mFragments.add(mTabataPrepareFM);//6
+        mFragments.add(mTabataActionItemFM);//7
+        mFragments.add(mTabataShowFM);//8
+        mFragments.add(mTabataIntervalFM);///9
+        mFragments.add(mSwVersionFM);//10
+        mFragments.add(mFlashFM);//11
+        mFragments.add(mSensorsFM);//12
+        mFragments.add(mAlarmFM);//13
+        mFragments.add(mFactory);//14
+        mFragments.add(mRunFM);//15
+        mFragments.add(mBaseFM);//16
 
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
