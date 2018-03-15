@@ -76,10 +76,10 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements SelectTypeFragment.ListenForSelectTypeFragment,
 RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerForIntellignetFragment,
         PersonalInfoFragment.ListenForPersonalInfoFragment, TabataFragment.ListenForTabataFragment,
-        RequestSleepFragment.ListenForRequestSleepFragment, SwVersionFragment.ListenForSwVersionFragment,
-        SleepFragment.ListenForSleepFragment, TabataActionItemFragment.ListenForTabataActionItemFragment,
-        TabataShowFragment.ListenForTabataShowFragment, FlashFragment.ListenForFlashFragment,
-        CalibrateFragment.ListenForCommandTestFragment, SensorsFragment.ListenForSensorFragment,
+        SwVersionFragment.ListenForSwVersionFragment, SleepFragment.ListenForSleepFragment,
+        TabataActionItemFragment.ListenForTabataActionItemFragment,
+        TabataShowFragment.ListenForTabataShowFragment,
+        FlashFragment.ListenForFlashFragment, SensorsFragment.ListenForSensorFragment,
         SystemFragment.ListenForSystemFragment, SyncFragment.ListenForSyncFragment,
         AlarmFragment.ListenForAlarmFragment, FactoryFragment.ListenForFactoryFragment,
         RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment{
@@ -115,7 +115,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                 curentDoneItems = 0;
                 mTabataQueue = null;
                 mTabataShowFM.setItems(0, 0);
-                isHide = true;
                 mTabataActionItemFM.setActionCountView("0");
             }
             navigateTo(item);
@@ -126,7 +125,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private boolean outSide = false;
     private FragmentManager mFM;
     private List<Fragment> mFragments = new ArrayList<Fragment>();
-   // private ShowDataFragment mShowDataFM = new ShowDataFragment();
     private PersonalInfoFragment mPersonalInfoFM = new PersonalInfoFragment();
     private SelectTypeFragment mSelectTypeFM = new SelectTypeFragment();
     private SleepFragment mSleepFM = new SleepFragment();
@@ -139,7 +137,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private TabataActionItemFragment mTabataActionItemFM = new TabataActionItemFragment();
     private TabataIntervalFragment mTabataIntervalFM = new TabataIntervalFragment();
     private FlashFragment mFlashFM = new FlashFragment();
-    private CalibrateFragment mCalibrateFM = new CalibrateFragment();
     private SensorsFragment mSensorsFM = new SensorsFragment();
     private SystemFragment mSystemFM = new SystemFragment();
     private SyncFragment mSyncFM = new SyncFragment();
@@ -184,21 +181,14 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private boolean isTabataIntervalEnd = false;
     private boolean isTabataDone = false;
     private boolean tabataHasDone = false;
-    private boolean isHide = true;
     private boolean isPopup = false;
     private boolean tabataActionEnd = false;
 
     UserConfig config = new UserConfig();
-    IntelligentSettings mItelligent;
 
     TelephonyManager telM = null;
 
-    private int getEraseProgressCount = 0;
-
     private ProgressBar mProgressBar;
-    int totalLogsSize = 0;
-    int deviceCurrentRecord = 0;
-    int apkCurrentRecord = 0;
 
     private TelListener telListener = new TelListener(this);
 
@@ -211,7 +201,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             requestHandler.postDelayed(requestTask,1000);
         }
     };
-    private int tabataNoResponseCount = 0;
 
     float[] accData = new float[3];
     float[] gyroData = new float[3];
@@ -224,12 +213,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private boolean onRing = false;
 
     final int SYSTEM_POSITION = 0;
-    //final int SHOWDATA_POSITION = 1;
     final int PERSONAL_POSITION = 1;
     final int SELECT_DEVICE_POSITION = 2;
-    final int SLEEP_POSITION = 3;
     final int RING_BATTERY_POSITION = 5;
-    final int SYNC_POSITION = 6;
     final int TABATA_WORK_POSITION = 7;
     final int TABATA_PREPARE_POSITION = 8;
     final int TABATA_ACTION_ITEM_POSITION  = 9;
@@ -324,7 +310,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             int msgType = cwmEvents.getMsgType();
             int message_id;
             String gestureEvent = "";
-           // Log.d("bernie","app msgType: "+Integer.toString(msgType));
+
             switch (msgType){
                 case Type.SYSTTEM_INFORMATION:
                     message_id = cwmEvents.getMessageID();
@@ -533,7 +519,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 }
                             });
                             configBuilder.show();
-                            //Toast.makeText(getApplicationContext(),builder.toString(),Toast.LENGTH_LONG).show();
+
                             break;
                         case ID.BATTERY_INFO:
                             mRingBatteryFM.setValue(cwmEvents.getBattery());
@@ -565,7 +551,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         case ID.GYRO_RAW_DATA_REPORT:
                             sensorTag = cwmEvents.getSensorTag();
                             gyroData = cwmEvents.getSensorGyroData();
-                           // Log.d("bernie","app gyroData:"+Float.toString(gyroData[0])+" "+Float.toString(gyroData[1])+" "+Float.toString(gyroData[2]));
+
                             mSensorsFM.refreshTextView(sensorTag, accData, gyroData);
                             if(mSensorsFM.isVisible()){
                                 resetFragmentsII(SENSORS_POSITION);
@@ -576,10 +562,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             Toast.makeText(getApplicationContext(),gestureEvent,Toast.LENGTH_SHORT).show();
                             break;
                         case ID.HEART_RATE_RAW_DATA_REPORT:
-                            //mShowDataFM.setHeartValue(cwmEvents.getHeartBeat());
+
                             mRunFM.setHeartValue(cwmEvents.getHeartBeat());
                             mTabataActionItemFM.setHeartRate(cwmEvents.getHeartBeat());
-                            //Log.d("bernie","app heart reate:"+Integer.toString(cwmEvents.getHeartBeat()));
+
                             mSensorsFM.refreshHeartTextView(cwmEvents.getHeartBeat());
 
                             if(mRunFM.isVisible()){
@@ -607,7 +593,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 gesture = "騎車";
                             }
 
-                            mRunFM.setValue(cwmEvents.getStepCount(), cwmEvents.getDistance(),
+                            mRunFM.setValue(cwmEvents.getStepCount(), 0/*cwmEvents.getDistance()*/,
                                     cwmEvents.getStepFreq(), /*gesture*/"");
 
                             if(mRunFM.isVisible()){
@@ -616,9 +602,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                         case ID.TABATA_RESPONSE_MESSAGE:
                             if(tabataActionEnd == false) {
-                                tabataNoResponseCount = 0;
-                                //Log.d("bernie", "tatabata status");
-                                String status = "start";
                                 String item = "";
                                 String count = "";
                                 String calories = "";
@@ -651,17 +634,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 calories = Integer.toString(cwmEvents.getTabataCalories());
                                 initCode = cwmEvents.getTabataInitCode();
 
-
-                                if (status.equals("start")) {
-                                    //Log.d("bernie","item:"+item);
-                                    previous_item = item;
-                                    previous_count = count;
-                                }
+                                previous_item = item;
+                                previous_count = count;
 
                                 // goal is achievement
                                 if (cwmEvents.getDoItemCount() >= goalTimes && goalTimes != 0) {
                                     if (isPopup == false) {
-                                        status = "stop";
                                         goalTimes = 0;
                                         requestHandler.removeCallbacks(requestTask);
                                         Log.d("bernie", "app remove requestTask goal times:" + Integer.toString(goalTimes) + "cwmEvents.getDoItemCount(): " + Integer.toString(cwmEvents.getDoItemCount()));
@@ -672,14 +650,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                     } else
                                         isPopup = false;
                                 }
-                                mTabataShowFM.setTabataResultValue(status, item, count, calories, heartRate);
-                                if (!status.equals("stop")) {//continue
-                                    if (tabataHasDone == false) {
-                                        //Log.d("bernie","set count isTabata done:"+Boolean.toString(isTabataDone));
-                                        mTabataActionItemFM.setActionCountView(count);
-                                        mTabataActionItemFM.setInitCode(initCode);
-                                        resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
-                                    }
+                                mTabataShowFM.setTabataResultValue("", item, count, calories, heartRate);
+
+                                if (tabataHasDone == false) {
+                                    mTabataActionItemFM.setActionCountView(count);
+                                    mTabataActionItemFM.setInitCode(initCode);
+                                    resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
                                 }
                             }
 
@@ -892,12 +868,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             }
 
             /*switch (id){
-                case 0x90:
-                    mSwVersionFM.setVersion(cwmEvents.getVersion());
-                    if(mSwVersionFM.isVisible()){
-                        resetFragments(SW_VERSION_POSITION);
-                    }
-                    break;
                 case 0xBE:
                     mProgressDialog.dismiss();
                     int startSleepPos = 0;
@@ -972,110 +942,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     mSleepFM.setParserValue(builder1.toString());
                     if (mSleepFM.isVisible())
                         resetFragments(SLEEP_POSITION);
-                    break;
-                case 0x20:
-                    int syncStatus;
-                    String statusStr = "";
-                    syncStatus = cwmEvents.getSyncStatus();
-                    if (syncStatus == 0)
-                        statusStr = "Sync Start";
-                    else if (syncStatus == 1)
-                        statusStr = "Sync Success";
-                    else if (syncStatus == 2)
-                        statusStr = "Sync Faile";
-                    else if (syncStatus == 3)
-                        statusStr = "Sync Abort";
-                    else if (syncStatus == 4)
-                        statusStr = "Sync Resume";
-                    else if (syncStatus == 5)
-                        statusStr = "Sync Erase";
-                    else if (syncStatus == 6) {
-                        statusStr = "Sync Erase Done";
-                        mProgressDialog.dismiss();
-                    } else if (syncStatus == 7) {
-                        statusStr = "Sync Done";
-                        mProgressDialog.dismiss();
-                    }
-                    Toast.makeText(getApplicationContext(), statusStr, Toast.LENGTH_SHORT).show();
-                    break;
-                case 0x21: // flash feedback command
-                    mFlashFM.setReceivedStatus("true");
-                    if (mFlashFM.isVisible())
-                        resetFragments(FLASH_TEST_POSITION);
-                    else
-                        setFragments(FLASH_TEST_POSITION);
-                    mProgressDialog.dismiss();
-                    break;
-                case 0x22:
-                    totalLogsSize = cwmEvents.getMaxByte();
-                    deviceCurrentRecord = cwmEvents.getDeviceCurrent();
-                    mProgressBar.setMax(totalLogsSize);
-                    Log.d("bernie", "max size is" + Integer.toString(totalLogsSize));
-                    //if (totalLogsSize > 0)
-                     //   cwmManager.CwmFlashSyncStart();
-                    break;
-                case 0xB:
-                    Log.d("bernie", "0x0b event");
-                    int[] gestureList = new int[10]; //cwmEvents.getGestureList();
-                    StringBuilder builder = new StringBuilder();
-                    if (gestureList[0] != 0) {
-                        builder.append("Wrist\n");
-                    }
-                    if (gestureList[1] != 0) {
-                        builder.append("Tap\n");
-                    }
-                    if (gestureList[2] != 0) {
-                        builder.append("Hand Up\n");
-                    }
-                    if (gestureList[3] != 0) {
-                        builder.append("Sedentary Remind\n");
-                    }
-                    if (gestureList[4] != 0) {
-                        builder.append("On Wear\n");
-                    }
-                    if (gestureList[5] != 0) {
-                        builder.append("Shake\n");
-                    }
-                    if (gestureList[6] != 0) {
-                        builder.append("Significant\n");
-                    }
-                    Toast.makeText(getApplicationContext(), builder.toString(), Toast.LENGTH_LONG).show();
-                    break;
-                case 0x23:
-                    if (mProgressDialog != null) {
-                        int progress = cwmEvents.getEraseProgress();
-                        mProgressDialog.setMessage("Erase Progress: " + Integer.toString(progress) + "%");
-                        if (timer != null) {
-                            if (progress == 100) {
-                                timer.cancel();
-                            }
-                        }
-                    }
-                    break;
-                case 0x91:
-                    Toast.makeText(getApplicationContext(),"Calibration has done",Toast.LENGTH_SHORT).show();
-                    break;
-                case 0x80:
-                    float[] sensorAcc;
-                    float[] sensorGyro;
-                    int sensorType;
-                    int trustLevel;
-                    int heartBeat;
-                    int signalGrade;
-                    float temperature;
-                    float pressure;
-                    sensorAcc = cwmEvents.getSensorAccData();
-                    sensorGyro = cwmEvents.getSensorGyroData();
-                    sensorType = cwmEvents.getSensorType();
-                    signalGrade = cwmEvents.getSignalGrade();
-                    trustLevel = cwmEvents.getTrustLevel();
-                    heartBeat = cwmEvents.getHeartBeat();
-                    temperature = cwmEvents.getTemperature();
-                    pressure = cwmEvents.getPressure();
-                    if(mSensorsFM.isVisible()){
-                        mSensorsFM.refreshTextView(sensorType, sensorAcc, sensorGyro, trustLevel,
-                                heartBeat, signalGrade, temperature, pressure);
-                    }
                     break;
                 default:
                     break;
@@ -1351,9 +1217,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                     }
                     break;
-                //case 0x02:
-                 //   Toast.makeText(getApplicationContext(),"Time has sync !",Toast.LENGTH_SHORT).show();
-                  //  break;
                 case 0x14:
                     Toast.makeText(getApplicationContext(),"Personal Info has sync !",Toast.LENGTH_SHORT).show();
                     break;
@@ -1407,8 +1270,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             int id = errorEvents.getErrorId();
             int cmdType = errorEvents.getMsgCmdType();
             int cmdId = errorEvents.getId();
-           // int tag = errorEvents.getTag();
-           // String tagString = "";
 
             if(id == 0x01){ //header lost
 
@@ -1418,8 +1279,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     cwmManager.CwmSyncFail();
             }
             else if(id == 0x03) { //Checksum error
-                //mProgressDialog.dismiss();
-                //Toast.makeText(getApplicationContext(), "Sync Aborted!", Toast.LENGTH_SHORT).show();
+
                 cwmManager.CwmReSendBitMap();
             }
         }
@@ -1639,7 +1499,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     public void onInitTabata(Queue<TabataTask> mTabataQ){
         tabataHasDone = false;
-        isHide = false;
         mTabataQueue = mTabataQ;
         int size = mTabataQueue.size();
         Log.d("bernie","size is "+Integer.toString(size));
@@ -1678,10 +1537,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0 , 0, 0);
     }
 
-    @Override
-    public void onRequestSleepLog(){
-        //cwmManager.CwmRequestSleepLog();
-    }
 
     @Override
     public void onRequestSwVersion(){
@@ -1693,7 +1548,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public void onRequestSleep(){
         if(mDeviceStatus == true)
            mProgressDialog = ProgressDialog.show(this,"要求睡眠資料","處理中...");
-        //cwmManager.CwmRequestSleepLog();
     }
 
     public void doFirstTabataTask(){
@@ -1761,8 +1615,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onSaveAlarmSettings(AlarmSetting setting){
-       // Log.d("bernie","request packages size");
-         //cwmManager.CwmSyncRequest();
         cwmManager.CwmSyncStart();
         config.setAlarmSetting(setting);
     }
@@ -1798,17 +1650,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public void onPressTabataResumeButton(){
         cwmManager.CwmTabataCommand(ITEMS.TABATA_RESUME.ordinal(), 0, 0, 0);
     }
-
-   /* @Override
-    public void onPressSyncStartButton(){
-        mFlashFM.setReceivedStatus("");
-        if(mFlashFM.isVisible())
-            resetFragments(FLASH_TEST_POSITION);
-        else
-            resetFragments(FLASH_TEST_POSITION);
-        mProgressDialog = ProgressDialog.show(this,"正在 Start Sync","處理中...");
-      //  cwmManager.CwmFlashSyncStart();
-    }*/
 
     @Override
     public void onPressSyncAutoButton(){
@@ -1867,39 +1708,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         Log.d("bernie","sleep interval: "+Integer.toString(sleepStartTime)+" "+Integer.toString(sleepStopTime));
     }
 
-   /* @Override
-    public void onPressSyncSuccessButton(){
-        mProgressDialog = ProgressDialog.show(this,"按下 Start Success","處理中...");
-        //cwmManager.CwmFlashSyncSuccess();
-    }
-    @Override
-    public void onPressSyncFailButton(){
-        mProgressDialog = ProgressDialog.show(this,"按下 Start Fail","處理中...");
-        //cwmManager.CwmFlashSyncFail();
-    }*/
-
-    @Override
-    public void onPressCalibrateADXL(){
-        //cwmManager.CwmCalibrate(1);
-    }
-
-    @Override
-    public void onPressCalibrateBMI160(){
-        //cwmManager.CwmCalibrate(2);
-    }
-
     @Override
     public void onPressSyncEraseButton(){
         mProgressDialog = ProgressDialog.show(this,"按下清除歷程鍵","處理中...");
         cwmManager.CwmEraseLog();
-        //timer = new Timer();
-        //timer.schedule(new TimerTask() {
-         //   @Override
-          //  public void run() {
-           //     //cwmManager.CwmRequestEraseProgress();
-            //}
-        //}, 0 , 1000);
-
     }
 
     @Override
@@ -1955,12 +1767,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mFragments.add(mFactory);
         mFragments.add(mRunFM);
         mFragments.add(mBaseFM);
-        //testS1ettings.
-        //testSettings.
+
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
-        //String testMac = "";
-       // Log.d("bernie","devices set: "+set.size());
 
         setFragments(SELECT_DEVICE_POSITION);
 
@@ -2056,8 +1865,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         cwmManager.CwmBleDisconnect();
     }
 
-    //function
-    //- function
     private void navigateTo(MenuItem item) {
         mNavIdx = item.getItemId();
         item.setChecked(true);
@@ -2369,21 +2176,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             final String title = intent.getStringExtra(Notification.EXTRA_TITLE);
             final String contactName = intent.getStringExtra("CONTACT_NAME");
 
-            //  if(title != null) {
-           //     if (title.getBytes().length == title.length())
-            //        Log.d("bernie", "title is english" + title);
-             //   else
-              //      Log.d("bernie", "title is not english" + title);
-            //}
-           // final String content = intent.getStringExtra(Notification.EXTRA_TEXT);
-           // titleView.setText(title);
-           // try {
-           //     Thread.sleep(1000);
-           // }
-           // catch (Exception e){
-
-            //}
-            //contentView.setText(content);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -2465,44 +2257,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
         return intentFilter;
-    }
-
-
-    public boolean lookingForContact(String number){
-       Cursor contacts_name = getContentResolver().query(
-                ContactsContract.Contacts.CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
-
-        while (contacts_name.moveToNext()) {
-            HashMap<String, String> contactsMap = new HashMap<String, String>();
-            String phoneNumber = "";
-            long id = contacts_name.getLong(contacts_name.getColumnIndex(ContactsContract.Contacts._ID));
-
-            Cursor contacts_number = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                            + "=" + Long.toString(id),
-                    null,
-                    null);
-
-            while (contacts_number.moveToNext()) {
-                phoneNumber = contacts_number
-                        .getString(contacts_number.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
-                Log.d("bernie","phone number: "+phoneNumber);
-            }
-           // contacts_number.close();
-           // String name = contacts_name.getString(contacts_name
-            //        .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            //contactsMap.put(NAME, name);
-            //contactsMap.put(NUMBER, phoneNumber);
-            //contactsArrayList.add(contactsMap);
-        }
-
-        return true;
     }
 
     public void unpairDevice(BluetoothDevice device) {
