@@ -566,8 +566,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             mRunFM.setHeartValue(cwmEvents.getHeartBeat());
                             mTabataActionItemFM.setHeartRate(cwmEvents.getHeartBeat());
 
-                            mSensorsFM.refreshHeartTextView(cwmEvents.getHeartBeat());
-
                             if(mRunFM.isVisible()){
                                 resetFragments(RUN_POSITION);
                             }
@@ -575,6 +573,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
                             }
                             if(mSensorsFM.isVisible()){
+                                mSensorsFM.refreshHeartTextView(cwmEvents.getHeartBeat());
                                 resetFragments(SENSORS_POSITION);
                             }
                             break;
