@@ -789,6 +789,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             else if(cwmEvents.getSelfTestResult() == 2){
                                 selfResult = "Pass";
                             }
+                            else if(cwmEvents.getSelfTestResult() == 3){
+                                selfResult = "Finished";
+                            }
 
                             selfTestBuilder.append(sensor+selfResult);
                             selfTestBuilder.append("\n");
