@@ -27,7 +27,7 @@ public class TabataShowFragment extends Fragment {
     private TextView itemView;
     private TextView countView;
     private TextView caloriesView;
-    private TextView heartBeatView;
+    private TextView strengthView;
     private TextView historyView;
     private TextView itemsView;
 
@@ -47,6 +47,7 @@ public class TabataShowFragment extends Fragment {
     String calories = "";
     String heartBeat = "";
     String history = "";
+    String strength = "";
 
     String actionItemEnd = "";
     //String strength = null;
@@ -84,7 +85,7 @@ public class TabataShowFragment extends Fragment {
         itemView = (TextView) mView.findViewById(R.id.exercise_item);
         countView = (TextView) mView.findViewById(R.id.action_count);
         caloriesView = (TextView) mView.findViewById(R.id.action_calories);
-        heartBeatView = (TextView) mView.findViewById(R.id.action_heart);
+        strengthView = (TextView) mView.findViewById(R.id.action_strength);
         historyView = (TextView) mView.findViewById(R.id.histroy);
         doneButton = (Button)mView.findViewById(R.id.tabata_done);
         doneButton.setOnClickListener(new View.OnClickListener() {
@@ -121,18 +122,17 @@ public class TabataShowFragment extends Fragment {
         itemView.setText("Action Item:  "+item);
         countView.setText("Action Count:  "+count);
         caloriesView.setText("Action Calories:  "+calories);
-        heartBeatView.setText("Heart Beat:  "+heartBeat);
+        strengthView.setText("Action Strength:  "+strength);
         return mView;
     }
 
-    public void setTabataResultValue(String status, String item, String count, String calories, String heartBeat/*, String strength*/)
+    public void setTabataResultValue(String status, String item, String count, String calories, String strength)
     {
         this.status = status;
         this.item = item;
         this.count = count;
         this.calories = calories;
-        this.heartBeat = heartBeat;
-        //this.strength = strength;
+        this.strength = strength;
     }
     public void setHistory(String builder)
     {

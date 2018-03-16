@@ -35,6 +35,9 @@ public class TabataActionItemFragment extends Fragment {
     private TextView connectionView;
     private TextView initCodeView;
     private TextView heartView;
+    private TextView strengthView;
+    private TextView caloriesView;
+
 
     private Button tabataPauseButton;
     private Button tabataDoneButton;
@@ -50,8 +53,11 @@ public class TabataActionItemFragment extends Fragment {
     private boolean mConnectState = false;
     private int initCode = 0;
     private int heartRate = 0;
+    private String strength = "0";
+    private String calories = "0";
 
-    private String count = "";
+
+    private String count = "0";
 
     ListenForTabataActionItemFragment mCallback;
 
@@ -91,6 +97,9 @@ public class TabataActionItemFragment extends Fragment {
             heartView.setText("heart status:"+Integer.toString(heartRate));
             actionItemView.setText(actionItem+"/"+actionComment);
             actionCountView.setText(count);
+            strengthView.setText("strength status:"+strength);
+            caloriesView.setText("calories status:"+calories);
+
         }
     }
 
@@ -111,6 +120,10 @@ public class TabataActionItemFragment extends Fragment {
             initCodeView.setText("init status: pass");
         heartView = (TextView)mView.findViewById(R.id.heart_state);
         heartView.setText("heart status:"+Integer.toString(heartRate));
+        strengthView = (TextView)mView.findViewById(R.id.strength_state);
+        strengthView.setText("strength status:"+strength);
+        caloriesView = (TextView)mView.findViewById(R.id.calories_state);
+        caloriesView.setText("calories status:"+calories);
         actionItemView = (TextView)mView.findViewById(R.id.action_item_view);
         actionItemView.setText(actionItem+"/"+actionComment);
         actionItemStartView = (TextView)mView.findViewById(R.id.action_item_start_view);
@@ -188,6 +201,9 @@ public class TabataActionItemFragment extends Fragment {
     public void setConnectStatus(boolean s) {mConnectState = s;}
     public void setInitCode(int code){initCode = code;}
     public void setHeartRate(int heart){heartRate = heart;}
+    public void setStrength(String strength){this.strength = strength;}
+    public void setCalories(String calories){this.calories = calories;}
+
     public void setAni(boolean b){mAniStarted = b;}
 
 }

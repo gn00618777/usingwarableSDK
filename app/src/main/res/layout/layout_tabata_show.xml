@@ -51,12 +51,6 @@
         android:text = "Calories Burned:"/>
 
     <TextView
-        android:id="@+id/action_heart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Heart Beat:"/>
-    <TextView
         android:id="@+id/action_strength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -109,7 +109,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     mTabataActionItemFM.isVisible() || mTabataShowFM.isVisible()) {
                 if(timer != null)
                     timer.cancel();
-                requestHandler.removeCallbacks(requestTask);
+                //requestHandler.removeCallbacks(requestTask);
                 mTabataActionItemFM.setActionCountView("0");
                 cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
                 curentDoneItems = 0;
@@ -184,6 +184,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     UserConfig config = new UserConfig();
 
+    int globalHeartRate = 0;
+    int accumulationCalories = 0;
+
+
     TelephonyManager telM = null;
 
     private ProgressBar mProgressBar;
@@ -192,13 +196,13 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     //tabata request related
     private Handler requestHandler = new Handler();
-    private Runnable requestTask = new Runnable() {
+   /* private Runnable requestTask = new Runnable() {
         @Override
         public void run() {
             cwmManager.CwmTabataCommand(ITEMS.TABATA_REQUEST.ordinal(), 0, 0, 0);
             requestHandler.postDelayed(requestTask,1000);
         }
-    };
+    };*/
 
     float[] accData = new float[3];
     float[] gyroData = new float[3];
@@ -560,9 +564,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             Toast.makeText(getApplicationContext(),gestureEvent,Toast.LENGTH_SHORT).show();
                             break;
                         case ID.HEART_RATE_RAW_DATA_REPORT:
-
-                            mRunFM.setHeartValue(cwmEvents.getHeartBeat());
-                            mTabataActionItemFM.setHeartRate(cwmEvents.getHeartBeat());
+                            globalHeartRate = cwmEvents.getHeartBeat();
+                            mRunFM.setHeartValue(globalHeartRate);
+                            mTabataActionItemFM.setHeartRate(globalHeartRate);
 
                             if(mRunFM.isVisible()){
                                 resetFragments(RUN_POSITION);
@@ -602,7 +606,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 String item = "";
                                 String count = "";
                                 String calories = "";
-                                String heartRate = "";
+                                String strength = "";
                                 int initCode;
 
                                 if (cwmEvents.getExerciseItem() == 1) {
@@ -628,30 +632,42 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 }
 
                                 count = Integer.toString(cwmEvents.getDoItemCount());
-                                calories = Integer.toString(cwmEvents.getTabataCalories());
+                                accumulationCalories += cwmEvents.getTabataCalories();
+                                calories = Integer.toString(accumulationCalories);
                                 initCode = cwmEvents.getTabataInitCode();
+                                strength = Integer.toString(cwmEvents.getStrength());
 
                                 previous_item = item;
                                 previous_count = count;
 
+                                mTabataShowFM.setTabataResultValue("", item, count, calories, strength);
+
                                 // goal is achievement
                                 if (cwmEvents.getDoItemCount() >= goalTimes && goalTimes != 0) {
-                                    if (isPopup == false) {
+                                    //if (isPopup == false) {
                                         goalTimes = 0;
-                                        requestHandler.removeCallbacks(requestTask);
+                                        //requestHandler.removeCallbacks(requestTask);
                                         Log.d("bernie", "app remove requestTask goal times:" + Integer.toString(goalTimes) + "cwmEvents.getDoItemCount(): " + Integer.toString(cwmEvents.getDoItemCount()));
                                         builder.append("item: " + previous_item + "  count: " + previous_count + "\n");
                                         mTabataShowFM.setHistory(builder.toString());
                                         mTabataActionItemFM.setActionCountView("0");
+                                        mTabataActionItemFM.setStrength(strength);
+                                        mTabataActionItemFM.setCalories(calories);
+                                        mTabataActionItemFM.setInitCode(0);
+
                                         sendActionItemEnd();
-                                    } else
-                                        isPopup = false;
+                                        return;
+                                    //} else
+                                     //   isPopup = false;
                                 }
-                                mTabataShowFM.setTabataResultValue("", item, count, calories, heartRate);
+                                //mTabataShowFM.setTabataResultValue("", item, count, calories, strength);
+                                Log.d("bernie","12313");
 
                                 if (tabataHasDone == false) {
                                     mTabataActionItemFM.setActionCountView(count);
+                                    mTabataActionItemFM.setStrength(strength);
                                     mTabataActionItemFM.setInitCode(initCode);
+                                    mTabataActionItemFM.setCalories(calories);
                                     resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
                                 }
                             }
@@ -969,7 +985,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
             if(mTabataActionItemFM.isVisible()){
-                requestHandler.removeCallbacks(requestTask);
+                //requestHandler.removeCallbacks(requestTask);
                 mTabataActionItemFM.setConnectStatus(mDeviceStatus);
                 resetFragmentsII(TABATA_ACTION_ITEM_POSITION);
             }
@@ -1117,7 +1133,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             else if(isTabataActionStart){
                                 isTabataActionStart = false;
                                 tabataActionEnd = false;
-                                requestHandler.post(requestTask);
+                                //requestHandler.post(requestTask);
                             }
                             else if(isTabataActionEnd){
                                 isTabataActionEnd = false;
@@ -1575,6 +1591,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         else{
             Toast.makeText(getApplicationContext(),"You have accomplished a round",Toast.LENGTH_SHORT).show();
             cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
+            accumulationCalories = 0;
             setFragments(TABATA_SHOW_POSITION);
         }
     }
@@ -1614,8 +1631,15 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         if(timer != null)
             timer.cancel();
         isTabataDone = true;
-        requestHandler.removeCallbacks(requestTask);
+        //requestHandler.removeCallbacks(requestTask);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
+        accumulationCalories = 0;
+        mTabataActionItemFM.setInitCode(0);
+        mTabataActionItemFM.setCalories(Integer.toString(accumulationCalories));
+        mTabataActionItemFM.setHeartRate(0);
+        mTabataActionItemFM.setActionCountView("0");
+        mTabataActionItemFM.setStrength("0");
+
         curentDoneItems = 0;
         mTabataQueue = null;
         mTabataShowFM.setItems(0,0);
@@ -1795,7 +1819,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         Log.d("bernie","on Destroy");
         if(timer != null)
             timer.cancel();
-        requestHandler.removeCallbacks(requestTask);
+       // requestHandler.removeCallbacks(requestTask);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NotificationReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NewsReceiver);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
@@ -1809,7 +1833,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public void onBackPressed() {
         if(timer != null)
           timer.cancel();
-        requestHandler.removeCallbacks(requestTask);
+        //requestHandler.removeCallbacks(requestTask);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NotificationReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NewsReceiver);
         cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);

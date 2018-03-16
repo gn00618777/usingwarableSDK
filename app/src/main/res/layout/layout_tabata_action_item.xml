@@ -25,7 +25,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:text="heart status:"/>
-                <TextView
+    <TextView
+     android:id="@+id/strength_state"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_gravity="right"
+     android:text="strength status:"/>
+    <TextView
+        android:id="@+id/calories_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="calories status:"/>
+
+    <TextView
                     android:id="@+id/action_item_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
