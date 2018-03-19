@@ -732,6 +732,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 }
                             }
                             break;
+                        case ID.SYNC_ABORTED:
+                            Toast.makeText(getApplicationContext(),"同步歷史訊息失敗",Toast.LENGTH_SHORT).show();
+                            break;
                     }
                     break;
                 case Type.FACTORY_RESPONSE:
@@ -1288,8 +1291,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
             }
             else if(id == 0x02){ //packet lost
-                if(cmdType == Type.HISTORY_DTAA_COMMAND && cmdId == ID.REQUEST_HISTORY)
+                if(cmdType == 0x03 && cmdId == 0x02)
                     cwmManager.CwmSyncFail();
+                if(cmdType == 0x03 && cmdId == 0x04)
+                    cwmManager.CwmSyncFail();
+                if(cmdType == 0x03 && cmdId == 0x01)
+                    cwmManager.CwmSyncFail();;
             }
             else if(id == 0x03) { //Checksum error
 
