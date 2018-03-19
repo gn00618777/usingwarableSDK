@@ -4,8 +4,6 @@ package cwm.usingwearablesdk;
  * Created by user on 2017/9/10.
  */
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,15 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-import android.util.Log;
 import android.widget.TextView;
-import android.support.v7.app.AlertDialog;
-import android.content.DialogInterface;
-import cwm.wearablesdk.TabataSettings;
+
 import pl.droidsonroids.gif.GifImageView;
 
 public class TabataActionItemFragment extends Fragment {
@@ -49,7 +40,6 @@ public class TabataActionItemFragment extends Fragment {
     private String actionItemStart="";
     private String actionComment="";
 
-    private boolean mAniStarted = false;
     private boolean mConnectState = false;
     private int initCode = 0;
     private int heartRate = 0;
@@ -203,7 +193,5 @@ public class TabataActionItemFragment extends Fragment {
     public void setHeartRate(int heart){heartRate = heart;}
     public void setStrength(String strength){this.strength = strength;}
     public void setCalories(String calories){this.calories = calories;}
-
-    public void setAni(boolean b){mAniStarted = b;}
 
 }

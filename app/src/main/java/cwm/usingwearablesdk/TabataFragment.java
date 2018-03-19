@@ -3,11 +3,8 @@ package cwm.usingwearablesdk;
 /**
  * Created by user on 2017/9/10.
  */
-import android.Manifest;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.IdRes;
@@ -19,19 +16,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
-import android.util.Log;
-import android.widget.TextView;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
-import android.widget.Toast;
 import cwm.wearablesdk.TabataTask;
 
 import java.util.ArrayList;
@@ -53,24 +43,11 @@ public class TabataFragment extends Fragment {
     private Button exerciseItemsButton;
     private Button startButton;
     private Button cycleButton;
-    /*private Button adxl50EnableButton;
-    private Button adxl100EnableButton;
-    private Button adxl200EnableButton;
-    private Button bmil50EnableButton;
-    private Button bmi100EnableButton;
-    private Button bmil200EnableButton;*/
 
     /*********************************/
 
     private List<String> exerciseList;
     private ListView listView;
-
-
-    //for menu list
-    private ListAdapter listAdapter;
-    private List<String> stringList = new ArrayList<>();
-    private ListView.OnItemClickListener listViewOnItemClickListener;
-    private MyDBHelper myDBHelper;
 
     private RadioGroup radioGroupPrepare;
     private RadioGroup radioGroupInterval;
@@ -87,20 +64,9 @@ public class TabataFragment extends Fragment {
     private int type = 1;
     private int cycle = 1;
 
-    private int index = 0;
-
-
-    private final CharSequence[] items = {"PUSH_UP", "CRUNCH", "SQUART", "JUMPING_JACK",
-            "DIPS","HIGH_KNESSRUNNING", "LUNGES", "BURPEES", "STEP_ON_CHAIR", "PUSHUP_ROTATION"};
     private final boolean[] itemSelected1 = {false,false,false,false,false,false,false,false,false,false,false};
 
-    private TabataSettings tatataSettings = new TabataSettings();
-
     private Queue<TabataTask> mTabataQ = new LinkedList<>();
-    Queue<TabataTask> tempTabataQ = new LinkedList<>();
-    private StringBuilder scheduler = new StringBuilder();
-    private StringBuilder itemSchedule = new StringBuilder();
-    private StringBuilder parameterSchedule = new StringBuilder();
 
     // Container Activity must implement this interface
     public interface ListenForTabataFragment {
@@ -126,8 +92,6 @@ public class TabataFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.layout_tabata, null);
         }
-        myDBHelper = new MyDBHelper(getContext(), Environment.getExternalStorageDirectory().toString() + "/Download/"+"tabatamenu.db", null, 1);
-        scheduler = new StringBuilder();
 
         prepareButton = (Button)mView.findViewById(R.id.prepare_time);
         prepareButton.setText("預備時間\n"+Integer.toString(prepare));
@@ -412,10 +376,6 @@ public class TabataFragment extends Fragment {
             return false;
         }
         return true;
-    }
-    public void setReset(){
-        mTabataQ = new LinkedList<>();
-        scheduler = new StringBuilder();
     }
 
    class ListAdapter extends BaseAdapter

@@ -11,14 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-import android.util.Log;
 import android.widget.TextView;
-import android.support.v7.app.AlertDialog;
-import android.content.DialogInterface;
-import cwm.wearablesdk.TabataSettings;
 
 public class TabataShowFragment extends Fragment {
 
@@ -32,9 +25,6 @@ public class TabataShowFragment extends Fragment {
     private TextView itemsView;
 
     private Button doneButton;
-    /*private Button bmil50DisableButton;
-    private Button bmi100DisableButton;
-    private Button bmil200DisableButton;*/
 
     private int currentDoneItm = 0;
     private int totalItems = 0;
@@ -45,21 +35,13 @@ public class TabataShowFragment extends Fragment {
     String item = "";
     String count = "";
     String calories = "";
-    String heartBeat = "";
     String history = "";
     String strength = "";
-
-    String actionItemEnd = "";
-    //String strength = null;
 
     ListenForTabataShowFragment mCallback;
 
     public interface ListenForTabataShowFragment {
         public void onPressTabataDoneButton();
-        public void onPressTabataPauseButton();
-        /*public void onPressBMI50Disable();
-        public void onPressBMI100Disable();
-        public void onPressBMI200Disable();*/
     }
 
     @Override
@@ -95,28 +77,6 @@ public class TabataShowFragment extends Fragment {
             }
         });
 
-       /* bmil50DisableButton = (Button)mView.findViewById(R.id.sensor_operate1);
-        bmil50DisableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressBMI50Disable();
-            }
-        });
-        bmi100DisableButton = (Button)mView.findViewById(R.id.sensor_operate2);
-        bmi100DisableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressBMI100Disable();
-            }
-        });
-        bmil200DisableButton = (Button)mView.findViewById(R.id.sensor_operate3);
-        bmil200DisableButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onPressBMI200Disable();
-            }
-        });*/
-
         historyView.setText(history);
         statusView.setText("Status:  "+status);
         itemView.setText("Action Item:  "+item);
@@ -137,10 +97,6 @@ public class TabataShowFragment extends Fragment {
     public void setHistory(String builder)
     {
         history = builder;
-    }
-
-    public void setActionItemEndView(String s){
-        actionItemEnd = s;
     }
 
     public void setItems(int currentDone, int totalItems){

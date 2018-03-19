@@ -4,18 +4,13 @@ import android.app.Notification;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompatBase;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,8 +29,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 
 import cwm.wearablesdk.settings.AlarmSetting;
 import cwm.wearablesdk.CwmManager;
@@ -57,16 +50,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -93,11 +81,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     //sdk
     private CwmManager cwmManager;
     //UI
-    private View layout;
-    private Toast mToast = null;
-    private TextView toastContent;
-    private TextView titleView;
-    private TextView contentView;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavView;
@@ -179,7 +162,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private boolean isTabataIntervalEnd = false;
     private boolean isTabataDone = false;
     private boolean tabataHasDone = false;
-    private boolean isPopup = false;
     private boolean tabataActionEnd = false;
 
     UserConfig config = new UserConfig();
@@ -1103,7 +1085,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             else if(isTabataActionItem){
                                 //Log.d("bernie","tabata action item:");
                                 isTabataActionItem = false;
-                                mTabataActionItemFM.setAni(false);
                                 mTabataActionItemFM.setConnectStatus(true);
                                 setFragments(TABATA_ACTION_ITEM_POSITION);
                                 if(firstTask != null)
@@ -1566,7 +1547,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
         if(mTabataQueue.size() != 0) {
             laterTask = mTabataQueue.poll();
-            isPopup = true;
             Log.d("bernie","selectActionItemFromQueue:"+laterTask.getTabataSettings().getItemName());
             if(laterTask.getTabataSettings().getItemName().equals("Push Up"))
                 comment = "伏地挺身";
@@ -1730,15 +1710,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         super.onCreate(savedInstanceState);
         Log.d("bernie","on Create");
         setContentView(R.layout.activity_main);
-        long unixTime = System.currentTimeMillis() / 1000L;
         // set toolbar to be action bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mProgressBar = (ProgressBar)findViewById(R.id.progressbar);
-        titleView = (TextView)findViewById(R.id.title);
-        contentView = (TextView)findViewById(R.id.content);
-        LayoutInflater inflater = getLayoutInflater();
-        layout = inflater.inflate(R.layout.layout_custom_toast, (ViewGroup)findViewById(R.id.llToast));
-        toastContent = (TextView)layout.findViewById(R.id.textToast);
         // set navigation item selected behavior
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavView = (NavigationView) findViewById(R.id.navigation_view);
@@ -2114,23 +2088,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         }
     }
 
-    public void makeTextAndShow(final String text, final int duration){
-
-        if(mToast == null){
-            mToast = new Toast(getApplicationContext());
-            mToast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER, 0, 0);
-            mToast.setView(layout);
-            mToast.setDuration(duration);
-            toastContent.setTextSize(15);
-            toastContent.setText(text);
-        }
-        else{
-            mToast.setDuration(duration);
-            toastContent.setText(text);
-        }
-        mToast.show();
-
-    }
     private boolean isNotificationServiceEnabled(){
         String pkgName = getPackageName();
         final String flat = Settings.Secure.getString(getContentResolver(),

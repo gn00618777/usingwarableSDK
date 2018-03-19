@@ -2,14 +2,11 @@ package cwm.usingwearablesdk;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.PixelFormat;
 import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.WindowManager;
-import android.widget.TextView;
 
 /**
  * Created by user on 2018/2/5.

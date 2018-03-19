@@ -3,11 +3,9 @@ package cwm.usingwearablesdk;
 import android.content.Context;
 import android.os.Bundle;
 import com.github.machinarius.preferencefragment.PreferenceFragment;
-import android.util.Log;
 
 import android.preference.EditTextPreference;
 import android.preference.SwitchPreference;
-import android.telephony.PhoneStateListener;
 import android.support.annotation.Nullable;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -64,10 +62,7 @@ public class IntelligentFragment extends PreferenceFragment{
         final SwitchPreference sedentarySwitch = (SwitchPreference) findPreference("sedentary_remind");
         final SwitchPreference handUpSwitch = (SwitchPreference) findPreference("hand_up");
         final SwitchPreference onWearSwitch = (SwitchPreference) findPreference("on-wear");
-        //final SwitchPreference doubleTapSwitch = (SwitchPreference) findPreference("double-tap");
         final SwitchPreference wristScrollSwitch = (SwitchPreference) findPreference("wrist-scroll");
-        //final SwitchPreference ShakeSwitch = (SwitchPreference) findPreference("shake");
-        //final SwitchPreference SignificantSwitch = (SwitchPreference) findPreference("significant");
         final EditTextPreference editTextPreference = (EditTextPreference) findPreference("step_number_aim");
         final EditTextPreference editTextPreference1 = (EditTextPreference) findPreference("sedentary_remind_time");
         final Preference save = findPreference("intelligent_save");
@@ -123,22 +118,6 @@ public class IntelligentFragment extends PreferenceFragment{
             });
         }
 
-        /*if(doubleTapSwitch != null) {
-            doubleTapSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference arg0, Object isVibrateOnObject) {
-                    Boolean isEnabled = false;
-                    isEnabled = doubleTapSwitch.isChecked();
-                    if (isEnabled == false)
-                        isDoubleTap = true;
-                    else
-                        isDoubleTap = false;
-
-                    return true;
-                }
-            });
-        }*/
-
         if(wristScrollSwitch != null) {
             wristScrollSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -154,36 +133,6 @@ public class IntelligentFragment extends PreferenceFragment{
                 }
             });
         }
-       /* if (ShakeSwitch != null){
-            ShakeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
-                @Override
-                public boolean onPreferenceChange(Preference arg0, Object isVibrateOnObject){
-                    boolean isEnabled = false;
-                    isEnabled = ShakeSwitch.isChecked();
-                    if(isEnabled == false)
-                        isShake = true;
-                    else
-                        isShake = false;
-
-                    return true;
-                }
-            });
-        }
-        if (SignificantSwitch != null){
-            SignificantSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
-                @Override
-                public boolean onPreferenceChange(Preference arg0, Object isVibrateOnObject){
-                    boolean isEnabled = false;
-                    isEnabled = SignificantSwitch.isChecked();
-                    if(isEnabled == false)
-                        isSignificant = true;
-                    else
-                        isSignificant = false;
-
-                    return true;
-                }
-            });
-        }*/
 
         if(editTextPreference != null){
             editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
@@ -254,10 +203,7 @@ public class IntelligentFragment extends PreferenceFragment{
         final SwitchPreference sedentarySwitch = (SwitchPreference) findPreference("sedentary_remind");
         final SwitchPreference handUpSwitch = (SwitchPreference) findPreference("hand_up");
         final SwitchPreference onWearSwitch = (SwitchPreference) findPreference("on-wear");
-        //final SwitchPreference doubleTapSwitch = (SwitchPreference) findPreference("double-tap");
         final SwitchPreference wristScrollSwitch = (SwitchPreference) findPreference("wrist-scroll");
-        //final SwitchPreference ShakeSwitch = (SwitchPreference) findPreference("shake");
-        //final SwitchPreference SignificantSwitch = (SwitchPreference) findPreference("significant");
 
         EditTextPreference aim = (EditTextPreference) findPreference("step_number_aim");
         EditTextPreference time = (EditTextPreference) findPreference("sedentary_remind_time");
@@ -265,10 +211,7 @@ public class IntelligentFragment extends PreferenceFragment{
         isSendtaryRemind = sedentarySwitch.isChecked();
         isHandUp = handUpSwitch.isChecked();
         isOnWear = onWearSwitch.isChecked();
-        //isDoubleTap = doubleTapSwitch.isChecked();
         isWristScroll = wristScrollSwitch.isChecked();
-       // isShake = ShakeSwitch.isChecked();
-       // isSignificant = SignificantSwitch.isChecked();
 
         stepAim = Integer.valueOf(aim.getText());
         sedentaryT = Integer.valueOf(time.getText());
@@ -279,10 +222,7 @@ public class IntelligentFragment extends PreferenceFragment{
     public boolean getSendtaryRemindStatus(){ return isSendtaryRemind;}
     public boolean getHandUpStatus(){ return isHandUp;}
     public boolean getOnWearStatus() {return isOnWear;}
-    public boolean getDoubleTapStatus() {return isDoubleTap;}
     public boolean getWritstScrollStatus() {return isWristScroll;}
-    public boolean getShakeStatus(){return isShake;}
-    public boolean getSignificantStatus(){return isSignificant;}
     public int getAim(){return stepAim;}
     public int getSedentartTime(){return sedentaryT;}
 
@@ -291,10 +231,7 @@ public class IntelligentFragment extends PreferenceFragment{
         final SwitchPreference sedentarySwitch = (SwitchPreference) findPreference("sedentary_remind");
         final SwitchPreference handUpSwitch = (SwitchPreference) findPreference("hand_up");
         final SwitchPreference onWearSwitch = (SwitchPreference) findPreference("on-wear");
-        //final SwitchPreference doubleTapSwitch = (SwitchPreference) findPreference("double-tap");
         final SwitchPreference wristScrollSwitch = (SwitchPreference) findPreference("wrist-scroll");
-        //final SwitchPreference ShakeSwitch = (SwitchPreference) findPreference("shake");
-        //final SwitchPreference SignificantSwitch = (SwitchPreference) findPreference("significant");
 
         EditTextPreference aim = (EditTextPreference) findPreference("step_number_aim");
         EditTextPreference time = (EditTextPreference) findPreference("sedentary_remind_time");
@@ -327,13 +264,6 @@ public class IntelligentFragment extends PreferenceFragment{
         else{
              handUpSwitch.setChecked(false);
         }
-
-       /* if(gesture[MainActivity.GESTURE.TAP.ordinal()]){
-             doubleTapSwitch.setChecked(true);
-        }
-        else{
-            doubleTapSwitch.setChecked(false);
-        }*/
 
         if(gesture[MainActivity.GESTURE.WATCH_TAKE_OFF.ordinal()]){
                onWearSwitch.setChecked(true);
