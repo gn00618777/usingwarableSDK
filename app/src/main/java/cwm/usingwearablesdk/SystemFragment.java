@@ -333,8 +333,15 @@ public class SystemFragment extends Fragment {
                     }
 
                     if(sleepStartEdit.getVisibility() == View.VISIBLE){
-                        sleepStartTime = Integer.valueOf(sleepStartEdit.getText().toString());
-                        sleepStopTime = Integer.valueOf(sleepStopEdit.getText().toString());
+                        if(!(sleepStartEdit.getText().toString().equals("")) &&
+                           !(sleepStopEdit.getText().toString().equals(""))) {
+                            sleepStartTime = Integer.valueOf(sleepStartEdit.getText().toString());
+                            sleepStopTime = Integer.valueOf(sleepStopEdit.getText().toString());
+                        }
+                        else{
+                            sleepStartTime = 21;
+                            sleepStopTime = 6;
+                        }
                     }
                     else{
                         sleepStartTime = 21;
@@ -471,6 +478,8 @@ public class SystemFragment extends Fragment {
 
         if((system.getFunctions() & 128) != 0){
             sleepDetectCheckBox.setChecked(true);
+            sleepStartEdit.setText(Integer.toString(system.getSleepStart()));
+            sleepStopEdit.setText(Integer.toString(system.getSleepStop()));
         }
         else
             sleepDetectCheckBox.setChecked(false);
