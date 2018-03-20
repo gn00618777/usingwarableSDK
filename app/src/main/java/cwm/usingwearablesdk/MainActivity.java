@@ -1765,6 +1765,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         telM.listen(telListener, PhoneStateListener.LISTEN_CALL_STATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(NotificationReceiver, makeGattUpdateIntentFilter());
         registerReceiver(NewsReceiver, makeNewstFilter());
+        registerReceiver(bluetoothReceiver, makeBluetoothFilter());
 
         final Set<BluetoothDevice> set = mBtAdapter.getBondedDevices();
 
@@ -2135,6 +2136,23 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         }
     };
 
+    private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();            // Get intent's action string
+            Bundle extras = intent.getExtras();            // Get all the Intent's extras
+            if (extras == null) return;                    // All intents of interest have ex
+            switch (action) {
+                case "android.bluetooth.device.action.BOND_STATE_CHANGED": {
+                    bondStateChanged(
+                            extras.getInt("android.bluetooth.device.extra.BOND_STATE", -1),
+                            (BluetoothDevice) extras.get("android.bluetooth.device.extra.DEVICE"));
+                    break;
+                }
+            }
+        }
+    };
+
     private final BroadcastReceiver NotificationReceiver = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
@@ -2225,6 +2243,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         return intentFilter;
     }
 
+    private IntentFilter makeBluetoothFilter(){
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.bluetooth.device.action.BOND_STATE_CHANGED");
+        return intentFilter;
+    }
+
     public void unpairDevice(BluetoothDevice device) {
         try {
             Method m = device.getClass()
@@ -2232,6 +2256,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             m.invoke(device, (Object[]) null);
         } catch (Exception e) {
            // Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void bondStateChanged(int state, BluetoothDevice device) {
+        switch (state) {
+            case BluetoothDevice.BOND_NONE:
+            case BluetoothDevice.BOND_BONDING:
+            case BluetoothDevice.BOND_BONDED:
+                // TODO: trigger changes in how widget handles clicks and displays this device
+                Log.d("bernie", "Bluetooth bond state changed to " + state + " for " + device.getName());
         }
     }
 
