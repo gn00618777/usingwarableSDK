@@ -76,6 +76,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private final int READ_PHONE_STATE = 3;
     private final int WRITE_EXTERNAL_STORAGE = 4;
     private final int READ_CONTACT = 5;
+    private final int RECEIVE_SMS = 6;
     private final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
 
     //sdk
@@ -1994,6 +1995,19 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, READ_CONTACT);
                 }
              });
+            builder.show();
+        }
+        if(this.checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("SMS Info");
+            builder.setMessage("Please grant to access SMS from phone");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS}, RECEIVE_SMS);
+                }
+            });
             builder.show();
         }
     }
