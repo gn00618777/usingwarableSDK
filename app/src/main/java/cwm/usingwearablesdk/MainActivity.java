@@ -695,25 +695,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             Toast.makeText(getApplicationContext(),"歷程清除完畢",Toast.LENGTH_SHORT).show();
                             break;
                         case ID.SLEEP_HISTORY:
-                            max = cwmEvents.getMaxMapPackages();
-                            current = cwmEvents.getCurrentPackages();
-                            if(max != 0){
-                                if(current <= max) {
-                                    mProgressBar.setProgress(current);
-                                    cwmManager.CwmSyncSucces();
-                                }
-                            }
-                            break;
                         case ID.LIFE_HISTORY:
-                              max = cwmEvents.getMaxMapPackages();
-                              current = cwmEvents.getCurrentPackages();
-                              if(max != 0){
-                                  if(current <= max) {
-                                      mProgressBar.setProgress(current);
-                                      cwmManager.CwmSyncSucces();
-                                  }
-                              }
-                            break;
                         case ID.LOG_HISTORY:
                             max = cwmEvents.getMaxMapPackages();
                             current = cwmEvents.getCurrentPackages();
@@ -721,6 +703,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 if(current <= max) {
                                     mProgressBar.setProgress(current);
                                     cwmManager.CwmSyncSucces();
+                                    if(current == max) {
+                                        mProgressDialog.onStart();
+                                        mProgressBar.setProgress(0);
+                                        Toast.makeText(getApplicationContext(),"同步歷程資料完畢!",Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                             break;
