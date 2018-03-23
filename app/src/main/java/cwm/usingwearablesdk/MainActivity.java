@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.IntentFilter;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -53,8 +54,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.app.ProgressDialog;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -1006,6 +1015,35 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             if(mSelectTypeFM.isVisible())
                 resetFragments(SELECT_DEVICE_POSITION);
 
+            if(isAddressTableExists()) {
+                boolean needReBond = deviceEverBonded(deviceAddress);
+                if(needReBond){
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("綁定資訊");
+                    builder.setMessage("綁定失敗! 請進行重新綁定流程");
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                               @Override
+                                public void onDismiss(DialogInterface dialog) {
+
+                               }
+                            });
+                    builder.show();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            cwmManager.CwmUnBond();
+                        }
+                    },1000);
+                }
+
+            }
+
         }
 
         @Override
@@ -1048,9 +1086,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             Toast.makeText(getApplicationContext(),"回復成原廠設定",Toast.LENGTH_SHORT).show();
                             break;
                         case ID.UNBOND:
-                            Toast.makeText(getApplicationContext(),"unBond ack",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"解除綁定回應",Toast.LENGTH_SHORT).show();
                             BluetoothDevice device = mBtAdapter.getRemoteDevice(mDeviceAddress);
                             unpairDevice(device);
+                            removeAddressTable();
 
                             break;
                     }
@@ -2276,11 +2315,111 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private void bondStateChanged(int state, BluetoothDevice device) {
         switch (state) {
             case BluetoothDevice.BOND_NONE:
+                break;
             case BluetoothDevice.BOND_BONDING:
+                break;
             case BluetoothDevice.BOND_BONDED:
                 // TODO: trigger changes in how widget handles clicks and displays this device
-                Log.d("bernie", "Bluetooth bond state changed to " + state + " for " + device.getName());
+                if(device.getName().equals("SmartBand")){
+                    Log.d("bernie", "Bluetooth bond state changed to " + state + " for " + device.getName());
+                    recordAddress(device.getAddress());
+                }
         }
     }
 
+    private boolean deviceEverBonded(String address){
+        boolean isEverBonded = false;
+        boolean needResetBond = false;
+        final Set<BluetoothDevice> set = mBtAdapter.getBondedDevices();
+        if(set.size() != 0){
+            for (BluetoothDevice device : set) {
+                if(device.getAddress().equals(address)){
+                    isEverBonded = true;
+                    needResetBond = false;
+                    break;
+                }
+            }
+
+            if(!isEverBonded){
+                //檢查資料庫是否綁定過
+                String mac =readBondedRecord();
+                if(mac.equals(address))
+                    needResetBond = true;
+            }
+        }
+        else{
+            //檢查資料庫是否綁定過
+            String mac = readBondedRecord();
+            if(mac.equals(address)) {
+                needResetBond = true;
+            }
+        }
+        return needResetBond;
+    }
+
+    private String readBondedRecord(){
+        BufferedReader br = null;
+        String response = "";
+        try {
+            StringBuffer output = new StringBuffer();
+            String fullPath = getCacheDir().getPath();
+            String savePath = fullPath + File.separator +"bondedAddress"+".txt";
+            br = new BufferedReader(new FileReader(savePath));
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                output.append(line);
+            }
+            response = output.toString();
+            br.close();
+
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+
+        }
+        return response;
+    }
+    private void recordAddress(String address){
+        try {
+
+            String fullPath = getCacheDir().getPath();
+            String savePath = fullPath + File.separator + "/"+"bondedAddress"+".txt";
+
+            File file = new File(savePath);
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file, false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(address);
+            bw.newLine();
+
+            bw.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+    private boolean isAddressTableExists(){
+        String fullPath = getCacheDir().getPath();
+        String savePath = fullPath + File.separator + "/"+"bondedAddress"+".txt";
+
+        File file = new File(savePath);
+        return file.exists();
+    }
+
+    private void removeAddressTable(){
+        String fullPath = getCacheDir().getPath();
+        String savePath = fullPath + File.separator + "/"+"bondedAddress"+".txt";
+
+        File file = new File(savePath);
+        if(file.exists())
+            file.delete();
+    }
 }
