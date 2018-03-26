@@ -690,6 +690,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 cwmManager.CwmSyncStart();
                             }
                             break;
+                        case ID.SYNC_DONE:
+                            mProgressDialog.onStart();
+                            mProgressBar.setProgress(0);
+                            Toast.makeText(getApplicationContext(),"同步歷程資料完畢!",Toast.LENGTH_SHORT).show();
+
+                            break;
                         case ID.HISTORY_ERASE_DONE:
                             mProgressDialog.dismiss();
                             Toast.makeText(getApplicationContext(),"歷程清除完畢",Toast.LENGTH_SHORT).show();
@@ -699,16 +705,15 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         case ID.LOG_HISTORY:
                             max = cwmEvents.getMaxMapPackages();
                             current = cwmEvents.getCurrentPackages();
+
                             if(max != 0){
-                                if(current <= max) {
-                                    mProgressBar.setProgress(current);
-                                    cwmManager.CwmSyncSucces();
-                                    if(current == max) {
-                                        mProgressDialog.onStart();
-                                        mProgressBar.setProgress(0);
-                                        Toast.makeText(getApplicationContext(),"同步歷程資料完畢!",Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+                               if(current < max)
+                                  mProgressBar.setProgress(current);
+                               else if(current == max) {
+                                  mProgressDialog.onStart();
+                                  mProgressBar.setProgress(0);
+                               }
+                                cwmManager.CwmSyncSucces();
                             }
                             break;
                         case ID.SYNC_ABORTED:
