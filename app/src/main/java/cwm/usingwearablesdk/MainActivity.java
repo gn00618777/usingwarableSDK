@@ -1520,6 +1520,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
 
     @Override
+    public void onSoftReset(){
+        cwmManager.CwmSoftReset();
+    }
+
+    @Override
     public void onInitTabata(Queue<TabataTask> mTabataQ){
         tabataHasDone = false;
         mTabataQueue = mTabataQ;

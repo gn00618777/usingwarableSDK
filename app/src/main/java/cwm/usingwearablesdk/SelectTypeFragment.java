@@ -23,6 +23,7 @@ public class SelectTypeFragment extends Fragment {
     private TextView deviceBoundAddress;
     private TextView deviceBoundStatus;
     private Button unBondButton;
+    private Button resetButton;
 
     private String mDevice = null;
     private String mDeviceAddress = null;
@@ -34,6 +35,7 @@ public class SelectTypeFragment extends Fragment {
         public void onDisconnectFromDevice();
         public void onConnectToDevice();
         public void onResetBoundRecord();
+        public void onSoftReset();
     }
 
     ListenForSelectTypeFragment mCallback;
@@ -95,6 +97,15 @@ public class SelectTypeFragment extends Fragment {
             }
         });
 
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onSoftReset();
+            }
+        });
+
+
+
 
     } // onActivityCreated()
 
@@ -110,6 +121,7 @@ public class SelectTypeFragment extends Fragment {
         diconnectDevice = (TextView)mView.findViewById(R.id.disconnet);
         connectDevice = (TextView)mView.findViewById(R.id.connect);
         unBondButton = (Button)mView.findViewById(R.id.unbond_button);
+        resetButton = (Button)mView.findViewById(R.id.softreset_button);
 
         return mView;
     } // onCreateView()
