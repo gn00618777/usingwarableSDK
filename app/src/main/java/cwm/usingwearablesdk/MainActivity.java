@@ -682,11 +682,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     int current = 0;
                     switch (message_id){
                         case ID.HISTORY_PACKAGES:
-                            if(cwmEvents.getRemindPackages() == 0){
+                            if(cwmEvents.getMaxPackages() == 0){
                                 Toast.makeText(getApplicationContext(),"已沒有歷程資料了",Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                mProgressBar.setMax(cwmEvents.getRemindPackages());
+                                mProgressBar.setMax(cwmEvents.getMaxPackages());
                                 cwmManager.CwmSyncStart();
                             }
                             break;
@@ -703,9 +703,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         case ID.SLEEP_HISTORY:
                         case ID.LIFE_HISTORY:
                         case ID.LOG_HISTORY:
-                            max = cwmEvents.getMaxMapPackages();
+                            max = cwmEvents.getMaxPackages();
                             current = cwmEvents.getCurrentPackages();
-
+                            Log.d("bernie","current:"+Integer.toString(current)+" max:"+Integer.toString(max));
                             if(max != 0){
                                if(current < max)
                                   mProgressBar.setProgress(current);
