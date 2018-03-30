@@ -292,10 +292,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     private AlertDialog enableNotificationListenerAlertDialog;
 
-    // information
-    private IntelligentSettings testSettings;
-    private BodySettings testS1ettings;
-
     private final int PERMISSION_REQUEST_FINE_LOCATION = 3;
 
     public CwmManager.EventListener eventListener = new CwmManager.EventListener() {
@@ -1526,43 +1522,23 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public void onInitTabata(Queue<TabataTask> mTabataQ){
         tabataHasDone = false;
         mTabataQueue = mTabataQ;
-        int size = mTabataQueue.size();
-        Log.d("bernie","size is "+Integer.toString(size));
+        totalItems = mTabataQueue.size();
+        Log.d("bernie","size is "+Integer.toString(totalItems));
         isTabataInitStart = true;
         firstTask = mTabataQ.poll();
-        if(firstTask.getTabataSettings().getItemName().equals("Push Up"))
-            comment = "伏地挺身";
-        else if(firstTask.getTabataSettings().getItemName().equals("Crunch"))
-            comment = "捲腹";
-        else if(firstTask.getTabataSettings().getItemName().equals("Squart"))
-            comment = "深蹲";
-        else if(firstTask.getTabataSettings().getItemName().equals("Jumping Jack"))
-            comment = "開合跳";
-        else if(firstTask.getTabataSettings().getItemName().equals("Dips"))
-            comment = "椅子三頭肌稱體";
-        else if(firstTask.getTabataSettings().getItemName().equals("High Kniess Running"))
-            comment = "原地提膝踏步";
-        else if(firstTask.getTabataSettings().getItemName().equals("Lunges"))
-            comment = "前屈深蹲";
-        else if(firstTask.getTabataSettings().getItemName().equals("Burpees"))
-            comment = "波比跳";
-        else if(firstTask.getTabataSettings().getItemName().equals("Step On Chair"))
-            comment = "登階運動";
-        else if(firstTask.getTabataSettings().getItemName().equals("PushUp Rotation"))
-            comment = "T型伏地挺身";
+
+        comment = mapTabataName(firstTask);
 
         mTabataSettings = firstTask.getTabataSettings();
         totalPrepare = mTabataSettings.getPrepareTime();
         Log.d("bernie","Tabata prepare is"+Integer.toString(totalPrepare));
         totalInterval = mTabataSettings.getIntervalTime();
         Log.d("bernie","Tabata interval is"+Integer.toString(totalInterval));
-        totalItems = size;
         mTabataShowFM.setItems(curentDoneItems, totalItems);
         goalTimes = mTabataSettings.getActionTimes();
         Log.d("bernie","Tabata goal is"+Integer.toString(goalTimes));
         cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0 , 0, 0);
     }
-
 
     @Override
     public void onRequestSwVersion(){
@@ -1583,28 +1559,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         if(mTabataQueue.size() != 0) {
             laterTask = mTabataQueue.poll();
             Log.d("bernie","selectActionItemFromQueue:"+laterTask.getTabataSettings().getItemName());
-            if(laterTask.getTabataSettings().getItemName().equals("Push Up"))
-                comment = "伏地挺身";
-            else if(laterTask.getTabataSettings().getItemName().equals("Crunch"))
-                comment = "捲腹";
-            else if(laterTask.getTabataSettings().getItemName().equals("Squart"))
-                comment = "深蹲";
-            else if(laterTask.getTabataSettings().getItemName().equals("Jumping Jack"))
-                comment = "開合跳";
-            else if(laterTask.getTabataSettings().getItemName().equals("Dips"))
-                comment = "椅子三頭肌稱體";
-            else if(laterTask.getTabataSettings().getItemName().equals("High Kniess Running"))
-                comment = "原地提膝踏步";
-            else if(laterTask.getTabataSettings().getItemName().equals("Lunges"))
-                comment = "前屈深蹲";
-            else if(laterTask.getTabataSettings().getItemName().equals("Burpees"))
-                comment = "波比跳";
-            else if(laterTask.getTabataSettings().getItemName().equals("Step On Chair"))
-                comment = "登階運動";
-            else if(laterTask.getTabataSettings().getItemName().equals("PushUp Rotation"))
-                comment = "T型伏地挺身";
+
+            comment = mapTabataName(laterTask);
+
             mTabataIntervalFM.setIntervalActionComment(comment);
             setFragments(TABATA_INTERVAL_POSITION);
+
             totalInterval = laterTask.getTabataSettings().getIntervalTime();
             goalTimes = laterTask.getTabataSettings().getActionTimes();
             isTabataIntervalStart = true;
@@ -1843,7 +1803,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         telM.listen(telListener, PhoneStateListener.LISTEN_NONE);
         finish();
     }
-
 
     @Override
     public void onBackPressed() {
@@ -2095,7 +2054,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         final AlertDialog alert = builder.create();
         alert.show();
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -2415,5 +2373,31 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         File file = new File(savePath);
         if(file.exists())
             file.delete();
+    }
+
+    private String mapTabataName(TabataTask task){
+        String comment = "";
+        if(task.getTabataSettings().getItemName().equals("Push Up"))
+            comment = "伏地挺身";
+        else if(task.getTabataSettings().getItemName().equals("Crunch"))
+            comment = "捲腹";
+        else if(task.getTabataSettings().getItemName().equals("Squart"))
+            comment = "深蹲";
+        else if(task.getTabataSettings().getItemName().equals("Jumping Jack"))
+            comment = "開合跳";
+        else if(task.getTabataSettings().getItemName().equals("Dips"))
+            comment = "椅子三頭肌稱體";
+        else if(task.getTabataSettings().getItemName().equals("High Kniess Running"))
+            comment = "原地提膝踏步";
+        else if(task.getTabataSettings().getItemName().equals("Lunges"))
+            comment = "前屈深蹲";
+        else if(task.getTabataSettings().getItemName().equals("Burpees"))
+            comment = "波比跳";
+        else if(task.getTabataSettings().getItemName().equals("Step On Chair"))
+            comment = "登階運動";
+        else if(task.getTabataSettings().getItemName().equals("PushUp Rotation"))
+            comment = "T型伏地挺身";
+
+        return comment;
     }
 }
