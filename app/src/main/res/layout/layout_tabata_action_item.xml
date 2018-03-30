@@ -11,14 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:text="connect status:"/>
-    <TextView
-        android:id="@+id/init_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:layout_gravity="right"
-        android:text="initCode status:"
-        android:textColor="#FFAA33"/>
+
     <TextView
         android:id="@+id/heart_state"
         android:layout_width="wrap_content"

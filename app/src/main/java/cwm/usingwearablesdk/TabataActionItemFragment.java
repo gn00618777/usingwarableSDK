@@ -24,7 +24,6 @@ public class TabataActionItemFragment extends Fragment {
     private TextView actionItemStartView;
     private TextView actionCountView;
     private TextView connectionView;
-    private TextView initCodeView;
     private TextView heartView;
     private TextView strengthView;
     private TextView caloriesView;
@@ -41,7 +40,6 @@ public class TabataActionItemFragment extends Fragment {
     private String actionComment="";
 
     private boolean mConnectState = false;
-    private int initCode = 0;
     private int heartRate = 0;
     private String strength = "0";
     private String calories = "0";
@@ -80,10 +78,6 @@ public class TabataActionItemFragment extends Fragment {
                 connectionView.setText("connect status: "+"斷線");
             else
                 connectionView.setText("connect status: "+"連線");
-            if(initCode == 0)
-                initCodeView.setText("init status: not pass");
-            else
-                initCodeView.setText("init status: pass");
             heartView.setText("heart status:"+Integer.toString(heartRate));
             actionItemView.setText(actionItem+"/"+actionComment);
             actionCountView.setText(count);
@@ -103,11 +97,7 @@ public class TabataActionItemFragment extends Fragment {
           connectionView.setText("connect status: "+"斷線");
         else
             connectionView.setText("connect status: "+"連線");
-        initCodeView = (TextView)mView.findViewById(R.id.init_state);
-        if(initCode == 0)
-           initCodeView.setText("init status: not pass");
-        else
-            initCodeView.setText("init status: pass");
+
         heartView = (TextView)mView.findViewById(R.id.heart_state);
         heartView.setText("heart status:"+Integer.toString(heartRate));
         strengthView = (TextView)mView.findViewById(R.id.strength_state);
@@ -189,7 +179,6 @@ public class TabataActionItemFragment extends Fragment {
     public void setActionItemCommentView(String s){actionComment = s;}
     public void setActionCountView(String c){count = c;}
     public void setConnectStatus(boolean s) {mConnectState = s;}
-    public void setInitCode(int code){initCode = code;}
     public void setHeartRate(int heart){heartRate = heart;}
     public void setStrength(String strength){this.strength = strength;}
     public void setCalories(String calories){this.calories = calories;}
