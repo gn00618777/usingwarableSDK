@@ -267,6 +267,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         PICK_UP
     }
     public enum SOCIAL_APP{
+        NEWS,
         QQ,
         WECHART,
         DOBAN,
@@ -2136,7 +2137,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         public void onReceive(Context context, Intent intent) {
             Log.d("bernie","SMS!!");
             NotificationData data = new NotificationData();
-            data.setNotifyId(NOTIFICATION.NEWS.ordinal());
+            data.setNotifyId(NOTIFICATION.SOCIAL.ordinal());
+            data.setAppIdentifier(SOCIAL_APP.NEWS.ordinal());
             cwmManager.CwmNotification(data);
         }
     };
