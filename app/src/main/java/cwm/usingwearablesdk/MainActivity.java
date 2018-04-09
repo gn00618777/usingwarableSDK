@@ -1807,14 +1807,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onBackPressed() {
-        if(timer != null)
-          timer.cancel();
-        //requestHandler.removeCallbacks(requestTask);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(NotificationReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(NewsReceiver);
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
+        Log.d("bernie","onBackPressed");
         finish();
-
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
