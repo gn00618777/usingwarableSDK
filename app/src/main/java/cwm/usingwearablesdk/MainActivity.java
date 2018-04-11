@@ -142,6 +142,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private byte[] mValue;
     private int[] mParser;
 
+    SendThread thread1 = new SendThread();
+    SendThread1 thread2 = new SendThread1();
+    private Handler sendHandler = new Handler();
+
     private BluetoothAdapter mBtAdapter = null;
 
     private Timer timer;
@@ -188,6 +192,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     //tabata request related
     private Handler requestHandler = new Handler();
+    private Handler sendHeartHandler = new Handler();
    /* private Runnable requestTask = new Runnable() {
         @Override
         public void run() {
@@ -195,6 +200,14 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             requestHandler.postDelayed(requestTask,1000);
         }
     };*/
+
+   private Runnable sendHeartTask = new Runnable() {
+       @Override
+       public void run() {
+           cwmManager.CwmTabataCommand(ITEMS.TABATA_SEND_HEART_RATE.ordinal(), 0, 0, 0);
+           sendHeartHandler.postDelayed(sendHeartTask,5000);
+       }
+   };
 
     float[] accData = new float[3];
     float[] gyroData = new float[3];
@@ -237,7 +250,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         TABATA_ACTION_END,
         TABATA_REQUEST,
         TABATA_DONE,
-        TABATA_RESUME
+        TABATA_RESUME,
+        TABATA_SEND_HEART_RATE
     };
 
     public enum GESTURE{
@@ -1341,10 +1355,14 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     public void onRequesEnableRun(int enable){
         Log.d("bernie","set run:"+Integer.toString(enable));
-        if(enable == 0)
-           cwmManager.CwmEnableRun(1, 0);
-        if(enable == 1)
+        if(enable == 0) {
+            cwmManager.CwmEnableRun(1, 0);
+            sendHandler.removeCallbacks(thread2);
+        }
+        if(enable == 1) {
             cwmManager.CwmEnableRun(1, 1);
+            sendHandler.post(thread2);
+        }
     }
     @Override
     public void onRequestBattery(){
@@ -1537,10 +1555,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         Log.d("bernie","Tabata interval is"+Integer.toString(totalInterval));
         mTabataShowFM.setItems(curentDoneItems, totalItems);
         goalTimes = mTabataSettings.getActionTimes();
-        Log.d("bernie","Tabata goal is"+Integer.toString(goalTimes));
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0 , 0, 0);
-    }
+        Log.d("bernie", "Tabata goal is" + Integer.toString(goalTimes));
+        cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0, 0, 0);
 
+        sendHandler.post(thread1);
+    }
     @Override
     public void onRequestSwVersion(){
         cwmManager.CwmRequestSwVersion();
@@ -1608,6 +1627,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onPressTabataDoneButton(){
+        sendHandler.removeCallbacks(thread1);
         tabataHasDone = true;
         mTabataActionItemFM.setActionCountView("0");
         Log.d("bernie","onPress Tabata Done");
@@ -1793,6 +1813,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        sendHandler.removeCallbacks(thread1);
+        sendHandler.removeCallbacks(thread2);
         Log.d("bernie","on Destroy");
         if(timer != null)
             timer.cancel();
@@ -2395,5 +2417,18 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             comment = "T型伏地挺身";
 
         return comment;
+    }
+
+    public class SendThread extends Thread{
+        public void run(){
+            cwmManager.CwmTabataCommand(ITEMS.TABATA_SEND_HEART_RATE.ordinal(), 0, 0, 0);
+            sendHandler.postDelayed(thread1, 5000);
+        }
+    }
+    public class SendThread1 extends Thread{
+        public void run(){
+            cwmManager.CwmEnableRun(4, 0);
+            sendHandler.postDelayed(thread2, 5000);
+        }
     }
 }
