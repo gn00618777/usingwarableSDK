@@ -58,6 +58,10 @@
             android:id="@+id/navigation_item_15"
             android:checked="true"
             android:title="底圖更新"/>
+        <item
+            android:id="@+id/navigation_item_16"
+            android:checked="true"
+            android:title="最新數據"/>
 
     </group>
 </menu>

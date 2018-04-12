@@ -31,6 +31,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 
+import cwm.wearablesdk.LifeData;
 import cwm.wearablesdk.settings.AlarmSetting;
 import cwm.wearablesdk.CwmManager;
 import cwm.wearablesdk.events.CwmEvents;
@@ -79,7 +80,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         FlashFragment.ListenForFlashFragment, SensorsFragment.ListenForSensorFragment,
         SystemFragment.ListenForSystemFragment,
         AlarmFragment.ListenForAlarmFragment, FactoryFragment.ListenForFactoryFragment,
-        RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment{
+        RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment,
+        CurrentFragment.ListenForCurrentFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int READ_PHONE_STATE = 3;
@@ -135,6 +137,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private FactoryFragment mFactory = new FactoryFragment();
     private RunFragment mRunFM = new RunFragment();
     private BaseMapFragment mBaseFM = new BaseMapFragment();
+    private CurrentFragment mCurrentFM = new CurrentFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -235,6 +238,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     final int FACTORY_POSITION = 14;
     final int RUN_POSITION = 15;
     final int BASE_MAP_POSITION = 16;
+    final int CURRNT_POSITION = 17;
 
     public enum ITEMS{
         TABATA_INIT,
@@ -537,6 +541,24 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             if(mSwVersionFM.isVisible()){
                                 resetFragments(SW_VERSION_POSITION);
                             }
+                            break;
+                        case ID.CURRENT:
+                            LifeData life = cwmEvents.getLife();
+                            StringBuilder lifeBuilder = new StringBuilder();
+                            lifeBuilder.append("系統時間戳: "+Long.toString(life.getTimeStamp())+"\n");
+                            lifeBuilder.append("目前步數: "+Integer.toString(life.getStepCount())+"\n");
+                            lifeBuilder.append("目前距離:"+Integer.toString(life.getDistance())+"\n");
+
+                            final AlertDialog.Builder datasBuilder = new AlertDialog.Builder(MainActivity.this);
+                            datasBuilder.setTitle("即時最新數據");
+                            datasBuilder.setMessage(lifeBuilder.toString());
+                            datasBuilder.setPositiveButton(android.R.string.ok, null);
+                            datasBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                }
+                            });
+                            datasBuilder.show();
                             break;
                         default:
                             break;
@@ -1434,6 +1456,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         cwmManager.CwmFactory(ID.RECORD_SENSOR_DATA, 0);
     }
 
+    @Override
+    public void onRequestCurrentLife(){
+        cwmManager.CwmSyncCurrent();
+    }
+
 
     @Override
     public void onIntelligentSaveToRing(){
@@ -1765,6 +1792,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mFragments.add(mFactory);//14
         mFragments.add(mRunFM);//15
         mFragments.add(mBaseFM);//16
+        mFragments.add(mCurrentFM);//17
 
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
@@ -1917,6 +1945,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             case R.id.navigation_item_15:
                 mToolbar.setTitle("更新底圖");
                 setFragments(BASE_MAP_POSITION);
+                break;
+            case R.id.navigation_item_16:
+                mToolbar.setTitle("最新數據");
+                setFragments(CURRNT_POSITION);
                 break;
             default: break;
         }
