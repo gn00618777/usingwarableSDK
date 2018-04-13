@@ -369,8 +369,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             builder.append("顯示頁面:"+Integer.toString(system.getScreens())+"\n");
                             builder.append("功能:"+Integer.toString(system.getFunctions())+"\n");
                             builder.append("算法:"+Integer.toString(intelligent.getGestureValue())+"\n");
-                            builder.append("睡眠偵測區間: "+Integer.toString(system.getSleepStart())+"~"+Integer.toString(system.getSleepStop())+"時"+"\n");
-                            builder.append("午休勿擾區間: "+Integer.toString(system.getNoDisturbStart())+"~"+Integer.toString(system.getNoDisturbStop())+"時"+"\n");
+                            if((system.getFunctions() & 128) != 0)
+                               builder.append("睡眠偵測區間: "+Integer.toString(system.getSleepStart())+"~"+Integer.toString(system.getSleepStop())+"時"+"\n");
+                            if((system.getFunctions() & 256) != 0)
+                               builder.append("午休勿擾區間: "+Integer.toString(system.getNoDisturbStart())+"~"+Integer.toString(system.getNoDisturbStop())+"時"+"\n");
                             builder.append("性別: "+Integer.toString(body.getSex())+"\n");
                             builder.append("年齡: "+Integer.toString(body.getOld())+"\n");
                             builder.append("身高: "+Integer.toString(body.getHight())+"\n");
