@@ -1837,6 +1837,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     protected void onStop(){
         super.onStop();
+        sendHandler.removeCallbacks(thread1);
+        sendHandler.removeCallbacks(thread2);
         Log.d("bernie", "on stop");
     }
 
@@ -2456,6 +2458,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public class SendThread extends Thread{
         public void run(){
             cwmManager.CwmTabataCommand(ITEMS.TABATA_SEND_HEART_RATE.ordinal(), 0, 0, 0);
+            Log.d("bernie","send heart rate");
             sendHandler.postDelayed(thread1, 5000);
         }
     }
