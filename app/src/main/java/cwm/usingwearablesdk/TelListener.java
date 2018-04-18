@@ -46,38 +46,26 @@ public class TelListener extends PhoneStateListener {
     }
     public String lookingForContact(String number){
         String name = "";
+        String phoneNumber = "";
         Cursor contacts_name = mContext.getContentResolver().query(
-                ContactsContract.Contacts.CONTENT_URI,
+               // ContactsContract.Contacts.CONTENT_URI,
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                  null,
                  null,
                  null,
                  null);
+
         while (contacts_name.moveToNext()) {
-            String phoneNumber = "";
-            long id = contacts_name.getLong(contacts_name.getColumnIndex(ContactsContract.Contacts._ID));
-
-            Cursor contacts_number = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                            + "=" + Long.toString(id),
-                    null,
-                    null);
-
-            while (contacts_number.moveToNext()) {
-                phoneNumber = contacts_number
-                        .getString(contacts_number.getColumnIndex(
-                        ContactsContract.CommonDataKinds.Phone.NUMBER));
-                phoneNumber = phoneNumber.replace(" ", "");
-            }
+            phoneNumber = contacts_name.getString(contacts_name.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            phoneNumber = phoneNumber.replace(" ", "");
             if(phoneNumber.equals(number)) {
-                contacts_number.close();
-                name = contacts_name.getString(contacts_name
-                        .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                name = contacts_name.getString(contacts_name.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 return name;
             }
-            else
+            else {
                 name = number;
+            }
         }
          return name;
     }
-
 }
