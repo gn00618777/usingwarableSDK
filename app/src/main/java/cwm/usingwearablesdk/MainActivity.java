@@ -896,6 +896,20 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                     }
                     break;
+                case Type.BLE_CONNECT_STATUS:
+                    message_id = cwmEvents.getMessageID();
+                    switch (message_id){
+                        case ID.USER_ACCOUNT_MISMATCH:
+                            Toast.makeText(getApplicationContext(),"User's account is mismatch",Toast.LENGTH_SHORT).show();
+                            break;
+                        case ID.CONNECT_TIMEOUT:
+                            Toast.makeText(getApplicationContext(),"Connect is time out",Toast.LENGTH_SHORT).show();
+                            break;
+                        case ID.BIND_SUCCESS:
+                            Toast.makeText(getApplicationContext(),"Bind success!",Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    break;
                 default:
                     break;
             }
