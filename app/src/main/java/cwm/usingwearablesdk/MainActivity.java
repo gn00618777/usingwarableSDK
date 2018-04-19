@@ -1069,6 +1069,14 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
             }
 
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    cwmManager.CwmSendAccount("A987654321");
+                }
+            },1000);
+
         }
 
         @Override
