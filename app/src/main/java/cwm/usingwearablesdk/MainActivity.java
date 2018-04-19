@@ -907,6 +907,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                         case ID.BIND_SUCCESS:
                             Toast.makeText(getApplicationContext(),"Bind success!",Toast.LENGTH_SHORT).show();
+                            cwmManager.CwmClearStep();
                             break;
                     }
                     break;
