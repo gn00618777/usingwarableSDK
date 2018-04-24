@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/hr_golden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="心律 Golden"/>
+        <Button
+            android:id="@+id/hr_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="心律 Target"/>
+        <Button
+            android:id="@+id/hr_light_leask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="心律 Light Leak"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/clear_hr_reult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="清除紀錄"/>
+    <TextView
+        android:id="@+id/adc_interval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""/>
+    <TextView
+        android:id="@+id/hr_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""/>
+
+</LinearLayout>

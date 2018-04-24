@@ -123,34 +123,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""/>
-    <ImageView
+    <!--<ImageView
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#ffffff"
-        />
+        android:background="#ffffff" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/hr_golden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="心律 Golden"/>
+        <Button
+            android:id="@+id/hr_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="心律 Target"/>
+        <Button
+            android:id="@+id/hr_light_leask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="心律 Light Leak"/>
+    </LinearLayout>
     <Button
-        android:id="@+id/record_sensor_data"
+        android:id="@+id/clear_hr_reult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="紀錄感應器資料"/>
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#ffffff"/>
-    <Button
-        android:id="@+id/update_bitmap"
+        android:text="清除紀錄"/>
+    <TextView
+        android:id="@+id/adc_interval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="更新BitMap"/>
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#ffffff"/>
-    <Button
-        android:id="@+id/update_font_lib"
+        android:text=""/>
+    <TextView
+        android:id="@+id/hr_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="更新字庫"/>
-
+        android:text=""/>-->
 
 </LinearLayout>

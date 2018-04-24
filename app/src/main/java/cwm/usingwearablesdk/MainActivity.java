@@ -81,7 +81,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         SystemFragment.ListenForSystemFragment,
         AlarmFragment.ListenForAlarmFragment, FactoryFragment.ListenForFactoryFragment,
         RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment,
-        CurrentFragment.ListenForCurrentFragment{
+        CurrentFragment.ListenForCurrentFragment, FactoryHRFragment.ListenForFactoryHRFragment{
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int READ_PHONE_STATE = 3;
@@ -138,6 +138,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private RunFragment mRunFM = new RunFragment();
     private BaseMapFragment mBaseFM = new BaseMapFragment();
     private CurrentFragment mCurrentFM = new CurrentFragment();
+    private FactoryHRFragment mFactoryHRFM = new FactoryHRFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -186,6 +187,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     int globalHeartRate = 0;
     int accumulationCalories = 0;
 
+    StringBuilder adcInterval = new StringBuilder();
+    StringBuilder hrTestResult = new StringBuilder();
 
     TelephonyManager telM = null;
 
@@ -239,6 +242,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     final int RUN_POSITION = 15;
     final int BASE_MAP_POSITION = 16;
     final int CURRNT_POSITION = 17;
+    final int FACTORY_HR_PORSITION = 18;
+
 
     public enum ITEMS{
         TABATA_INIT,
@@ -894,6 +899,39 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             if(currentProgress == maxSize)
                                 mProgressDialog.dismiss();
                             break;
+                        case ID.HEART_RATE_MECHANICAL_TEST_RESULT:
+                             Log.d("bernie","HR result");
+
+                             if(cwmEvents.getHRMinEnabledVerify() == 1 && cwmEvents.getHRMaxEnabledVerify() == 1){
+                                 adcInterval.append("factory test"+"channel:"+Integer.toString(cwmEvents.getHRChannel())+" (min:"+Integer.toString(cwmEvents.getHRMin())+
+                                         " value:"+Integer.toString(cwmEvents.getHRValue())+
+                                         " max:"+Integer.toString(cwmEvents.getHRMax())+")"+"\n");
+                             }
+                             else if(cwmEvents.getHRMinEnabledVerify() == 1){
+                                 adcInterval.append("factory test"+"channel:"+Integer.toString(cwmEvents.getHRChannel())+" (min:"+Integer.toString(cwmEvents.getHRMin())+
+                                         " value:"+Integer.toString(cwmEvents.getHRValue())+"\n");
+                             }
+                             else if(cwmEvents.getHRMaxEnabledVerify() == 1){
+                                 adcInterval.append("factory test"+"channel:"+Integer.toString(cwmEvents.getHRChannel())+
+                                         " (value:"+Integer.toString(cwmEvents.getHRValue())+
+                                         " max:"+Integer.toString(cwmEvents.getHRMax())+")"+"\n");
+                             }
+
+                             if(cwmEvents.getHRMinEnabledVerify() == 1 && cwmEvents.getHRMinVerifiedSuccess() == 0){
+                                 hrTestResult.append("Fatory Test Failed"+" channel:"+Integer.toString(cwmEvents.getHRChannel())+
+                                         " value:"+Integer.toString(cwmEvents.getHRValue())+" min:"+Integer.toString(cwmEvents.getHRMin())+"\n");
+                             }
+                             if(cwmEvents.getHRMaxEnabledVerify() == 1 && cwmEvents.getHRMaxVerifiedSuccess() == 0 ){
+                                 hrTestResult.append("Factory Test Failed"+" channel:"+Integer.toString(cwmEvents.getHRChannel())+
+                                         " value:"+Integer.toString(cwmEvents.getHRValue())+
+                                         " max:"+Integer.toString(cwmEvents.getHRMax())+"\n");
+                             }
+
+                            if(mFactoryHRFM.isVisible()){
+                                mFactoryHRFM.updateHRTestResult(adcInterval.toString(), hrTestResult.toString());
+                                resetFragments(FACTORY_HR_PORSITION);
+                            }
+                            break;
                     }
                     break;
                 case Type.BLE_CONNECT_STATUS:
@@ -1441,6 +1479,23 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
 
     @Override
+    public void onPressClearHRTestResult(){
+        adcInterval = new StringBuilder();
+        hrTestResult = new StringBuilder();
+        adcInterval.append("ADC_INTERVAL"+"\n");
+        hrTestResult.append("HR_TEST_RESULT"+"\n");
+        if(mFactoryHRFM.isVisible()){
+            mFactoryHRFM.updateHRTestResult("", "");
+            resetFragments(FACTORY_HR_PORSITION);
+        }
+    }
+
+    @Override
+    public void onPressHRTest(int test){
+        cwmManager.CwmFactory(ID.HEART_RATE_MECHANICAL_TEST_RESULT, test);
+    }
+
+    @Override
     public void onPressSync100(int cmd, float para){
         cwmManager.CwmEnableRun(cmd, para);
     }
@@ -1818,6 +1873,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mFragments.add(mRunFM);//15
         mFragments.add(mBaseFM);//16
         mFragments.add(mCurrentFM);//17
+        mFragments.add(mFactoryHRFM);//18
 
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
@@ -1850,6 +1906,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                 }
             },1000);
         }
+
+        adcInterval.append("ADC_INTERVAL"+"\n");
+        hrTestResult.append("HR_TEST_RESULT"+"\n");
     }
     @Override
     protected void onPause(){
@@ -1976,6 +2035,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             case R.id.navigation_item_16:
                 mToolbar.setTitle("最新數據");
                 setFragments(CURRNT_POSITION);
+                break;
+            case R.id.navigation_item_17:
+                mToolbar.setTitle("工廠模式-HR");
+                setFragments(FACTORY_HR_PORSITION);
                 break;
             default: break;
         }

@@ -62,6 +62,10 @@
             android:id="@+id/navigation_item_16"
             android:checked="true"
             android:title="最新數據"/>
+        <item
+            android:id="@+id/navigation_item_17"
+            android:checked="true"
+            android:title="工廠模式-HR"/>
 
     </group>
 </menu>

@@ -31,14 +31,22 @@ public class FactoryFragment extends Fragment {
     private Button calibrateBMIACC;
     private Button calibrateBMIGYRO;
     private Button clearCalibrate;
+    private Button hrGoldenTest;
+    private Button hrTargetTest;
+    private Button hrLightLeakTest;
+    private Button clearHRResult;
     private TextView selfTestView;
     private TextView calibrateView;
+    private TextView adcInterval;
+    private TextView hrResult;
 
     private boolean dfu = false;
     private boolean selfTest = false;
 
     String selfTestResult = "";
     String calibrateResult = "";
+    String adcIntervalResult = "";
+    String hrTestResult = "";
 
     int progress = 1;
 
@@ -51,6 +59,8 @@ public class FactoryFragment extends Fragment {
         void onPressCalibrateButton(int comonet);
         void onPressClearCalibrateButton();
         void onPressRecordSensorDataButton();
+        //void onPressHRTest(int test);
+        //void onPressClearHRTestResult();
     }
 
 
@@ -185,11 +195,43 @@ public class FactoryFragment extends Fragment {
                 mCallback.onPressClearCalibrateButton();
             }
         });
+
+        /*hrGoldenTest = (Button)mView.findViewById(R.id.hr_golden);
+        hrGoldenTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressHRTest(ID.HR_GOLDEN_TEST);
+            }
+        });
+        hrTargetTest = (Button) mView.findViewById(R.id.hr_target);
+        hrTargetTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressHRTest(ID.HR_TARGET_TEST);
+            }
+        });
+        hrLightLeakTest = (Button)mView.findViewById(R.id.hr_light_leask);
+        hrLightLeakTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressHRTest(ID.HR_LIGHT_LEAK_TEST);
+            }
+        });
+        clearHRResult = (Button)mView.findViewById(R.id.clear_hr_reult);
+        clearHRResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onPressClearHRTestResult();
+            }
+        });*/
         selfTestView = (TextView)mView.findViewById(R.id.self_test_result);
         selfTestView.setText(selfTestResult);
         calibrateView = (TextView)mView.findViewById(R.id.calibrate_result);
         calibrateView.setText(calibrateResult);
-
+       // adcInterval = (TextView)mView.findViewById(R.id.adc_interval);
+       // adcInterval.setText(adcIntervalResult);
+       // hrResult = (TextView)mView.findViewById(R.id.hr_result);
+       // hrResult.setText(hrTestResult);
         return mView;
     }
 
@@ -197,6 +239,11 @@ public class FactoryFragment extends Fragment {
         selfTestResult = selfTest;
         calibrateResult = calibrate;
     }
+
+   /* public void updateHRTestResult(String adcInterval, String result){
+        adcIntervalResult = adcInterval;
+        hrTestResult = result;
+    }*/
 
     public void updateProgress(int progress){
         this.progress = progress;
