@@ -316,9 +316,7 @@ public class SystemFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((!historyEdit.getText().toString().matches("")) &&
-                        (!screenEdit.getText().toString().matches("")) &&
-                        screen != 0 && functions != 0){
+                if((!historyEdit.getText().toString().matches("")) && functions != 0){
                     historyDetect = Integer.parseInt(historyEdit.getText().toString());
                     screenTimeOut = Integer.parseInt(screenEdit.getText().toString());
 
