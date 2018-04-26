@@ -106,7 +106,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     timer.cancel();
                 //requestHandler.removeCallbacks(requestTask);
                 mTabataActionItemFM.setActionCountView("0");
-                cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
+                cwmManager.tabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
                 curentDoneItems = 0;
                 mTabataQueue = null;
                 mTabataShowFM.setItems(0, 0);
@@ -210,7 +210,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
    private Runnable sendHeartTask = new Runnable() {
        @Override
        public void run() {
-           cwmManager.CwmTabataCommand(ITEMS.TABATA_SEND_HEART_RATE.ordinal(), 0, 0, 0);
+           cwmManager.tabataCommand(ITEMS.TABATA_SEND_HEART_RATE.ordinal(), 0, 0, 0);
            sendHeartHandler.postDelayed(sendHeartTask,5000);
        }
    };
@@ -303,8 +303,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            cwmManager.CwmBleDisconnect();
-            cwmManager.CwmBleClose();
+            cwmManager.bleDisconnect();
+            cwmManager.bleClose();
             mProgressDialog.dismiss();
         }
     };
@@ -725,7 +725,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             }
                             else {
                                 mProgressBar.setMax(cwmEvents.getMaxPackages());
-                                cwmManager.CwmSyncStart();
+                                cwmManager.syncStart();
                             }
                             break;
                         case ID.SYNC_DONE:
@@ -751,7 +751,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                   mProgressDialog.onStart();
                                   mProgressBar.setProgress(0);
                                }
-                                cwmManager.CwmSyncSucces();
+                                cwmManager.syncSucces();
                             }
                             break;
                         case ID.SYNC_ABORTED:
@@ -895,7 +895,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             //Log.d("bernie","ak maxsize:"+Float.toString(maxSize));
                             mProgressDialog.setMessage("進度: "+Float.toString(currentProgress / maxSize * 100));
                             if(currentProgress != maxSize)
-                                cwmManager.CwmSendBitMap();
+                                cwmManager.sendBitMap();
                             if(currentProgress == maxSize)
                                 mProgressDialog.dismiss();
                             break;
@@ -945,7 +945,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             break;
                         case ID.BIND_SUCCESS:
                             Toast.makeText(getApplicationContext(),"Bind success!",Toast.LENGTH_SHORT).show();
-                            cwmManager.CwmClearStep();
+                            cwmManager.clearStep();
                             break;
                     }
                     break;
@@ -1071,7 +1071,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     if(set.size() != 0){
                       for (BluetoothDevice device : set) {
                           mProgressDialog = ProgressDialog.show(MainActivity.this, "正在連線", "處理中...");
-                          cwmManager.CwmBleConnect(device.getAddress());
+                          cwmManager.bleConnect(device.getAddress());
                           break;
                       }
                     }
@@ -1115,7 +1115,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            cwmManager.CwmUnBond();
+                            cwmManager.unBond();
                         }
                     },1000);
                 }
@@ -1126,7 +1126,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    cwmManager.CwmSendAccount("A987654321");
+                    cwmManager.sendAccount("A987654321");
                 }
             },1000);
 
@@ -1186,7 +1186,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             if(isTabataInitStart){
                                 isTabataInitStart = false;
                                 isTabataPrepareStart = true;
-                                cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_START.ordinal(), 0 , 0, 0);
+                                cwmManager.tabataCommand(ITEMS.TABATA_PREPARE_START.ordinal(), 0 , 0, 0);
                             }
                             else if(isTabataPrepareStart){
                                 isTabataPrepareStart = false;
@@ -1198,7 +1198,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 //Log.d("bernie","tabata prepare count:0");
                                 isTabataPrepareCount = false;
                                 isTabataPrepareEnd = true;
-                                cwmManager.CwmTabataCommand(ITEMS.TABATA_PREARE_END.ordinal(), 0, 0, 0);
+                                cwmManager.tabataCommand(ITEMS.TABATA_PREARE_END.ordinal(), 0, 0, 0);
                             }
                             else if(isTabataPrepareEnd){
                                 //Log.d("bernie","tabata prepare end:");
@@ -1234,7 +1234,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                     @Override
                                     public void run() {
                                         isTabataActionStart = true;
-                                         cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
+                                         cwmManager.tabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
                                     }
                                 },1000);
                                 firstTask = null;
@@ -1266,7 +1266,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                                 timer.cancel();
                                                 isTabataIntervalCount = true;
                                             }
-                                              cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, countDown, 0);
+                                              cwmManager.tabataCommand(ITEMS.TABATA_REST_COUNT.ordinal(), 0, countDown, 0);
                                             countDown--;
                                         }
                                     }
@@ -1277,7 +1277,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 mTabataIntervalFM.setIntervalCountView("0");
                                 resetFragments(TABATA_INTERVAL_POSITION);
                                 isTabataIntervalEnd = true;
-                                cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_END.ordinal(), 0, 0, 0);
+                                cwmManager.tabataCommand(ITEMS.TABATA_REST_END.ordinal(), 0, 0, 0);
 
                                 Handler handler = new Handler();
                                 Handler handler1 = new Handler();
@@ -1294,7 +1294,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 handler1.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
+                                        cwmManager.tabataCommand(ITEMS.TABATA_ACTION_START.ordinal(), 0, 0, 0);
                                     }
                                 },1000);
 
@@ -1307,7 +1307,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 int itemPos = laterTask.getTabataSettings().getItemPos();
                                 totalInterval = laterTask.getTabataSettings().getIntervalTime();
                                 isTabataActionItem = true;
-                                 cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
+                                 cwmManager.tabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
                                 Log.d("bernie","tabata action item start");
                             }
                             else if(isTabataDone){
@@ -1380,7 +1380,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         timer.cancel();
                         isTabataPrepareCount = true;
                     }
-                    cwmManager.CwmTabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), countDown, 0, 0);
+                    cwmManager.tabataCommand(ITEMS.TABATA_PREPARE_COUNT.ordinal(), countDown, 0, 0);
                     countDown--;
                 }
             }
@@ -1399,15 +1399,15 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             }
             else if(id == 0x02){ //packet lost
                 if(cmdType == 0x03 && cmdId == 0x02)
-                    cwmManager.CwmSyncFail();
+                    cwmManager.syncFail();
                 if(cmdType == 0x03 && cmdId == 0x04)
-                    cwmManager.CwmSyncFail();
+                    cwmManager.syncFail();
                 if(cmdType == 0x03 && cmdId == 0x01)
-                    cwmManager.CwmSyncFail();;
+                    cwmManager.syncFail();;
             }
             else if(id == 0x03) { //Checksum error
 
-                cwmManager.CwmReSendBitMap();
+                cwmManager.reSendBitMap();
             }
         }
     };
@@ -1416,12 +1416,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     public void onNewADevice(){
         if(mDeviceStatus == false){
-            cwmManager.CwmBleSearch();
+            cwmManager.bleSearch();
         }
     }
     @Override
     public void onDisconnectFromDevice(){
-           cwmManager.CwmBleDisconnect();
+           cwmManager.bleDisconnect();
     }
     @Override
     public void onConnectToDevice(){
@@ -1429,7 +1429,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
     @Override
     public void onResetBoundRecord(){
-      cwmManager.CwmUnBond();
+      cwmManager.unBond();
     }
 
     @Override
@@ -1441,33 +1441,33 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public void onRequesEnableRun(int enable){
         Log.d("bernie","set run:"+Integer.toString(enable));
         if(enable == 0) {
-            cwmManager.CwmEnableRun(1, 0);
+            cwmManager.enableRun(1, 0);
             sendHandler.removeCallbacks(thread2);
         }
         if(enable == 1) {
-            cwmManager.CwmEnableRun(1, 1);
+            cwmManager.enableRun(1, 1);
             sendHandler.post(thread2);
         }
     }
     @Override
     public void onRequestBattery(){
         if(mDeviceStatus != false) {
-           cwmManager.CwmRequestBattery();
+           cwmManager.requestBattery();
         }
     }
 
     @Override
     public void onAlarmRequest(){
-        cwmManager.CwmRequestUserConfig();
+        cwmManager.requestUserConfig();
     }
 
     @Override
-    public void onSystemRequest(){cwmManager.CwmRequestUserConfig();}
+    public void onSystemRequest(){cwmManager.requestUserConfig();}
 
     @Override
     public void onPressSelfTestButton(int componet){
         mProgressDialog = ProgressDialog.show(this,"開始自我檢測","檢測中...");
-       cwmManager.CwmFactory(ID.SELF_TEST_RESULT, componet);
+       cwmManager.factory(ID.SELF_TEST_RESULT, componet);
     }
     @Override
     public void onPressClearSelfTestTResultButton(){
@@ -1492,34 +1492,34 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onPressHRTest(int test){
-        cwmManager.CwmFactory(ID.HEART_RATE_MECHANICAL_TEST_RESULT, test);
+        cwmManager.factory(ID.HEART_RATE_MECHANICAL_TEST_RESULT, test);
     }
 
     @Override
     public void onPressSync100(int cmd, float para){
-        cwmManager.CwmEnableRun(cmd, para);
+        cwmManager.enableRun(cmd, para);
     }
 
     @Override
     public void onPressRequestAddUp(int cmd){
-        cwmManager.CwmEnableRun(cmd, 0);
+        cwmManager.enableRun(cmd, 0);
     }
 
     @Override
     public void onSycRequest(){
-        cwmManager.CwmSendUserConfig(config);
+        cwmManager.sendUserConfig(config);
     }
 
     @Override
     public void onResetDefault(){
         Log.d("bernie","reseeett");
-       cwmManager.CwmResetUserConfig();
+       cwmManager.resetUserConfig();
     }
 
     @Override
     public void onPressCalibrateButton(int componet){
         mProgressDialog = ProgressDialog.show(this,"開始校正","校正中...");
-        cwmManager.CwmFactory(ID.CALIBRATION_RESULT, componet);
+        cwmManager.factory(ID.CALIBRATION_RESULT, componet);
     }
 
     @Override
@@ -1533,12 +1533,12 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onPressRecordSensorDataButton(){
-        cwmManager.CwmFactory(ID.RECORD_SENSOR_DATA, 0);
+        cwmManager.factory(ID.RECORD_SENSOR_DATA, 0);
     }
 
     @Override
     public void onRequestCurrentLife(){
-        cwmManager.CwmSyncCurrent();
+        cwmManager.syncCurrent();
     }
 
 
@@ -1600,13 +1600,13 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onIntelligentRequest(){
-        cwmManager.CwmRequestUserConfig();
+        cwmManager.requestUserConfig();
         Log.d("bernie","requestIntelligent");
     }
 
     @Override
     public void onPersonalRequest(){
-        cwmManager.CwmRequestUserConfig();
+        cwmManager.requestUserConfig();
     }
     @Override
     public void onPersonalInfoSaveToUserConfig(){
@@ -1641,7 +1641,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onSoftReset(){
-        cwmManager.CwmSoftReset();
+        cwmManager.softReset();
     }
 
     @Override
@@ -1663,13 +1663,13 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mTabataShowFM.setItems(curentDoneItems, totalItems);
         goalTimes = mTabataSettings.getActionTimes();
         Log.d("bernie", "Tabata goal is" + Integer.toString(goalTimes));
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_INIT.ordinal(), 0, 0, 0);
+        cwmManager.tabataCommand(ITEMS.TABATA_INIT.ordinal(), 0, 0, 0);
 
         sendHandler.post(thread1);
     }
     @Override
     public void onRequestSwVersion(){
-        cwmManager.CwmRequestSwVersion();
+        cwmManager.requestSwVersion();
     }
 
     public void doFirstTabataTask(){
@@ -1678,7 +1678,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
         totalInterval = firstTask.getTabataSettings().getIntervalTime();
         isTabataActionItem = true;
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
+        cwmManager.tabataCommand(ITEMS.TABATA_ACTION_ITEM.ordinal(), 0, 0, itemPos);
     }
 
     public void selectActionItemFromQueue(){
@@ -1695,11 +1695,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             totalInterval = laterTask.getTabataSettings().getIntervalTime();
             goalTimes = laterTask.getTabataSettings().getActionTimes();
             isTabataIntervalStart = true;
-            cwmManager.CwmTabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0, 0, 0);
+            cwmManager.tabataCommand(ITEMS.TABATA_REST_START.ordinal(), 0, 0, 0);
         }
         else{
             Toast.makeText(getApplicationContext(),"You have accomplished a round",Toast.LENGTH_SHORT).show();
-            cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
+            cwmManager.tabataCommand(ITEMS.TABATA_DONE.ordinal(), 0, 0, 0);
             accumulationCalories = 0;
             setFragments(TABATA_SHOW_POSITION);
         }
@@ -1711,25 +1711,25 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         Log.d("bernie","sendActionItemEnd");
         isTabataActionEnd = true;
         tabataActionEnd = true;
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
+        cwmManager.tabataCommand(ITEMS.TABATA_ACTION_END.ordinal(), 0 , 0, 0);
     }
 
     @Override
     public void onPressTabataPauseButton(){
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_PAUSE.ordinal(), 0 , 0, 0);
+        cwmManager.tabataCommand(ITEMS.TABATA_PAUSE.ordinal(), 0 , 0, 0);
     }
 
     @Override
     public void onSaveAlarmSettings(AlarmSetting setting){
-        cwmManager.CwmSyncStart();
+        cwmManager.syncStart();
         config.setAlarmSetting(setting);
     }
 
     @Override
     public void onStartUpdateBaseMap(){
-          cwmManager.CwmUpdateBitMapInit();
+          cwmManager.updateBitMapInit();
           mProgressDialog = ProgressDialog.show(this,"開始更新底圖","進度: 0%");
-         cwmManager.CwmSendBitMap();
+         cwmManager.sendBitMap();
     }
 
     @Override
@@ -1742,7 +1742,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             timer.cancel();
         isTabataDone = true;
         //requestHandler.removeCallbacks(requestTask);
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
+        cwmManager.tabataCommand(ITEMS.TABATA_DONE.ordinal(), 0 , 0, 0);
         accumulationCalories = 0;
         mTabataActionItemFM.setCalories(Integer.toString(accumulationCalories));
         mTabataActionItemFM.setHeartRate(0);
@@ -1761,35 +1761,35 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onPressTabataResumeButton(){
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_RESUME.ordinal(), 0, 0, 0);
+        cwmManager.tabataCommand(ITEMS.TABATA_RESUME.ordinal(), 0, 0, 0);
     }
 
     @Override
     public void onPressSyncAutoButton(){
-        cwmManager.CwmSyncRequest();
+        cwmManager.syncRequest();
     }
 
     @Override
     public void onPressEraseOLEDButton(){
         mProgressDialog = ProgressDialog.show(this,"按下清除OLED鍵","處理中...");
-        cwmManager.CwmEraseBaseMap(1);
+        cwmManager.eraseBaseMap(1);
     }
 
     @Override
     public void onPressEraseBitMapButton(){
         mProgressDialog = ProgressDialog.show(this,"按下清除BitMap鍵","處理中...");
-        cwmManager.CwmEraseBaseMap(2);
+        cwmManager.eraseBaseMap(2);
     }
 
     @Override
     public void onPressEraseFontButton(){
         mProgressDialog = ProgressDialog.show(this,"按下清除FontLib鍵","處理中...");
-        cwmManager.CwmEraseBaseMap(3);
+        cwmManager.eraseBaseMap(3);
     }
 
     @Override
     public void onPressCheckBox(int sensorType){
-      cwmManager.CwmSensorReport(sensorType);
+      cwmManager.sensorReport(sensorType);
     }
 
     @Override
@@ -1824,7 +1824,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     public void onPressSyncEraseButton(){
         mProgressDialog = ProgressDialog.show(this,"按下清除歷程鍵","處理中...");
-        cwmManager.CwmEraseLog();
+        cwmManager.eraseLog();
     }
 
     @Override
@@ -1900,7 +1900,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                 @Override
                 public void run() {
                     for(BluetoothDevice device : set) {
-                        cwmManager.CwmBleConnect(device.getAddress());
+                        cwmManager.bleConnect(device.getAddress());
                         break;
                     }
                 }
@@ -1935,8 +1935,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
        // requestHandler.removeCallbacks(requestTask);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NotificationReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(NewsReceiver);
-        cwmManager.CwmTabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
-        cwmManager.CwmReleaseResource();
+        cwmManager.tabataCommand(ITEMS.TABATA_DONE.ordinal(),0,0,0);
+        cwmManager.releaseResource();
         telM.listen(telListener, PhoneStateListener.LISTEN_NONE);
         finish();
     }
@@ -1957,7 +1957,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
                     connectHandler.postDelayed(runnable,15000);
 
-                    cwmManager.CwmBleConnect(deviceAddress);
+                    cwmManager.bleConnect(deviceAddress);
                 }
                 break;
 
@@ -1966,11 +1966,11 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     } // onActivityResult()
 
     public void onConnect(final View view){
-        cwmManager.CwmBleSearch();
+        cwmManager.bleSearch();
     }
 
     public void onDisconnect(final View view){
-        cwmManager.CwmBleDisconnect();
+        cwmManager.bleDisconnect();
     }
 
     private void navigateTo(MenuItem item) {
@@ -2168,7 +2168,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     .setCancelable(false)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(final DialogInterface dialog, final int id) {
-                            cwmManager.CwmSwitchOTA();
+                            cwmManager.switchOTA();
                             final Intent newIntent = new Intent(getApplication(), DfuActivity.class);
                             newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             startActivity(newIntent);
@@ -2277,7 +2277,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             NotificationData data = new NotificationData();
             data.setNotifyId(NOTIFICATION.SOCIAL.ordinal());
             data.setAppIdentifier(SOCIAL_APP.NEWS.ordinal());
-            cwmManager.CwmNotification(data);
+            cwmManager.notification(data);
         }
     };
 
@@ -2313,45 +2313,45 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         data.setNotifyId(NOTIFICATION.SOCIAL.ordinal());
                         data.setAppIdentifier(SOCIAL_APP.QQ.ordinal());
                         data.setAppName("QQ");
-                        cwmManager.CwmNotification(data);
+                        cwmManager.notification(data);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.WECHART_CODE){
                         NotificationData data = new NotificationData();
                         data.setNotifyId(NOTIFICATION.SOCIAL.ordinal());
                         data.setAppIdentifier(SOCIAL_APP.WECHART.ordinal());
                         data.setAppName("WeChat");
-                        cwmManager.CwmNotification(data);
+                        cwmManager.notification(data);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.DOBAN_CODE){
                         NotificationData data = new NotificationData();
                         data.setNotifyId(NOTIFICATION.SOCIAL.ordinal());
                         data.setAppIdentifier(SOCIAL_APP.DOBAN.ordinal());
                         data.setAppName("Doban");
-                        cwmManager.CwmNotification(data);
+                        cwmManager.notification(data);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.GMAIL_CODE){
                         NotificationData data = new NotificationData();
                         data.setNotifyId(NOTIFICATION.EMAIL.ordinal());
-                        cwmManager.CwmNotification(data);
+                        cwmManager.notification(data);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_CODE){
                         onRing = true;
                         NotificationData phoneData = new NotificationData();
                         phoneData.setNotifyId(NOTIFICATION.CALL.ordinal());
                         phoneData.setPersonName(contactName);
-                        cwmManager.CwmNotification(phoneData);
+                        cwmManager.notification(phoneData);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_SERVER_CODE){
                         NotificationData data = new NotificationData();
                         data.setNotifyId(NOTIFICATION.MISSING_CALL.ordinal());
                         //data.setPersonName(title);
-                        cwmManager.CwmNotification(data);
+                        cwmManager.notification(data);
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_OFF_HOOK){
                         onRing = false;
                         NotificationData data = new NotificationData();
                         data.setNotifyId(NOTIFICATION.PICK_UP.ordinal());
-                        cwmManager.CwmNotification(data);
+                        cwmManager.notification(data);
 
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.TELE_IDLE){
@@ -2360,7 +2360,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             onRing = false;
                             NotificationData data = new NotificationData();
                             data.setNotifyId(NOTIFICATION.MISSING_CALL.ordinal());
-                            cwmManager.CwmNotification(data);
+                            cwmManager.notification(data);
                         }
                     }
                     else if(code == NotificationListenerExampleService.InterceptedNotificationCode.OTHER_NOTIFICATIONS_CODE){
@@ -2368,7 +2368,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                         data.setNotifyId(NOTIFICATION.SOCIAL.ordinal());
                         data.setAppIdentifier(SOCIAL_APP.OTHER.ordinal());
                         data.setAppName("赖的测试");
-                        cwmManager.CwmNotification(data);
+                        cwmManager.notification(data);
                     }
                 }
             });
@@ -2543,14 +2543,14 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     public class SendThread extends Thread{
         public void run(){
-            cwmManager.CwmTabataCommand(ITEMS.TABATA_SEND_HEART_RATE.ordinal(), 0, 0, 0);
+            cwmManager.tabataCommand(ITEMS.TABATA_SEND_HEART_RATE.ordinal(), 0, 0, 0);
             Log.d("bernie","send heart rate");
             sendHandler.postDelayed(thread1, 5000);
         }
     }
     public class SendThread1 extends Thread{
         public void run(){
-            cwmManager.CwmEnableRun(4, 0);
+            cwmManager.enableRun(4, 0);
             sendHandler.postDelayed(thread2, 5000);
         }
     }
