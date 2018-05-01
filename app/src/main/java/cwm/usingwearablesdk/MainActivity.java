@@ -88,8 +88,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         FlashFragment.ListenForFlashFragment, SensorsFragment.ListenForSensorFragment,
         SystemFragment.ListenForSystemFragment,
         AlarmFragment.ListenForAlarmFragment, FactoryFragment.ListenForFactoryFragment,
-        RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment,
-        CurrentFragment.ListenForCurrentFragment, FactoryHRFragment.ListenForFactoryHRFragment,
+        RunFragment.ListenForRunFragment, CurrentFragment.ListenForCurrentFragment,
+        FactoryHRFragment.ListenForFactoryHRFragment,
         LoaderCallbacks<Cursor> {
 
    private final int REQUEST_SELECT_DEVICE = 2;
@@ -147,7 +147,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private AlarmFragment mAlarmFM = new AlarmFragment();
     private FactoryFragment mFactory = new FactoryFragment();
     private RunFragment mRunFM = new RunFragment();
-    private BaseMapFragment mBaseFM = new BaseMapFragment();
     private CurrentFragment mCurrentFM = new CurrentFragment();
     private FactoryHRFragment mFactoryHRFM = new FactoryHRFragment();
     private BitMapFragment mBitMapFM = new BitMapFragment();
@@ -252,10 +251,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     final int ALARM_POSITION = 13;
     final int FACTORY_POSITION = 14;
     final int RUN_POSITION = 15;
-    final int BASE_MAP_POSITION = 16;
-    final int CURRNT_POSITION = 17;
-    final int FACTORY_HR_PORSITION = 18;
-    final int BASEMAP_PORSITION = 19;
+    final int CURRNT_POSITION = 16;
+    final int FACTORY_HR_PORSITION = 17;
+    final int BASEMAP_PORSITION = 18;
 
 
     public enum ITEMS{
@@ -1739,12 +1737,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     }
 
     @Override
-    public void onStartUpdateBaseMap(){
-          mProgressDialog = ProgressDialog.show(this,"開始更新底圖","進度: 0%");
-          cwmManager.sendBitMap();
-    }
-
-    @Override
     public void onPressTabataDoneButton(){
         sendHandler.removeCallbacks(thread1);
         tabataHasDone = true;
@@ -1779,24 +1771,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     @Override
     public void onPressSyncAutoButton(){
         cwmManager.syncRequest();
-    }
-
-    @Override
-    public void onPressEraseOLEDButton(){
-        mProgressDialog = ProgressDialog.show(this,"按下清除OLED鍵","處理中...");
-        cwmManager.eraseBaseMap(1);
-    }
-
-    @Override
-    public void onPressEraseBitMapButton(){
-        mProgressDialog = ProgressDialog.show(this,"按下清除BitMap鍵","處理中...");
-        cwmManager.eraseBaseMap(2);
-    }
-
-    @Override
-    public void onPressEraseFontButton(){
-        mProgressDialog = ProgressDialog.show(this,"按下清除FontLib鍵","處理中...");
-        cwmManager.eraseBaseMap(3);
     }
 
     @Override
@@ -1883,10 +1857,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mFragments.add(mAlarmFM);//13
         mFragments.add(mFactory);//14
         mFragments.add(mRunFM);//15
-        mFragments.add(mBaseFM);//16
-        mFragments.add(mCurrentFM);//17
-        mFragments.add(mFactoryHRFM);//18
-        mFragments.add(mBitMapFM);//19
+        mFragments.add(mCurrentFM);//16
+        mFragments.add(mFactoryHRFM);//17
+        mFragments.add(mBitMapFM);//18
 
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
@@ -2053,19 +2026,15 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                 setFragments(FLASH_TEST_POSITION);
                 break;
             case R.id.navigation_item_15:
-                mToolbar.setTitle("更新底圖");
-                setFragments(BASE_MAP_POSITION);
-                break;
-            case R.id.navigation_item_16:
                 mToolbar.setTitle("最新數據");
                 setFragments(CURRNT_POSITION);
                 break;
-            case R.id.navigation_item_17:
+            case R.id.navigation_item_16:
                 mToolbar.setTitle("工廠模式-HR");
                 setFragments(FACTORY_HR_PORSITION);
                 break;
-            case R.id.navigation_item_18:
-                mToolbar.setTitle("底圖更新-個別");
+            case R.id.navigation_item_17:
+                mToolbar.setTitle("底圖更新");
                 setFragments(BASEMAP_PORSITION);
                 break;
             default: break;
