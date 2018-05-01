@@ -5,13 +5,18 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.IntentFilter;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -47,6 +52,7 @@ import cwm.wearablesdk.TabataTask;
 import cwm.wearablesdk.constants.Type;
 import cwm.wearablesdk.settings.UserConfig;
 
+import android.app.LoaderManager.LoaderCallbacks;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -54,10 +60,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.app.ProgressDialog;
+import android.content.CursorLoader;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -81,7 +89,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         SystemFragment.ListenForSystemFragment,
         AlarmFragment.ListenForAlarmFragment, FactoryFragment.ListenForFactoryFragment,
         RunFragment.ListenForRunFragment, BaseMapFragment.ListenForBaseMapFragment,
-        CurrentFragment.ListenForCurrentFragment, FactoryHRFragment.ListenForFactoryHRFragment{
+        CurrentFragment.ListenForCurrentFragment, FactoryHRFragment.ListenForFactoryHRFragment,
+        LoaderCallbacks<Cursor> {
 
    private final int REQUEST_SELECT_DEVICE = 2;
     private final int READ_PHONE_STATE = 3;
@@ -89,6 +98,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private final int READ_CONTACT = 5;
     private final int RECEIVE_SMS = 6;
     private final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
+    private static final int SELECT_FILE_REQ = 1;
+    private static final String EXTRA_URI = "uri";
 
     //sdk
     private CwmManager cwmManager;
@@ -139,6 +150,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private BaseMapFragment mBaseFM = new BaseMapFragment();
     private CurrentFragment mCurrentFM = new CurrentFragment();
     private FactoryHRFragment mFactoryHRFM = new FactoryHRFragment();
+    private BitMapFragment mBitMapFM = new BitMapFragment();
 
     private String mDeviceName = null;
     private String mDeviceAddress = null;
@@ -243,6 +255,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     final int BASE_MAP_POSITION = 16;
     final int CURRNT_POSITION = 17;
     final int FACTORY_HR_PORSITION = 18;
+    final int BASEMAP_PORSITION = 19;
 
 
     public enum ITEMS{
@@ -1727,9 +1740,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
 
     @Override
     public void onStartUpdateBaseMap(){
-          cwmManager.updateBitMapInit();
           mProgressDialog = ProgressDialog.show(this,"開始更新底圖","進度: 0%");
-         cwmManager.sendBitMap();
+          cwmManager.sendBitMap();
     }
 
     @Override
@@ -1874,6 +1886,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
         mFragments.add(mBaseFM);//16
         mFragments.add(mCurrentFM);//17
         mFragments.add(mFactoryHRFM);//18
+        mFragments.add(mBitMapFM);//19
 
         cwmManager = new CwmManager(this,wearableServiceListener, eventListener, ackListener, errorListener);
         statusCheck();
@@ -1960,6 +1973,17 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     cwmManager.bleConnect(deviceAddress);
                 }
                 break;
+            case SELECT_FILE_REQ:
+                final Uri uri = data.getData();
+                if (uri.getScheme().equals("file")) {
+                } else if (uri.getScheme().equals("content")){
+                    //File aFile = new File(uri.toString());
+                    // file name and size must be obtained from Content Provider
+                    final Bundle bundle = new Bundle();
+                    bundle.putParcelable(EXTRA_URI, uri);
+                    getLoaderManager().restartLoader(SELECT_FILE_REQ, bundle, this);
+                }
+                break;
 
             default:    break;
         }
@@ -2039,6 +2063,10 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             case R.id.navigation_item_17:
                 mToolbar.setTitle("工廠模式-HR");
                 setFragments(FACTORY_HR_PORSITION);
+                break;
+            case R.id.navigation_item_18:
+                mToolbar.setTitle("底圖更新-個別");
+                setFragments(BASEMAP_PORSITION);
                 break;
             default: break;
         }
@@ -2553,5 +2581,63 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             cwmManager.enableRun(4, 0);
             sendHandler.postDelayed(thread2, 5000);
         }
+    }
+
+    public void onSelectFileClicked(final View view) {
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(DfuService.MIME_TYPE_OCTET_STREAM);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // file browser has been found on the device
+            startActivityForResult(intent, SELECT_FILE_REQ);
+        }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
+        final Uri uri = args.getParcelable(EXTRA_URI);
+		/*
+		 * Some apps, f.e. Google Drive allow to select file that is not on the device. There is no "_data" column handled by that provider. Let's try to obtain
+		 * all columns and than check which columns are present.
+		 */
+        // final String[] projection = new String[] { MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns.SIZE, MediaStore.MediaColumns.DATA };
+        return new CursorLoader(this, uri, null /* all columns, instead of projection */, null, null, null);
+    }
+
+    @Override
+    public void onLoaderReset(final Loader<Cursor> loader) {
+        Log.d("bernie","onLoaderReset");
+    }
+
+    @Override
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
+        if (data != null && data.moveToNext()) {
+			/*
+			 * Here we have to check the column indexes by name as we have requested for all. The order may be different.
+			 */
+            final String fileName = data.getString(data.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)/* 0 DISPLAY_NAME */);
+            final String fileSize = data.getString(data.getColumnIndex(MediaStore.MediaColumns.SIZE)/* 0 DISPLAY_NAME */);
+            String filePath = null;
+            final int dataIndex = data.getColumnIndex(MediaStore.MediaColumns.DATA);
+            if (dataIndex != -1) {
+                filePath = data.getString(dataIndex /* 2 DATA */);
+                if(cwmManager.updateBitMapInit(filePath)){
+                    mBitMapFM.updateUI(fileName, fileSize, "ok");
+                    mBitMapFM.enableUpload(true);
+                }
+                else
+                    mBitMapFM.updateUI(fileName, fileSize, "file is not validate");
+
+                if(mBitMapFM.isVisible()){
+                    resetFragments(BASEMAP_PORSITION);
+                }
+            }
+        } else {
+        }
+    }
+
+    public void onUploadClicked(final View view){
+        mProgressDialog = ProgressDialog.show(this,"開始更新底圖","進度: 0%");
+        cwmManager.sendBitMap();
     }
 }

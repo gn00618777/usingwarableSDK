@@ -66,6 +66,10 @@
             android:id="@+id/navigation_item_17"
             android:checked="true"
             android:title="工廠模式-HR"/>
+        <item
+            android:id="@+id/navigation_item_18"
+            android:checked="true"
+            android:title="底圖更新-個別"/>
 
     </group>
 </menu>
