@@ -14,35 +14,6 @@
         <!-- The size of text below must be fixed, therefore dp are used instead of sp -->
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/feature_section_padding"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="42dp">
-            <Button
-                android:id="@+id/delete_tft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
-                android:text="刪除TFT"/>
-            <Button
-                android:id="@+id/delete_bitmap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
-                android:text="刪除BitMap"/>
-            <Button
-                android:id="@+id/delete_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
-                android:text="刪除Font"/>
-
-       </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
@@ -182,7 +153,33 @@
                     android:text="@string/dfu_action_upload"/>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/feature_section_padding"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/delete_tft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
+                    android:text="刪除TFT"/>
+                <Button
+                    android:id="@+id/delete_bitmap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
+                    android:text="刪除BitMap"/>
+                <Button
+                    android:id="@+id/delete_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
+                    android:text="刪除Font"/>
 
+            </LinearLayout>
         </LinearLayout>
 
 
