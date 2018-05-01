@@ -1947,17 +1947,18 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                 }
                 break;
             case SELECT_FILE_REQ:
-                final Uri uri = data.getData();
-                if (uri.getScheme().equals("file")) {
-                } else if (uri.getScheme().equals("content")){
-                    //File aFile = new File(uri.toString());
-                    // file name and size must be obtained from Content Provider
-                    final Bundle bundle = new Bundle();
-                    bundle.putParcelable(EXTRA_URI, uri);
-                    getLoaderManager().restartLoader(SELECT_FILE_REQ, bundle, this);
+                if(data != null) {
+                    final Uri uri = data.getData();
+                    if (uri.getScheme().equals("file")) {
+                    } else if (uri.getScheme().equals("content")) {
+                        //File aFile = new File(uri.toString());
+                        // file name and size must be obtained from Content Provider
+                        final Bundle bundle = new Bundle();
+                        bundle.putParcelable(EXTRA_URI, uri);
+                        getLoaderManager().restartLoader(SELECT_FILE_REQ, bundle, this);
+                    }
                 }
                 break;
-
             default:    break;
         }
     } // onActivityResult()
