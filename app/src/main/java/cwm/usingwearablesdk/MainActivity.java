@@ -1515,6 +1515,9 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     public void onDeleteFont(final View view){
         cwmManager.eraseBaseMap(3);
     }
+    public void onDeleteOLED(final View view){
+        cwmManager.eraseBaseMap(1);
+    }
 
     @Override
     public void onPressHRTest(int test){

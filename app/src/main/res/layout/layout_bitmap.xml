@@ -181,6 +181,13 @@
                     android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
                     android:onClick="onDeleteFont"
                     android:text="刪除Font"/>
+                <Button
+                    android:id="@+id/delete_oled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
+                    android:onClick="onDeleteOLED"
+                    android:text="刪除OLED"/>
 
             </LinearLayout>
         </LinearLayout>
