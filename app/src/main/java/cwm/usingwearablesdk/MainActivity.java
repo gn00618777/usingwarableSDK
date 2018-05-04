@@ -157,6 +157,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
     private byte[] mValue;
     private int[] mParser;
 
+    private int targetSize = 0;
+
     SendThread thread1 = new SendThread();
     SendThread1 thread2 = new SendThread1();
     private Handler sendHandler = new Handler();
@@ -899,16 +901,20 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                                 Toast.makeText(getApplicationContext(),"BITMAP 刪除完畢",Toast.LENGTH_SHORT).show();
                             else if(cwmEvents.getMapId() == 3)
                                 Toast.makeText(getApplicationContext(),"FONT刪除完畢", Toast.LENGTH_SHORT).show();
+                            else if(cwmEvents.getMapId() == 4)
+                                Toast.makeText(getApplicationContext(),"TFT刪除完畢", Toast.LENGTH_SHORT).show();
                             break;
                         case ID.MAP_WRITE_DONE:
                             float currentProgress = cwmEvents.getCurrentMapSize();
-                            float maxSize = 352256;//cwmEvents.getMaxMapSize();
-                            //Log.d("bernie","ak maxsize:"+Float.toString(maxSize));
-                            mProgressDialog.setMessage("進度: "+Float.toString(currentProgress / maxSize * 100));
-                            if(currentProgress != maxSize)
+                            mProgressDialog.setMessage("進度: "+Float.toString(currentProgress / targetSize * 100));
+                            if(currentProgress != targetSize)
                                 cwmManager.sendBitMap();
-                            if(currentProgress == maxSize)
+                            else if(currentProgress == targetSize) {
                                 mProgressDialog.dismiss();
+                                mBitMapFM.updateUI("","","File not loaded");
+                                mBitMapFM.enableUpload(false);
+                                resetFragments(BASEMAP_PORSITION);
+                            }
                             break;
                         case ID.HEART_RATE_MECHANICAL_TEST_RESULT:
                              Log.d("bernie","HR result");
@@ -1417,7 +1423,6 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                     cwmManager.syncFail();;
             }
             else if(id == 0x03) { //Checksum error
-
                 cwmManager.reSendBitMap();
             }
         }
@@ -1499,6 +1504,16 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             mFactoryHRFM.updateHRTestResult("", "");
             resetFragments(FACTORY_HR_PORSITION);
         }
+    }
+
+    public void onDeleteTFT(final View view){
+        cwmManager.eraseBaseMap(4);
+    }
+    public void onDeleteBitMap(final View view){
+        cwmManager.eraseBaseMap(2);
+    }
+    public void onDeleteFont(final View view){
+        cwmManager.eraseBaseMap(3);
     }
 
     @Override
@@ -2591,7 +2606,8 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
             final int dataIndex = data.getColumnIndex(MediaStore.MediaColumns.DATA);
             if (dataIndex != -1) {
                 filePath = data.getString(dataIndex /* 2 DATA */);
-                if(cwmManager.updateBitMapInit(filePath)){
+                targetSize = cwmManager.updateBitMapInit(filePath);
+                if(targetSize > 0){
                     mBitMapFM.updateUI(fileName, fileSize, "ok");
                     mBitMapFM.enableUpload(true);
                 }

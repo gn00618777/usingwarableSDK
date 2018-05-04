@@ -165,18 +165,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
+                    android:onClick="onDeleteTFT"
                     android:text="刪除TFT"/>
                 <Button
                     android:id="@+id/delete_bitmap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
+                    android:onClick="onDeleteBitMap"
                     android:text="刪除BitMap"/>
                 <Button
                     android:id="@+id/delete_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_vertical_margin_bottom"
+                    android:onClick="onDeleteFont"
                     android:text="刪除Font"/>
 
             </LinearLayout>
