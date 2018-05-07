@@ -910,6 +910,7 @@ RingBatteryFragment.ListenForRingStatusFragment, IntelligentFragment.ListenerFor
                             if(currentProgress != targetSize)
                                 cwmManager.sendBitMap();
                             else if(currentProgress == targetSize) {
+                                cwmManager.sendFinishCommand(Type.FACTORY_DATA_COMMAND);
                                 mProgressDialog.dismiss();
                                 mBitMapFM.updateUI("","","File not loaded");
                                 mBitMapFM.enableUpload(false);
